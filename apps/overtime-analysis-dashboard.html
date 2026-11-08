@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>加班工時診斷儀表板</title>
+<style>
+:root{
+  --paper:#EEF2F5;--surface:#FFFFFF;--surface2:#F6F8FA;--ink:#17283A;--ink2:#4A5B6C;--ink3:#7A8A99;
+  --line:#D3DBE3;--accent:#1D6A86;--accent-soft:#DCEDF3;
+  --s1:#1D6A86;--s2:#C77A2B;--s3:#6E58A8;--s4:#3F8F6A;--s5:#B24C63;--s6:#5C7F9E;--s7:#9A8A2E;--s8:#3E9BA8;
+  --ok:#2E8656;--ok-bg:#E2F2E8;--warn:#A87A08;--warn-bg:#FBF0D2;--bad:#BE3B34;--bad-bg:#F9E1DF;
+  --heat0:#F1F5F8;--heat1:#1D6A86;
+  --radius:10px;--shadow:0 1px 0 rgba(23,40,58,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0D141B;--surface:#15202B;--surface2:#1A2734;--ink:#E2E9EF;--ink2:#A9B7C4;--ink3:#7B8B9A;
+  --line:#2A3846;--accent:#5BB5D1;--accent-soft:#183644;
+  --s1:#5BB5D1;--s2:#E39A52;--s3:#A391E0;--s4:#68C394;--s5:#E07990;--s6:#8FB0CC;--s7:#CFC163;--s8:#6FD0DC;
+  --ok:#5CC48A;--ok-bg:#163327;--warn:#E3B53F;--warn-bg:#3A2E10;--bad:#F07169;--bad-bg:#3D1C1B;
+  --heat0:#1A2734;--heat1:#5BB5D1;color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#0D141B;--surface:#15202B;--surface2:#1A2734;--ink:#E2E9EF;--ink2:#A9B7C4;--ink3:#7B8B9A;
+  --line:#2A3846;--accent:#5BB5D1;--accent-soft:#183644;
+  --s1:#5BB5D1;--s2:#E39A52;--s3:#A391E0;--s4:#68C394;--s5:#E07990;--s6:#8FB0CC;--s7:#CFC163;--s8:#6FD0DC;
+  --ok:#5CC48A;--ok-bg:#163327;--warn:#E3B53F;--warn-bg:#3A2E10;--bad:#F07169;--bad-bg:#3D1C1B;
+  --heat0:#1A2734;--heat1:#5BB5D1;color-scheme:dark;}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;font-size:15px;line-height:1.6;font-variant-numeric:tabular-nums}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-family:"SF Pro Display","Segoe UI","Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums}
+.muted{color:var(--ink3)}.small{font-size:13px}
+.hidden{display:none!important}
+
+/* header */
+header.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.top-inner{max-width:1360px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.brand h1{font-size:19px;margin:0;letter-spacing:.02em;font-weight:700}
+.brand .meta{font-size:12.5px;color:var(--ink2);display:flex;flex-wrap:wrap;gap:4px 14px}
+.local-badge{font-size:12px;color:var(--ok);background:var(--ok-bg);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.top-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;font-size:14px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0D141B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#0D141B}}
+.toggle{display:inline-flex;align-items:center;gap:6px;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:var(--surface)}
+.toggle input{accent-color:var(--accent)}
+.menu{position:relative}
+.menu-pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:260px;padding:6px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.menu-pop button{display:block;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:6px;font-size:14px}
+.menu-pop button:hover{background:var(--surface2)}
+.menu-pop .sep{border-top:1px solid var(--line);margin:4px 0}
+
+nav.tabs{max-width:1360px;margin:0 auto;padding:0 20px;display:flex;gap:4px}
+nav.tabs button{border:0;background:none;padding:10px 14px;font-size:15px;color:var(--ink2);border-bottom:3px solid transparent}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+
+/* filters */
+.filters{max-width:1360px;margin:14px auto 0;padding:0 20px}
+.filter-bar{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.f-item{display:flex;align-items:center;gap:6px;font-size:14px}
+.f-item label{color:var(--ink2);white-space:nowrap}
+select{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:5px 12px;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0D141B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0D141B}}
+.ms{position:relative}
+.ms-btn{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 10px;min-width:120px;text-align:left}
+.ms-pop{position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;z-index:40;min-width:200px;max-height:320px;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.ms-pop label{display:flex;gap:8px;padding:4px 6px;border-radius:6px;font-size:14px;cursor:pointer}
+.ms-pop label:hover{background:var(--surface2)}
+.ms-pop .ms-tools{display:flex;gap:6px;margin-bottom:6px}
+.ms-pop .ms-tools button{font-size:12.5px;padding:3px 8px}
+.denom-note{font-size:12.5px;color:var(--ink3)}
+
+main{max-width:1360px;margin:0 auto;padding:16px 20px 60px}
+
+/* upload */
+.drop{border:2px dashed var(--line);border-radius:16px;background:var(--surface);padding:48px 24px;text-align:center;max-width:760px;margin:40px auto}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop h2{margin:0 0 8px;font-size:22px}
+.drop p{color:var(--ink2);margin:6px auto;max-width:56ch}
+.csv-fallback{margin-top:18px;text-align:left;background:var(--warn-bg);border-radius:10px;padding:14px 16px}
+.csv-fallback .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+
+/* generic blocks */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+h2.sec{font-size:18px;margin:6px 0 12px}
+h3{font-size:16px;margin:0 0 8px}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t th,table.t td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.t th{color:var(--ink2);font-weight:600;background:var(--surface2);position:sticky;top:0}
+table.t td.r,table.t th.r{text-align:right}
+table.t th.sortable{cursor:pointer;user-select:none}
+.tbl-wrap{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:8px}
+.light{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.light::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.light.g{color:var(--ok);background:var(--ok-bg)}.light.y{color:var(--warn);background:var(--warn-bg)}.light.r{color:var(--bad);background:var(--bad-bg)}.light.n{color:var(--ink3);background:var(--surface2)}
+
+/* health */
+.health-row td:first-child{font-weight:600}
+details.more summary{cursor:pointer;color:var(--accent);font-size:13px;margin-top:4px}
+.foot-note{margin-top:14px;padding:12px 14px;border-left:4px solid var(--warn);background:var(--warn-bg);border-radius:6px;font-size:14px}
+
+/* mapping */
+.map-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.map-row{display:grid;grid-template-columns:140px 1fr 24px;gap:8px;align-items:center;font-size:14px;padding:3px 0}
+.map-row select{width:100%}
+.req{color:var(--bad)}
+
+/* module chain */
+.chain{position:relative;padding-left:30px}
+.chain::before{content:"";position:absolute;left:11px;top:14px;bottom:14px;width:2px;background:var(--line)}
+.mod{position:relative;margin-bottom:22px}
+.mod-dot{position:absolute;left:-30px;top:2px;min-width:24px;height:24px;padding:0 4px;border-radius:12px;white-space:nowrap;background:var(--surface);border:2px solid var(--accent);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--accent)}
+.mod-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:10px}
+.mod-head h2{font-size:18px;margin:0}
+.mod-head .q{color:var(--ink2);font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 10px;text-align:left;display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ink3)}
+.kpi.g::before{background:var(--ok)}.kpi.y::before{background:var(--warn)}.kpi.r::before{background:var(--bad)}
+.kpi:hover{border-color:var(--accent)}
+.kpi[aria-expanded="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.kpi .k-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.kpi .k-name{font-size:13.5px;color:var(--ink2);line-height:1.35}
+.kpi .k-val{font-size:26px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.kpi .k-val small{font-size:13px;font-weight:500;color:var(--ink2);margin-left:3px}
+.kpi .k-sub{font-size:12.5px;color:var(--ink3);min-height:18px}
+.kpi .k-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.delta{font-size:12.5px;white-space:nowrap}
+.delta.up{color:var(--bad)}.delta.down{color:var(--ok)}.delta.flat{color:var(--ink3)}
+.delta.up.good{color:var(--ok)}.delta.down.bad{color:var(--bad)}
+
+/* panel */
+.panel-back{position:fixed;inset:0;background:rgba(10,20,30,.45);z-index:60;display:flex;justify-content:flex-end}
+.panel{background:var(--paper);width:min(1120px,100%);height:100%;overflow:auto;padding:0 0 40px;border-left:1px solid var(--line)}
+.panel-head{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;gap:12px;align-items:center;z-index:2}
+.panel-head h2{margin:0;font-size:18px}
+.panel-head .close{margin-left:auto;white-space:nowrap}
+.panel-body{padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+.p-sec h3{display:flex;align-items:center;gap:8px}
+.p-sec h3 .n{width:22px;height:22px;border-radius:6px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:12px}
+.charts{display:grid;grid-auto-flow:row dense;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:14px}
+.chart-box{background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.chart-box h4{margin:0 0 4px;font-size:14px}
+.chart-box .cap{font-size:12.5px;color:var(--ink3);margin:0 0 6px}
+.chart-box.wide{grid-column:1/-1}
+.chart-scroll{overflow-x:auto}
+.chart-scroll svg{min-width:460px}
+svg.ch{width:100%;height:auto;display:block}
+svg.ch text{font-family:inherit;fill:var(--ink2);font-size:11px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--ink2);margin:2px 0 6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.legend i.line{height:3px;border-radius:2px;vertical-align:3px}
+.formula{font-size:14px}
+.formula .f{background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.formula .f b{display:block;margin-bottom:2px}
+.formula code{font-family:inherit;color:var(--accent)}
+ul.diag{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+ul.diag li{border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--surface);display:flex;gap:10px;align-items:flex-start}
+ul.diag li .light{margin-top:2px}
+.panel-filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:7px 10px;border-radius:7px;z-index:100;max-width:300px;line-height:1.45;white-space:pre-line;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.drill{margin-top:10px}
+
+/* drawer */
+.drawer-back{position:fixed;inset:0;background:rgba(10,20,30,.45);z-index:70;display:flex;justify-content:flex-end}
+.drawer{background:var(--surface);width:min(460px,100%);height:100%;overflow:auto;padding:16px 18px 40px}
+.drawer h2{margin:0 0 4px;font-size:18px}
+.drawer fieldset{border:1px solid var(--line);border-radius:8px;margin:12px 0;padding:8px 12px}
+.drawer legend{font-weight:600;font-size:14px;padding:0 4px}
+.p-row{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;font-size:13.5px;padding:3px 0}
+.p-row input{width:100%;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--surface2);text-align:right}
+
+/* report */
+.matrix td,.matrix th{text-align:center}
+.matrix td:first-child,.matrix th:first-child{text-align:left}
+.matrix button.cell{border:0;background:none;padding:0}
+.cause{font-weight:700;border-radius:6px;padding:2px 8px;white-space:nowrap}
+.finding{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface);margin-bottom:10px}
+.finding .fh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.finding .rank{font-weight:700;color:var(--accent)}
+.finding dl{display:grid;grid-template-columns:72px 1fr;gap:4px 10px;margin:8px 0 0;font-size:14px}
+.finding dt{color:var(--ink3)}
+.finding dd{margin:0}
+.recs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.recs ul{padding-left:18px;margin:6px 0 0}
+.recs li{margin-bottom:8px}
+.recs li a{color:var(--accent);font-size:13px;cursor:pointer;text-decoration:underline}
+.linkbtn{border:0;background:none;color:var(--accent);text-decoration:underline;padding:0;font-size:inherit}
+.stack{display:flex;flex-direction:column;gap:16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:8px;font-size:14px;z-index:120}
+
+@media (max-width:640px){
+  header.top{position:static}
+  .panel-head .close{white-space:nowrap}
+  .kpis{grid-template-columns:1fr}
+  .top-inner{padding:10px 14px}
+  main,.filters,nav.tabs{padding-left:14px;padding-right:14px}
+  .map-row{grid-template-columns:110px 1fr 20px}
+  .chain{padding-left:0}.chain::before,.mod-dot{display:none}
+}
+@media (prefers-reduced-motion:no-preference){.kpi{transition:border-color .15s}}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  header.top,nav.tabs,.filters,.noprint,.panel-back,.drawer-back,.tip,.toast{display:none!important}
+  body{background:#fff;color:#000}
+  main{max-width:none;padding:0}
+  .card,.finding{break-inside:avoid;border-color:#bbb}
+  .view:not(.print-me){display:none!important}
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="top-inner">
+  <div class="brand"><h1>加班工時診斷儀表板</h1><div class="meta" id="meta"></div></div>
+  <span class="local-badge">資料僅在本機處理，不會上傳</span>
+  <div class="top-actions">
+   <label class="btn primary" for="file-in">上傳 XLSX</label><input type="file" id="file-in" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+   <div class="menu"><button class="btn" data-act="export" data-need-data aria-haspopup="true">匯出 ▾</button>
+    <div class="menu-pop hidden" id="export-pop">
+     <button data-act="exp" data-key="health">資料健檢結果 CSV</button>
+     <button data-act="exp" data-key="m1">模組一 部門趨勢判定 CSV</button>
+     <button data-act="exp" data-key="u">未核准加班員工名單 CSV</button>
+     <button data-act="exp" data-key="m2">模組二 長期高工時名單 CSV</button>
+     <button data-act="exp" data-key="m3">模組三 部門缺口與象限 CSV</button>
+     <button data-act="exp" data-key="m4">模組四 優先關注名單 CSV</button>
+     <button data-act="exp" data-key="diag">綜合診斷 部門根因 CSV</button>
+     <div class="sep"></div>
+     <button data-act="param-export">參數設定 JSON</button>
+    </div></div>
+   <label class="toggle"><input type="checkbox" id="mask-in" checked>遮罩模式</label>
+   <button class="btn" data-act="settings">參數設定</button>
+   <button class="btn" data-act="theme">主題 自動</button>
+  </div>
+ </div>
+ <nav class="tabs hidden" id="tabs" role="tablist">
+  <button role="tab" data-act="tab" data-key="health">資料健檢</button>
+  <button role="tab" data-act="tab" data-key="modules">模組分析</button>
+  <button role="tab" data-act="tab" data-key="report">綜合診斷</button>
+ </nav>
+</header>
+<div class="filters hidden" id="filters"><div class="filter-bar" id="filter-bar"></div></div>
+<main id="main"></main>
+<div id="panel-host"></div>
+<div id="drawer-host"></div>
+<input type="file" id="param-in" accept=".json,application/json" hidden>
+<script>
+'use strict';
+/* ========== 工具 ========== */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sum=a=>a.reduce((s,x)=>s+(+x||0),0);
+const mean=a=>a.length?sum(a)/a.length:0;
+const median=a=>{if(!a.length)return 0;const b=[...a].sort((x,y)=>x-y),m=b.length>>1;return b.length%2?b[m]:(b[m-1]+b[m])/2};
+const std=a=>{if(a.length<2)return 0;const m=mean(a);return Math.sqrt(sum(a.map(x=>(x-m)**2))/a.length)};
+const quant=(a,q)=>{if(!a.length)return 0;const b=[...a].sort((x,y)=>x-y);const p=(b.length-1)*q,lo=Math.floor(p),hi=Math.ceil(p);return b[lo]+(b[hi]-b[lo])*(p-lo)};
+function pearson(x,y){const n=x.length;if(n<3)return NaN;const mx=mean(x),my=mean(y);let a=0,b=0,c=0;for(let i=0;i<n;i++){a+=(x[i]-mx)*(y[i]-my);b+=(x[i]-mx)**2;c+=(y[i]-my)**2}return b&&c?a/Math.sqrt(b*c):NaN}
+function linreg(y){const n=y.length;if(n<3)return{slope:NaN,r2:NaN,n};const x=y.map((_,i)=>i+1),mx=mean(x),my=mean(y);let sxy=0,sxx=0,syy=0;for(let i=0;i<n;i++){sxy+=(x[i]-mx)*(y[i]-my);sxx+=(x[i]-mx)**2;syy+=(y[i]-my)**2}const slope=sxy/sxx;const r2=syy?(sxy*sxy)/(sxx*syy):0;return{slope,r2,n,intercept:my-slope*mx}}
+function gini(v){const n=v.length;if(!n)return 0;const s=sum(v);if(!s)return 0;const b=[...v].sort((x,y)=>x-y);let acc=0;b.forEach((x,i)=>acc+=(i+1)*x);return (2*acc)/(n*s)-(n+1)/n}
+function pctRank(arr){const s=[...arr].sort((a,b)=>a-b);return arr.map(v=>{let lo=0,eq=0;for(const x of s){if(x<v)lo++;else if(x===v)eq++}return s.length?((lo+0.5*eq)/s.length)*100:0})}
+const fmt=(v,d=1)=>(v==null||!isFinite(v))?'—':(+v).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmt0=v=>fmt(v,0);
+const pct=(v,d=1)=>(v==null||!isFinite(v))?'—':fmt(v*100,d)+'%';
+const ymLabel=ym=>`${Math.floor(ym/100)}/${String(ym%100).padStart(2,'0')}`;
+const ymIdx=ym=>Math.floor(ym/100)*12+(ym%100)-1;
+const qOf=ym=>`${Math.floor(ym/100)}-Q${Math.floor((ym%100-1)/3)+1}`;
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2400)}
+function download(name,text,type){const blob=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function toCSV(rows){return '\ufeff'+rows.map(r=>r.map(v=>{const s=String(v??'');return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}).join(',')).join('\r\n')}
+
+/* ========== XLSX 解析（自行實作 ZIP + deflate-raw） ========== */
+const XLSX_OK=typeof DecompressionStream!=='undefined'&&typeof DOMParser!=='undefined'&&(()=>{try{new DecompressionStream('deflate-raw');return true}catch(e){return false}})();
+async function unzip(buf){
+  const dv=new DataView(buf),u8=new Uint8Array(buf);let eocd=-1;
+  for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-65557);i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break}}
+  if(eocd<0)throw new Error('找不到 ZIP 中央目錄，檔案可能不是有效的 XLSX');
+  const count=dv.getUint16(eocd+10,true);let p=dv.getUint32(eocd+16,true);
+  const td=new TextDecoder('utf-8'),entries={};
+  for(let n=0;n<count;n++){
+    if(dv.getUint32(p,true)!==0x02014b50)throw new Error('ZIP 中央目錄格式錯誤');
+    const method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true),nlen=dv.getUint16(p+28,true),elen=dv.getUint16(p+30,true),clen=dv.getUint16(p+32,true),lho=dv.getUint32(p+42,true);
+    const name=td.decode(u8.subarray(p+46,p+46+nlen));entries[name]={method,csize,lho};p+=46+nlen+elen+clen;
+  }
+  async function read(name){
+    const e=entries[name]||entries[Object.keys(entries).find(k=>k.toLowerCase()===name.toLowerCase())];if(!e)return null;
+    const ln=dv.getUint16(e.lho+26,true),le=dv.getUint16(e.lho+28,true),start=e.lho+30+ln+le;
+    const data=u8.subarray(start,start+e.csize);
+    if(e.method===0)return td.decode(data);
+    if(e.method!==8)throw new Error('不支援的壓縮方式：'+e.method);
+    const stream=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return td.decode(await new Response(stream).arrayBuffer());
+  }
+  return {entries,read};
+}
+const colIdx=ref=>{const m=/^([A-Z]+)/.exec(ref);let n=0;for(const c of m[1])n=n*26+(c.charCodeAt(0)-64);return n-1};
+async function parseXLSX(buf){
+  const z=await unzip(buf),dp=new DOMParser();
+  const xml=async n=>{const t=await z.read(n);return t==null?null:dp.parseFromString(t,'application/xml')};
+  const wb=await xml('xl/workbook.xml');if(!wb)throw new Error('找不到 workbook.xml');
+  const rels=await xml('xl/_rels/workbook.xml.rels');const relMap={};
+  if(rels)for(const r of rels.getElementsByTagName('Relationship'))relMap[r.getAttribute('Id')]=r.getAttribute('Target');
+  const ss=[];const sx=await xml('xl/sharedStrings.xml');
+  if(sx)for(const si of sx.getElementsByTagName('si')){let s='';for(const t of si.getElementsByTagName('t')){if(t.parentNode.nodeName==='rPh')continue;s+=t.textContent}ss.push(s)}
+  // 判斷哪些樣式是日期格式
+  const dateStyles=new Set();const st=await xml('xl/styles.xml');
+  if(st){const custom={};for(const nf of st.getElementsByTagName('numFmt'))custom[nf.getAttribute('numFmtId')]=nf.getAttribute('formatCode')||'';
+    const xfs=st.getElementsByTagName('cellXfs')[0];if(xfs){Array.from(xfs.getElementsByTagName('xf')).forEach((xf,i)=>{const id=+xf.getAttribute('numFmtId');const code=custom[id]||'';if((id>=14&&id<=22)||(id>=45&&id<=47)||/[ymd]/i.test(code.replace(/\[[^\]]*\]|"[^"]*"/g,'')))dateStyles.add(i)})}}
+  const sheets=[];
+  for(const s of wb.getElementsByTagName('sheet')){
+    const name=s.getAttribute('name'),rid=s.getAttribute('r:id')||s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');
+    let target=relMap[rid]||'';target=target.startsWith('/')?target.slice(1):'xl/'+target.replace(/^\.\//,'');
+    const doc=await xml(target);if(!doc)continue;const rows=[];
+    for(const r of doc.getElementsByTagName('row')){
+      const arr=[];
+      for(const c of r.getElementsByTagName('c')){
+        const ref=c.getAttribute('r'),t=c.getAttribute('t'),sIdx=+(c.getAttribute('s')||0);const i=ref?colIdx(ref):arr.length;
+        const vEl=c.getElementsByTagName('v')[0];let v=vEl?vEl.textContent:null;
+        if(t==='s')v=ss[+v]??'';else if(t==='inlineStr'){v=Array.from(c.getElementsByTagName('t')).map(x=>x.textContent).join('')}
+        else if(t==='b')v=v==='1';else if(t==='str'||t==='e'){}
+        else if(v!=null&&v!==''){v=+v;if(dateStyles.has(sIdx))v={__date:v}}
+        arr[i]=v;
+      }
+      const ri=+(r.getAttribute('r')||rows.length+1)-1;rows[ri]=arr;
+    }
+    sheets.push({name,rows:rows.filter(Boolean).map(r=>Array.from(r,x=>x===undefined?null:x))});
+  }
+  return sheets;
+}
+function parseCSV(text){
+  text=text.replace(/^\ufeff/,'');const rows=[];let row=[],f='',q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}else f+=c}
+  if(f!==''||row.length){row.push(f);rows.push(row)}
+  return rows.filter(r=>r.some(x=>x!==''));
+}
+function excelDate(v){
+  if(v==null||v==='')return '';
+  if(typeof v==='object'&&v.__date!=null)v=v.__date;
+  if(typeof v==='number'||/^\d+(\.\d+)?$/.test(String(v))){const n=+v;if(n>20000&&n<80000){const d=new Date(Date.UTC(1899,11,30)+Math.round(n*86400000));return d.toISOString().slice(0,10)}}
+  const s=String(v).trim().replace(/\//g,'-');const m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);
+  return m?`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`:s;
+}
+
+/* ========== 欄位同義詞與角色定義 ========== */
+const ROLES={
+  hours:{label:'員工月度工時',names:['員工月度工時','月度工時','工時','加班工時'],fields:[
+    ['recId','工時紀錄編號',0,['工時紀錄編號','紀錄編號','記錄編號','工時編號','id']],
+    ['year','年度',1,['年度','年','year']],['month','月份',1,['月份','月','month']],['quarter','季度',0,['季度','季','quarter']],
+    ['emp','員工編號',1,['員工編號','員編','工號','employeeid','empid']],['dept','部門代碼',1,['部門代碼','部門代號','部門編號','deptcode']],
+    ['deptName','部門名稱',0,['部門名稱','部門','deptname']],['wd','工作日數',1,['工作日數','工作天數','出勤日數','當月工作日數']],
+    ['nh','正常出勤工時',1,['正常出勤工時','正常工時','出勤工時']],['ot','實際加班時數',1,['實際加班時數','實際加班工時','加班時數','加班工時']],
+    ['ota','已核准加班時數',1,['已核准加班時數','核准加班時數','核准加班工時','已核准加班工時']],['lv','請假時數',1,['請假時數','請假工時','休假時數']],
+    ['ab','異常缺勤時數',1,['異常缺勤時數','異常缺勤工時','缺勤時數','曠職時數']],['pj','參與專案數',0,['參與專案數','專案數','專案數量']],
+    ['ld','工作負荷指數',0,['工作負荷指數','負荷指數','工作負荷']]]},
+  emp:{label:'員工資料',names:['員工資料','員工基本資料','員工名冊','人員資料'],fields:[
+    ['emp','員工編號',1,['員工編號','員編','工號','employeeid','empid']],['name','員工姓名',0,['員工姓名','姓名','名字','name']],
+    ['email','公司Email',0,['公司email','email','電子郵件','公司信箱','信箱','mail']],['dept','部門代碼',1,['部門代碼','部門代號','部門編號']],
+    ['deptName','部門名稱',0,['部門名稱','部門']],['job','職務',0,['職務','職稱','職位','title']],['hire','到職日期',0,['到職日期','到職日','到職日期時間','入職日期']],
+    ['status','在職狀態',0,['在職狀態','狀態','在職']]]},
+  staff:{label:'部門人力編制',names:['部門人力編制','人力編制','編制'],fields:[
+    ['recId','編制紀錄編號',0,['編制紀錄編號','紀錄編號','編號']],['year','年度',1,['年度','年']],['month','月份',1,['月份','月']],['quarter','季度',0,['季度','季']],
+    ['dept','部門代碼',1,['部門代碼','部門代號','部門編號']],['deptName','部門名稱',0,['部門名稱','部門']],
+    ['act','實際在職人數',1,['實際在職人數','在職人數','實際人數','現有人數']],['quota','核定編制人數',1,['核定編制人數','編制人數','核定人數','核定編制']],
+    ['gapRaw','人力缺口',0,['人力缺口','缺口人數','缺口']],['wd','當月工作日數',0,['當月工作日數','工作日數','工作天數']]]},
+  dept:{label:'部門資料',names:['部門資料','部門基本資料','部門清單'],fields:[
+    ['dept','部門代碼',1,['部門代碼','部門代號','部門編號']],['deptName','部門名稱',0,['部門名稱','部門']],
+    ['sa','年初實際人數',0,['年初實際人數','年初人數','期初實際人數']],['sq','年初核定編制',0,['年初核定編制','年初編制','期初核定編制','年初核定編制人數']]]}
+};
+const norm=s=>String(s??'').normalize('NFKC').replace(/[\s_\-()（）［］\[\]：:]/g,'').toLowerCase();
+function headerOf(sheet){for(const r of sheet.rows){if(r&&r.filter(x=>x!=null&&x!=='').length>=2)return r.map(x=>String(x??'').trim())}return[]}
+function matchField(headers,syn){
+  const nh=headers.map(norm);
+  for(const s of syn){const i=nh.indexOf(norm(s));if(i>=0)return i}
+  for(const s of syn){const ns=norm(s);if(ns.length<2)continue;const i=nh.findIndex(h=>h&&(h.includes(ns)||ns.includes(h)&&h.length>=2));if(i>=0)return i}
+  return -1;
+}
+function autoMap(sheets){
+  const res={};const used=new Set();
+  for(const [role,def] of Object.entries(ROLES)){
+    let si=sheets.findIndex((s,i)=>!used.has(i)&&def.names.some(n=>norm(s.name)===norm(n)));
+    if(si<0)si=sheets.findIndex((s,i)=>!used.has(i)&&def.names.some(n=>norm(s.name).includes(norm(n))));
+    if(si<0){// 以欄位簽章判斷
+      let best=-1,bs=0;sheets.forEach((s,i)=>{if(used.has(i))return;const h=headerOf(s);const sc=def.fields.filter(f=>f[2]&&matchField(h,f[3])>=0).length/def.fields.filter(f=>f[2]).length;if(sc>bs){bs=sc;best=i}});
+      if(bs>=0.99)si=best;
+    }
+    if(si>=0)used.add(si);
+    res[role]={sheet:si,auto:si>=0,cols:{}};
+    if(si>=0)fillCols(res[role],sheets[si],def);
+  }
+  return res;
+}
+function fillCols(m,sheet,def){const h=headerOf(sheet);m.cols={};for(const f of def.fields)m.cols[f[0]]=matchField(h,f[3])}
+
+/* ========== 狀態 ========== */
+const DEFAULT_PARAMS={
+  stdHours:174,growConsec:3,growSlope:0.5,growR2:0.5,growQoQ:0.15,peakRise:0.15,peakFall:0.10,
+  chgYellow:0.05,chgRed:0.15,pcYellow:20,pcRed:30,
+  unapYellow:0.10,unapRed:0.20,unapMult:1.5,
+  topPct:0.20,paretoPct:0.80,giniMid:0.20,giniHigh:0.35,giniVery:0.50,cvThr:0.6,
+  t1Month:46,t2Sum3:138,t2Month:54,t3Month:100,t3Avg:80,longMonths:3,
+  gapYellow:0.10,gapRed:0.20,replaceThr:0.5,replaceMinGap:1,
+  absYellow:0.01,absRed:0.02,
+  wOt:0.40,wLoad:0.20,wProj:0.15,wAbs:0.15,wLeave:0.10,riskThr:70,highPct:75,lowPct:25,leaveRise:4,absRise:2
+};
+const PARAM_META=[
+ ['模組一 趨勢',[['stdHours','月標準工時（小時）'],['growConsec','連續上升月數'],['growSlope','迴歸斜率門檻（小時／月）'],['growR2','R² 門檻'],['growQoQ','最近一季成長門檻（比例）'],['peakRise','短期高峰上升幅度（比例）'],['peakFall','短期高峰回落幅度（比例）'],['chgYellow','變化率黃燈（比例）'],['chgRed','變化率紅燈（比例）'],['pcYellow','人均月加班黃燈（小時）'],['pcRed','人均月加班紅燈（小時）']]],
+ ['未核准加班',[['unapYellow','未核准比率黃燈'],['unapRed','未核准比率紅燈'],['unapMult','部門高於全公司倍數']]],
+ ['模組二 集中度',[['topPct','前段員工比例'],['paretoPct','柏拉圖累積切點'],['giniMid','吉尼中度集中下限'],['giniHigh','吉尼偏高下限'],['giniVery','吉尼高度集中下限'],['cvThr','部門內 CV 門檻'],['t1Month','第一級 單月加班 >'],['t2Sum3','第二級 連續 3 月合計 >'],['t2Month','第二級 單月加班 >'],['t3Month','第三級 單月加班 >'],['t3Avg','第三級 連續 2–6 月平均 >'],['longMonths','長期高工時超標月數 ≥']]],
+ ['模組三 人力缺口',[['gapYellow','缺口率黃燈'],['gapRed','缺口率紅燈'],['replaceThr','加班替補比門檻'],['replaceMinGap','替補比最低平均缺口（人）']]],
+ ['模組四 出勤與負荷',[['absYellow','異常缺勤率黃燈'],['absRed','異常缺勤率紅燈'],['wOt','權重 實際加班'],['wLoad','權重 工作負荷指數'],['wProj','權重 參與專案數'],['wAbs','權重 異常缺勤'],['wLeave','權重 請假變化'],['riskThr','優先關注分數 ≥'],['highPct','高百分位門檻'],['lowPct','低百分位門檻'],['leaveRise','請假上升門檻（小時／月）'],['absRise','異常缺勤上升門檻（小時／月）']]]
+];
+const S={sheets:null,mapping:null,data:null,health:null,params:{...DEFAULT_PARAMS},
+  f:{start:null,end:null,gran:'m',depts:null,jobs:null},denom:'rec',mask:true,view:'upload',panel:null,pf:{},R:null};
+
+/* ========== 依對應建立資料 ========== */
+const toNum=v=>{if(v==null||v==='')return NaN;if(typeof v==='object'&&v.__date!=null)return v.__date;if(typeof v==='number')return v;const s=String(v).normalize('NFKC').replace(/[,\s]/g,'');const m=/-?\d+(\.\d+)?/.exec(s);return m?+m[0]:NaN};
+const toStr=v=>v==null?'':(typeof v==='object'&&v.__date!=null?String(v.__date):String(v).normalize('NFKC').trim());
+function rowsOf(role){
+  const m=S.mapping[role];if(!m||m.sheet<0)return[];const sh=S.sheets[m.sheet];const h=headerOf(sh);
+  let hi=sh.rows.findIndex(r=>r&&r.filter(x=>x!=null&&x!=='').length>=2);
+  return sh.rows.slice(hi+1).filter(r=>r&&r.some(x=>x!=null&&x!=='')).map((r,i)=>{const o={__row:hi+i+2};for(const [k,c] of Object.entries(m.cols))o[k]=c>=0?r[c]:null;return o});
+}
+function buildData(){
+  const names={};const nul={hours:0,emp:0,staff:0,dept:0};const nullDetail={};
+  const cnt=(role,k)=>{nul[role]++;nullDetail[role+'.'+k]=(nullDetail[role+'.'+k]||0)+1};
+  const reqCheck=(role,o)=>{for(const f of ROLES[role].fields)if(f[2]&&S.mapping[role].cols[f[0]]>=0&&(o[f[0]]==null||o[f[0]]==='')){cnt(role,f[1])}};
+  const H=rowsOf('hours').map(o=>{reqCheck('hours',o);const y=toNum(o.year),m=toNum(o.month);const ym=y*100+m;
+    const d=toStr(o.dept);if(o.deptName)names[d]=names[d]||toStr(o.deptName);
+    return{row:o.__row,ym,y,m,q:toStr(o.quarter)||qOf(ym),emp:toStr(o.emp),dept:d,wd:toNum(o.wd),nh:toNum(o.nh),ot:toNum(o.ot)||0,ota:toNum(o.ota)||0,lv:toNum(o.lv)||0,ab:toNum(o.ab)||0,pj:toNum(o.pj),ld:toNum(o.ld)}})
+    .filter(r=>isFinite(r.ym)&&r.m>=1&&r.m<=12&&r.emp);
+  H.forEach(r=>{if(!/^\d{4}-Q[1-4]$/.test(r.q.replace(/\s/g,'')))r.q=qOf(r.ym);else r.q=r.q.replace(/\s/g,'')});
+  const E={};rowsOf('emp').forEach(o=>{reqCheck('emp',o);const id=toStr(o.emp);if(!id)return;const d=toStr(o.dept);if(o.deptName)names[d]=names[d]||toStr(o.deptName);
+    E[id]={id,name:toStr(o.name),dept:d,job:toStr(o.job)||'未填職務',hire:excelDate(o.hire),status:toStr(o.status)}}); // 刻意不保留 Email
+  const ST=rowsOf('staff').map(o=>{reqCheck('staff',o);const y=toNum(o.year),m=toNum(o.month);const d=toStr(o.dept);if(o.deptName)names[d]=names[d]||toStr(o.deptName);
+    return{row:o.__row,ym:y*100+m,dept:d,act:toNum(o.act),quota:toNum(o.quota),gapRaw:toNum(o.gapRaw),wd:toNum(o.wd)}}).filter(r=>isFinite(r.ym));
+  const D={};rowsOf('dept').forEach(o=>{reqCheck('dept',o);const d=toStr(o.dept);if(!d)return;if(o.deptName)names[d]=toStr(o.deptName)||names[d];D[d]={sa:toNum(o.sa),sq:toNum(o.sq)}});
+  H.forEach(r=>{r.job=(E[r.emp]&&E[r.emp].job)||'未對應員工'});
+  const months=[...new Set(H.map(r=>r.ym))].sort((a,b)=>a-b);
+  const depts=[...new Set([...H.map(r=>r.dept),...ST.map(r=>r.dept),...Object.keys(D)])].filter(Boolean).sort();
+  const jobs=[...new Set(H.map(r=>r.job))].sort();
+  depts.forEach(d=>{names[d]=names[d]||d});
+  const staffMap={};ST.forEach(r=>staffMap[r.dept+'|'+r.ym]=r);
+  S.data={H,E,ST,D,names,months,depts,jobs,staffMap,nul,nullDetail};
+  S.f={start:months[0],end:months[months.length-1],gran:'m',depts:new Set(depts),jobs:new Set(jobs)};
+  S.health=runHealth();
+}
+const dn=d=>S.data.names[d]||d;
+const empLabel=id=>{const e=S.data.E[id];return (!S.mask&&e&&e.name)?`${e.name}（${id}）`:id};
+
+/* ========== 資料健檢 ========== */
+function runHealth(){
+  const {H,E,ST,D,staffMap,nul,nullDetail}=S.data;const items=[];const P=S.params;
+  // 1 必要欄位、空值、重複
+  const missing=[];for(const [role,def] of Object.entries(ROLES)){const m=S.mapping[role];if(m.sheet<0){missing.push(`缺少工作表「${def.label}」`);continue}for(const f of def.fields)if(f[2]&&m.cols[f[0]]<0)missing.push(`${def.label}缺少「${f[1]}」`)}
+  const seen={},dup=[];H.forEach(r=>{const k=r.emp+'|'+r.ym;if(seen[k])dup.push(r);else seen[k]=1});
+  const nullTotal=sum(Object.values(nul));
+  items.push({id:'h1',name:'必要欄位、空值與重複紀錄',count:missing.length+nullTotal+dup.length,
+    result:missing.length?`缺少 ${missing.length} 個必要欄位`:(nullTotal||dup.length)?`空值 ${nullTotal} 筆、重複員工月份 ${dup.length} 筆`:'必要欄位齊全，無空值與重複',
+    light:missing.length?'r':(nullTotal||dup.length)?'y':'g',action:dup.length?'重複紀錄仍全部計入，請回頭確認來源檔':'無需處理',mods:'全部',
+    detail:[...missing,...Object.entries(nullDetail).map(([k,v])=>`${k} 空值 ${v} 筆`),...dup.slice(0,30).map(r=>`重複 ${r.emp} ${ymLabel(r.ym)}（第 ${r.row} 列）`)]});
+  // 2 正常出勤工時公式
+  const bad2=H.filter(r=>isFinite(r.nh)&&isFinite(r.wd)&&Math.abs(r.nh-(r.wd*8-r.lv-r.ab))>0.01);
+  items.push({id:'h2',name:'正常出勤工時 = 工作日數 × 8 − 請假 − 異常缺勤',count:bad2.length,result:bad2.length?`${bad2.length} 筆不成立`:`全部 ${H.length} 筆成立`,light:bad2.length?'y':'g',
+    action:bad2.length?'保留原值，不影響加班計算；異常缺勤率改用工作日數 × 8 為分母':'無需處理',mods:'模組四',
+    detail:bad2.slice(0,40).map(r=>`${r.emp} ${ymLabel(r.ym)}：記錄 ${r.nh}，應為 ${r.wd*8-r.lv-r.ab}`)});
+  // 3 核准 ≤ 實際
+  const bad3=H.filter(r=>r.ota>r.ot+1e-9);
+  items.push({id:'h3',name:'已核准加班時數 ≤ 實際加班時數',count:bad3.length,result:bad3.length?`${bad3.length} 筆核准大於實際`:'全部成立',light:bad3.length?'y':'g',
+    action:bad3.length?'未核准時數以 0 計，不出現負值':'無需處理',mods:'未核准加班',detail:bad3.slice(0,40).map(r=>`${r.emp} ${ymLabel(r.ym)}：實際 ${r.ot}，核准 ${r.ota}`)});
+  // 4 人力缺口
+  const gapRows=ST.map(r=>({...r,gapCalc:r.quota-r.act}));const bad4=gapRows.filter(r=>isFinite(r.gapRaw)&&Math.abs(r.gapRaw-r.gapCalc)>1e-9);
+  items.push({id:'h4',name:'人力缺口 = 核定編制 − 實際在職',count:bad4.length,result:bad4.length?`${bad4.length}／${ST.length} 筆原始值與重算值不同`:'原始值與重算值一致',light:bad4.length?'y':'g',
+    action:'原始缺口欄位可能經脫敏擾動或採不同定義，分析一律採用重算值',mods:'模組三',gapTable:gapRows});
+  // 5 編制在職人數 vs 工時紀錄人數
+  const recCnt={};H.forEach(r=>{const k=r.dept+'|'+r.ym;(recCnt[k]=recCnt[k]||new Set()).add(r.emp)});
+  const bad5=ST.filter(r=>(recCnt[r.dept+'|'+r.ym]?.size||0)!==r.act).map(r=>({dept:r.dept,ym:r.ym,act:r.act,rec:recCnt[r.dept+'|'+r.ym]?.size||0}));
+  items.push({id:'h5',name:'編制表在職人數與工時表當月紀錄人數',count:bad5.length,result:bad5.length?`${bad5.length}／${ST.length} 個部門月份不一致`:'全部一致',light:bad5.length?'y':'g',
+    action:'人均預設以工時表紀錄人數為分母，可在篩選列切換',mods:'模組一、三、四（人均指標）',detail:bad5.map(x=>`${dn(x.dept)} ${ymLabel(x.ym)}：編制表 ${x.act} 人，工時表 ${x.rec} 人`)});
+  // 6 部門資料年初 vs 編制表 1 月
+  const firstYM=Math.min(...ST.map(r=>r.ym));const bad6=[];
+  Object.entries(D).forEach(([d,v])=>{const j=staffMap[d+'|'+(Math.floor(firstYM/100)*100+1)]||staffMap[d+'|'+firstYM];if(!j){bad6.push(`${dn(d)}：編制表沒有年初月份資料`);return}
+    if(isFinite(v.sa)&&v.sa!==j.act)bad6.push(`${dn(d)}：年初實際 ${v.sa}，編制表 ${ymLabel(j.ym)} 為 ${j.act}`);
+    if(isFinite(v.sq)&&v.sq!==j.quota)bad6.push(`${dn(d)}：年初編制 ${v.sq}，編制表 ${ymLabel(j.ym)} 為 ${j.quota}`)});
+  items.push({id:'h6',name:'部門資料年初數字與編制表 1 月',count:bad6.length,result:bad6.length?`${bad6.length} 項差異`:'一致',light:bad6.length?'y':'g',action:'僅供參考，分析以編制表逐月數字為準',mods:'模組三',detail:bad6});
+  // 7 員工編號對應
+  const hIds=new Set(H.map(r=>r.emp));const notInE=[...hIds].filter(id=>!E[id]);const notInH=Object.keys(E).filter(id=>!hIds.has(id));
+  items.push({id:'h7',name:'工時表與員工資料表的員工編號',count:notInE.length+notInH.length,result:notInE.length?`${notInE.length} 位工時表員工在員工資料找不到`:notInH.length?`${notInH.length} 位員工沒有工時紀錄`:'全部對得上',
+    light:notInE.length?'r':notInH.length?'y':'g',action:notInE.length?'職務以「未對應員工」歸類，仍納入加班計算':'無需處理',mods:'職務篩選、名單顯示',detail:[...notInE.map(x=>`工時表有、員工資料無：${x}`),...notInH.map(x=>`員工資料有、工時表無：${x}`)]});
+  // 8 可疑值
+  const bad8a=H.filter(r=>r.ot>100),bad8b=H.filter(r=>isFinite(r.wd)&&(r.lv>r.wd*8||r.ab>r.wd*8));
+  items.push({id:'h8',name:'可疑值（單月加班 > 100 小時、請假或缺勤超過應出勤工時）',count:bad8a.length+bad8b.length,result:(bad8a.length+bad8b.length)?`加班 > 100 小時 ${bad8a.length} 筆、請假或缺勤超標 ${bad8b.length} 筆`:'未發現',
+    light:(bad8a.length+bad8b.length)?'y':'g',action:'保留並標記，診斷時降低信心',mods:'模組二、四',detail:[...bad8a.map(r=>`${r.emp} ${ymLabel(r.ym)} 加班 ${r.ot} 小時`),...bad8b.map(r=>`${r.emp} ${ymLabel(r.ym)} 請假 ${r.lv}／缺勤 ${r.ab}，應出勤 ${r.wd*8}`)]});
+  return {items,gapMismatch:bad4.length,staffMismatch:bad5.length,suspicious:bad8a.length+bad8b.length,gapRows};
+}
+
+/* ========== 分析引擎 ========== */
+function analyze(){
+  const {H,ST,months,staffMap}=S.data;const P=S.params,f=S.f;
+  const ms=months.filter(m=>m>=f.start&&m<=f.end);
+  const depts=S.data.depts.filter(d=>f.depts.has(d));
+  const F=H.filter(r=>r.ym>=f.start&&r.ym<=f.end&&f.depts.has(r.dept)&&f.jobs.has(r.job));
+  const SF=ST.filter(r=>r.ym>=f.start&&r.ym<=f.end&&f.depts.has(r.dept));
+  const rec={};F.forEach(r=>{const k=r.dept+'|'+r.ym;(rec[k]=rec[k]||new Set()).add(r.emp)});
+  const heads=(d,ym)=>{if(S.denom==='staff'){const s=staffMap[d+'|'+ym];if(s&&isFinite(s.act))return s.act}return rec[d+'|'+ym]?.size||0};
+  const headsOf=(ds,yms)=>{let h=0;for(const d of ds)for(const m of yms)h+=heads(d,m);return h};
+  // 部門 × 月 彙總
+  const A={};depts.forEach(d=>{A[d]={};ms.forEach(m=>A[d][m]={ot:0,ota:0,un:0,lv:0,ab:0,wdh:0,n:0})});
+  F.forEach(r=>{const a=A[r.dept]?.[r.ym];if(!a)return;a.ot+=r.ot;a.ota+=r.ota;a.un+=Math.max(0,r.ot-r.ota);a.lv+=r.lv;a.ab+=r.ab;a.wdh+=(isFinite(r.wd)?r.wd*8:0);a.n++});
+  const aggOf=(ds,yms,k)=>{let s=0;for(const d of ds)for(const m of yms)s+=A[d]?.[m]?.[k]||0;return s};
+  const pcOf=(ds,yms,k='ot')=>{const h=headsOf(ds,yms);return h?aggOf(ds,yms,k)/h:NaN};
+  // 季度對照
+  const qMap={};F.forEach(r=>{if(!qMap[r.ym])qMap[r.ym]=r.q});ms.forEach(m=>{if(!qMap[m])qMap[m]=qOf(m)});
+  const quarters=[...new Set(ms.map(m=>qMap[m]))];const qMonths=q=>ms.filter(m=>qMap[m]===q);
+  const periods=f.gran==='q'?quarters.map(q=>({key:q,label:q,months:qMonths(q)})):ms.map(m=>({key:m,label:ymLabel(m),months:[m]}));
+  const R={ms,depts,F,SF,periods,quarters,qMonths,qMap,A,heads,headsOf,aggOf,pcOf,nM:ms.length};
+  if(!ms.length||!depts.length){R.empty=true;return R}
+
+  /* ---- 模組一 ---- */
+  const m1={};m1.total=aggOf(depts,ms,'ot');m1.headsSum=headsOf(depts,ms);m1.avgHeads=m1.headsSum/ms.length;m1.pc=m1.headsSum?m1.total/m1.headsSum:NaN;
+  m1.pcM=ms.map(m=>pcOf(depts,[m]));m1.totM=ms.map(m=>aggOf(depts,[m],'ot'));
+  m1.pcQ=quarters.map(q=>pcOf(depts,qMonths(q)));m1.totQ=quarters.map(q=>aggOf(depts,qMonths(q),'ot'));
+  const n=ms.length;m1.mom=n>=2?(m1.pcM[n-1]-m1.pcM[n-2])/m1.pcM[n-2]:NaN;
+  m1.momSeries=m1.pcM.map((v,i)=>i?(v-m1.pcM[i-1])/m1.pcM[i-1]:NaN);
+  const nq=quarters.length;m1.qoq=nq>=2?(m1.pcQ[nq-1]-m1.pcQ[nq-2])/m1.pcQ[nq-2]:NaN;
+  m1.qoqSeries=m1.pcQ.map((v,i)=>i?(v-m1.pcQ[i-1])/m1.pcQ[i-1]:NaN);
+  m1.fte=m1.total/(ms.length*P.stdHours);
+  m1.dept=depts.map(d=>{
+    const pcM=ms.map(m=>pcOf([d],[m])),valid=pcM.filter(isFinite);const pcQ=quarters.map(q=>pcOf([d],qMonths(q)));
+    const reg=linreg(valid);const N=P.growConsec;let c1=false;
+    if(valid.length>=N+1){c1=true;for(let i=valid.length-N;i<valid.length;i++)if(!(valid[i]>valid[i-1]))c1=false}
+    const c2=isFinite(reg.slope)&&reg.slope>P.growSlope&&reg.r2>=P.growR2;
+    const vq=pcQ.filter(isFinite);const qg=vq.length>=2?(vq[vq.length-1]-vq[vq.length-2])/vq[vq.length-2]:NaN;const c3=isFinite(qg)&&qg>=P.growQoQ;
+    const peaks=[];for(let i=1;i<pcQ.length-1;i++){if(pcQ[i]>=pcQ[i-1]*(1+P.peakRise)&&pcQ[i+1]<=pcQ[i]*(1-P.peakFall))peaks.push({q:quarters[i],v:pcQ[i],prev:pcQ[i-1],next:pcQ[i+1]})}
+    const tot=aggOf([d],ms,'ot'),hs=headsOf([d],ms);
+    // 前後期分解
+    let a,b;if(nq>=2){a=qMonths(quarters[0]);b=qMonths(quarters[nq-1])}else{a=[ms[0]];b=[ms[n-1]]}
+    const totA=aggOf([d],a,'ot')/a.length,totB=aggOf([d],b,'ot')/b.length,hA=headsOf([d],a)/a.length,hB=headsOf([d],b)/b.length;
+    const pcA=hA?totA/hA:NaN,pcB=hB?totB/hB:NaN;
+    const dec={totChg:totA?(totB-totA)/totA:NaN,pcChg:pcA?(pcB-pcA)/pcA:NaN,hChg:hA?(hB-hA)/hA:NaN,hA,hB,pcA,pcB,from:nq>=2?quarters[0]:ymLabel(ms[0]),to:nq>=2?quarters[nq-1]:ymLabel(ms[n-1])};
+    dec.headShare=(pcA>0&&pcB>0&&hA>0&&hB>0&&pcB!==pcA)?-Math.log(hB/hA)/Math.log(pcB/pcA):NaN;
+    dec.type=(dec.pcChg>0.10&&dec.hChg<-0.03)?'attrition':(dec.totChg>0.10&&Math.abs(dec.pcChg)<0.05&&dec.hChg>0)?'heads':null;
+    const firstQ=pcQ[0];const laterHigher=pcQ.length>=2&&pcQ.slice(1).every(v=>v>firstQ*1.1);
+    return{d,pcM,pcQ,reg,c1,c2,c3,qg,growth:c1||c2||c3,peaks,peak:peaks.length>0,tot,avgHeads:hs/ms.length,pc:hs?tot/hs:NaN,fte:tot/(ms.length*P.stdHours),dec,laterHigher};
+  });
+  m1.growDepts=m1.dept.filter(x=>x.growth);
+  // 全公司分解
+  {let a,b;if(nq>=2){a=qMonths(quarters[0]);b=qMonths(quarters[nq-1])}else{a=[ms[0]];b=[ms[n-1]]}
+   const tA=aggOf(depts,a,'ot')/a.length,tB=aggOf(depts,b,'ot')/b.length,hA=headsOf(depts,a)/a.length,hB=headsOf(depts,b)/b.length;
+   m1.dec={totChg:(tB-tA)/tA,pcChg:(tB/hB-tA/hA)/(tA/hA),hChg:(hB-hA)/hA,from:nq>=2?quarters[0]:ymLabel(ms[0]),to:nq>=2?quarters[nq-1]:ymLabel(ms[n-1])}}
+  R.m1=m1;
+
+  /* ---- 未核准 ---- */
+  const u={};u.total=aggOf(depts,ms,'un');u.ratio=m1.total?u.total/m1.total:NaN;
+  u.unM=ms.map(m=>aggOf(depts,[m],'un'));u.ratioM=ms.map((m,i)=>m1.totM[i]?u.unM[i]/m1.totM[i]:NaN);
+  u.dept=depts.map(d=>{const ot=aggOf([d],ms,'ot'),un=aggOf([d],ms,'un');return{d,ot,un,ratio:ot?un/ot:NaN}});
+  u.flag=u.dept.filter(x=>u.ratio>0&&x.ratio>u.ratio*P.unapMult);
+  const ue={};F.forEach(r=>{const k=r.emp;ue[k]=ue[k]||{emp:k,dept:r.dept,job:r.job,ot:0,un:0};ue[k].ot+=r.ot;ue[k].un+=Math.max(0,r.ot-r.ota)});
+  u.emps=Object.values(ue).sort((a,b)=>b.un-a.un);R.u=u;
+
+  /* ---- 模組二 ---- */
+  const EM={};F.forEach(r=>{const e=EM[r.emp]=EM[r.emp]||{emp:r.emp,dept:r.dept,job:r.job,ot:0,lv:0,ab:0,mon:{},pj:[],ld:[]};
+    e.ot+=r.ot;e.lv+=r.lv;e.ab+=r.ab;e.dept=r.dept;e.mon[r.ym]={ot:r.ot,lv:r.lv,ab:r.ab,ld:r.ld,pj:r.pj,ota:r.ota};if(isFinite(r.pj))e.pj.push(r.pj);if(isFinite(r.ld))e.ld.push(r.ld)});
+  const emps=Object.values(EM);
+  const m2={};const sorted=[...emps].sort((a,b)=>b.ot-a.ot);const tot=sum(sorted.map(e=>e.ot));m2.n=sorted.length;m2.sorted=sorted;m2.total=tot;
+  m2.k=Math.max(1,Math.ceil(m2.n*P.topPct));m2.topShare=tot?sum(sorted.slice(0,m2.k).map(e=>e.ot))/tot:NaN;
+  let acc=0,cut=0;for(let i=0;i<sorted.length;i++){acc+=sorted[i].ot;if(acc>=P.paretoPct*tot-1e-9){cut=i+1;break}}m2.cutN=cut;m2.cut=m2.n?cut/m2.n:NaN;
+  m2.gini=gini(sorted.map(e=>e.ot));
+  m2.giniLevel=m2.gini>=P.giniVery?'高度集中':m2.gini>=P.giniHigh?'偏高集中':m2.gini>=P.giniMid?'中度集中':'分布平均';
+  m2.cv=depts.map(d=>{const v=F.filter(r=>r.dept===d).map(r=>r.ot);const m=mean(v);return{d,cv:m?std(v)/m:NaN,n:v.length,mean:m,vals:v}});
+  m2.cvHigh=m2.cv.filter(x=>x.cv>P.cvThr);
+  emps.forEach(e=>{
+    const ks=Object.keys(e.mon).map(Number).sort((a,b)=>a-b);const seq=ks.map(k=>({i:ymIdx(k),v:e.mon[k].ot,ym:k}));
+    let lv=0;const reasons=[];const mx=Math.max(...seq.map(x=>x.v));
+    e.exceed=seq.filter(x=>x.v>P.t1Month).length;e.exceedMonths=seq.filter(x=>x.v>P.t1Month).map(x=>x.ym);
+    if(mx>P.t1Month){lv=1;reasons.push(`單月最高 ${fmt(mx)} 小時`)}
+    const runs=[];for(let i=0;i<seq.length;i++){let j=i;while(j+1<seq.length&&seq[j+1].i===seq[j].i+1)j++;runs.push(seq.slice(i,j+1));i=j}
+    let s3=0,best=0;for(const r of runs){for(let i=0;i+2<r.length;i++)s3=Math.max(s3,r[i].v+r[i+1].v+r[i+2].v);for(let L=2;L<=6;L++)for(let i=0;i+L<=r.length;i++)best=Math.max(best,mean(r.slice(i,i+L).map(x=>x.v)))}
+    if(s3>P.t2Sum3||mx>P.t2Month){lv=Math.max(lv,2);if(s3>P.t2Sum3)reasons.push(`連續 3 月合計 ${fmt(s3)} 小時`)}
+    if(mx>P.t3Month||best>P.t3Avg){lv=3;if(best>P.t3Avg)reasons.push(`連續月平均 ${fmt(best)} 小時`)}
+    e.tier=lv;e.tierReason=reasons.join('，');e.s3=s3;e.bestAvg=best;e.maxM=mx;
+  });
+  m2.tiers=[1,2,3].map(t=>emps.filter(e=>e.tier===t).length);m2.longCount=emps.filter(e=>e.tier>=1).length;
+  m2.longEmps=emps.filter(e=>e.tier>=1).sort((a,b)=>b.tier-a.tier||b.exceed-a.exceed||b.ot-a.ot);
+  m2.topEmp=[...emps].sort((a,b)=>b.exceed-a.exceed||b.ot-a.ot)[0];
+  m2.chronic=emps.filter(e=>e.exceed>=P.longMonths).sort((a,b)=>b.exceed-a.exceed);
+  m2.masked=m1.dept.filter(x=>x.pc<=m1.pc&&emps.some(e=>e.dept===x.d&&e.tier>=1)).map(x=>({d:x.d,pc:x.pc,emps:emps.filter(e=>e.dept===x.d&&e.tier>=1)}));
+  m2.imbalance=m2.cvHigh.map(x=>({...x,top:sorted.filter(e=>e.dept===x.d).slice(0,3)}));
+  R.m2=m2;R.emps=emps;R.EM=EM;
+
+  /* ---- 模組三 ---- */
+  const m3={};const lastYM=ms[n-1];
+  const st=(d,m)=>{const s=staffMap[d+'|'+m];return(s&&f.depts.has(d)&&isFinite(s.quota)&&isFinite(s.act))?s:null};
+  const gapAt=(ds,m)=>{let g=0,o=0,q=0,a=0,c=0;ds.forEach(d=>{const s=st(d,m);if(!s)return;c++;g+=Math.max(0,s.quota-s.act);o+=Math.max(0,s.act-s.quota);q+=s.quota;a+=s.act});return{g,o,q,a,c}};
+  m3.byMonth=ms.map(m=>({m,...gapAt(depts,m)}));const L=m3.byMonth[n-1];
+  m3.last=L;m3.lastYM=lastYM;m3.gap=L.g;m3.over=L.o;m3.rate=L.q?L.g/L.q:NaN;m3.fill=L.q?L.a/L.q:NaN;
+  m3.rateM=m3.byMonth.map(x=>x.q?x.g/x.q:NaN);m3.fillM=m3.byMonth.map(x=>x.q?x.a/x.q:NaN);m3.gapM=m3.byMonth.map(x=>x.g);
+  m3.dept=depts.map(d=>{const rows=ms.map(m=>st(d,m)).filter(Boolean);const gaps=rows.map(s=>Math.max(0,s.quota-s.act));const q=sum(rows.map(s=>s.quota));
+    const ds=m1.dept.find(x=>x.d===d);const avgGap=mean(gaps);const gapM=ms.map(m=>{const s=st(d,m);return s?Math.max(0,s.quota-s.act):NaN});
+    const rateM=ms.map(m=>{const s=st(d,m);return s&&s.quota?Math.max(0,s.quota-s.act)/s.quota:NaN});
+    // 滯後相關：缺口(t-1) vs 人均(t)
+    const xs=[],ys=[];for(let i=1;i<ms.length;i++){if(isFinite(gapM[i-1])&&isFinite(ds.pcM[i])){xs.push(gapM[i-1]);ys.push(ds.pcM[i])}}
+    const x0=[],y0=[];for(let i=0;i<ms.length;i++){if(isFinite(gapM[i])&&isFinite(ds.pcM[i])){x0.push(gapM[i]);y0.push(ds.pcM[i])}}
+    return{d,rate:q?sum(gaps)/q:NaN,avgGap,avgQuota:rows.length?q/rows.length:NaN,avgAct:mean(rows.map(s=>s.act)),pc:ds.pc,fte:ds.fte,replace:avgGap>=P.replaceMinGap?ds.fte/avgGap:(avgGap>0?NaN:Infinity),
+      gapM,rateM,lag1:pearson(xs,ys),lag0:pearson(x0,y0),over:mean(rows.map(s=>Math.max(0,s.act-s.quota))),has:rows.length>0}}).filter(x=>x.has);
+  const vd=m3.dept.filter(x=>isFinite(x.rate)&&isFinite(x.pc));m3.n=vd.length;m3.r=pearson(vd.map(x=>x.rate),vd.map(x=>x.pc));
+  m3.xm=median(vd.map(x=>x.rate));m3.ymed=median(vd.map(x=>x.pc));
+  vd.forEach(x=>{const hg=x.rate>m3.xm,ho=x.pc>m3.ymed;x.quad=hg&&ho?'HH':!hg&&ho?'LH':hg&&!ho?'HL':'LL'});
+  const totGapAvg=mean(m3.gapM);m3.replace=totGapAvg>0?m1.fte/totGapAvg:Infinity;m3.replaceM=ms.map((m,i)=>m3.gapM[i]>0?(m1.totM[i]/P.stdHours)/m3.gapM[i]:NaN);
+  {const xs=[],ys=[];for(let i=1;i<n;i++){xs.push(m3.gapM[i-1]);ys.push(m1.pcM[i])}m3.lagCo=pearson(xs,ys)}
+  R.m3=m3;
+
+  /* ---- 模組四 ---- */
+  const m4={};m4.lvPc=pcOf(depts,ms,'lv');m4.abPc=pcOf(depts,ms,'ab');
+  m4.lvM=ms.map(m=>pcOf(depts,[m],'lv'));m4.abM=ms.map(m=>pcOf(depts,[m],'ab'));
+  const wdh=aggOf(depts,ms,'wdh');m4.absRate=wdh?aggOf(depts,ms,'ab')/wdh:NaN;m4.absRateM=ms.map(m=>{const w=aggOf(depts,[m],'wdh');return w?aggOf(depts,[m],'ab')/w:NaN});
+  m4.dept=depts.map(d=>{const w=aggOf([d],ms,'wdh');return{d,rate:w?aggOf([d],ms,'ab')/w:NaN,ab:aggOf([d],ms,'ab')}});
+  const half1=ms.slice(0,Math.floor(n/2)),half2=ms.slice(Math.ceil(n/2));
+  emps.forEach(e=>{const ks=Object.keys(e.mon).map(Number);e.nm=ks.length;e.avgOt=e.ot/e.nm;e.avgLv=e.lv/e.nm;e.avgAb=e.ab/e.nm;e.avgLd=e.ld.length?mean(e.ld):NaN;e.avgPj=e.pj.length?mean(e.pj):NaN;
+    const h1=half1.filter(m=>e.mon[m]),h2=half2.filter(m=>e.mon[m]);
+    e.lvChg=(h1.length&&h2.length)?mean(h2.map(m=>e.mon[m].lv))-mean(h1.map(m=>e.mon[m].lv)):0;
+    e.abChg=(h1.length&&h2.length)?mean(h2.map(m=>e.mon[m].ab))-mean(h1.map(m=>e.mon[m].ab)):0;
+    // 加班後請假滯後
+    const seq=ks.sort((a,b)=>a-b);let pk=null,pv=-1;seq.forEach(m=>{if(e.mon[m].ot>pv){pv=e.mon[m].ot;pk=m}});
+    const after=seq.filter(m=>{const d=ymIdx(m)-ymIdx(pk);return d>=1&&d<=2});
+    e.peakYM=pk;e.lagEval=after.length>0&&seq.length>=4&&pv>0;e.lagAfter=after.length?mean(after.map(m=>e.mon[m].lv)):NaN;e.lagUp=e.lagEval&&e.lagAfter>e.avgLv;
+  });
+  const fill=(arr)=>arr.map(v=>isFinite(v)?v:0);
+  const pOt=pctRank(emps.map(e=>e.avgOt)),pLd=pctRank(fill(emps.map(e=>e.avgLd))),pPj=pctRank(fill(emps.map(e=>e.avgPj))),pAb=pctRank(emps.map(e=>e.avgAb)),pLc=pctRank(emps.map(e=>e.lvChg)),pLv=pctRank(emps.map(e=>e.avgLv));
+  const wSum=P.wOt+P.wLoad+P.wProj+P.wAbs+P.wLeave||1;
+  emps.forEach((e,i)=>{e.p={ot:pOt[i],ld:pLd[i],pj:pPj[i],ab:pAb[i],lc:pLc[i],lv:pLv[i]};
+    e.risk=(P.wOt*pOt[i]+P.wLoad*pLd[i]+P.wProj*pPj[i]+P.wAbs*pAb[i]+P.wLeave*pLc[i])/wSum;
+    const tr=[];if(pOt[i]>=80)tr.push('加班偏高');if(pLd[i]>=80)tr.push('負荷指數偏高');if(pPj[i]>=80)tr.push('專案數多');if(pAb[i]>=80&&e.avgAb>0)tr.push('異常缺勤偏高');if(pLc[i]>=80&&e.lvChg>0)tr.push('請假增加');
+    e.pattern=[];
+    if(pOt[i]>=P.highPct&&e.lvChg>=P.leaveRise)e.pattern.push('burnout');
+    else if(pOt[i]>=P.highPct&&pLv[i]<=P.lowPct)e.pattern.push('preburn');
+    if(pOt[i]<50&&pAb[i]>=P.highPct&&e.avgAb>=1)e.pattern.push('discipline');
+    if(pLd[i]>=P.highPct&&pOt[i]<50)e.pattern.push('hidden');
+    e.triggers=tr;});
+  m4.priority=emps.filter(e=>e.risk>=P.riskThr).sort((a,b)=>b.risk-a.risk);
+  const top10=[...emps].sort((a,b)=>b.risk-a.risk).slice(0,Math.max(1,Math.ceil(emps.length*0.1)));m4.topRisk=mean(top10.map(e=>e.risk));
+  const ev=emps.filter(e=>e.lagEval);m4.lagN=ev.length;m4.lagUp=ev.filter(e=>e.lagUp).length;m4.lag=ev.length?m4.lagUp/ev.length:NaN;
+  const lr=F.filter(r=>isFinite(r.ld));m4.loadCorr=pearson(lr.map(r=>r.ld),lr.map(r=>r.ot));
+  m4.loadCorrM=ms.map(m=>{const x=lr.filter(r=>r.ym===m);return pearson(x.map(r=>r.ld),x.map(r=>r.ot))});
+  m4.pat={burnout:emps.filter(e=>e.pattern.includes('burnout')),preburn:emps.filter(e=>e.pattern.includes('preburn')),discipline:emps.filter(e=>e.pattern.includes('discipline')),hidden:emps.filter(e=>e.pattern.includes('hidden'))};
+  m4.morale=depts.map(d=>{const de=emps.filter(e=>e.dept===d);const up=de.filter(e=>e.abChg>=P.absRise);return{d,n:de.length,up}}).filter(x=>x.up.length>=2&&x.up.length>=0.2*x.n);
+  R.m4=m4;
+  R.periodSeries=periodSeries(R);
+  return R;
+}
+/* 依彙總粒度計算各期指標（供迷你趨勢線與前期比較） */
+function periodSeries(R){
+  const P=S.params;const {periods,depts,F,pcOf,aggOf,headsOf}=R;
+  return periods.map(p=>{
+    const rows=F.filter(r=>p.months.includes(r.ym));const ot=aggOf(depts,p.months,'ot'),un=aggOf(depts,p.months,'un');
+    const em={};rows.forEach(r=>em[r.emp]=(em[r.emp]||0)+r.ot);const v=Object.values(em).sort((a,b)=>b-a);const t=sum(v);
+    const k=Math.max(1,Math.ceil(v.length*P.topPct));let acc=0,cut=0;for(let i=0;i<v.length;i++){acc+=v[i];if(acc>=P.paretoPct*t-1e-9){cut=i+1;break}}
+    const cvc=depts.filter(d=>{const x=rows.filter(r=>r.dept===d).map(r=>r.ot);const m=mean(x);return m&&std(x)/m>P.cvThr}).length;
+    const last=p.months[p.months.length-1];const g=R.m3.byMonth.find(x=>x.m===last)||{g:0,q:0,a:0};
+    const w=aggOf(depts,p.months,'wdh');const lr=rows.filter(r=>isFinite(r.ld));
+    return{label:p.label,ot,pc:pcOf(depts,p.months),fte:ot/(p.months.length*P.stdHours),un,unR:ot?un/ot:NaN,top:t?sum(v.slice(0,k))/t:NaN,cut:v.length?cut/v.length:NaN,gini:gini(v),cvc,
+      t1:new Set(rows.filter(r=>r.ot>P.t1Month).map(r=>r.emp)).size,gap:g.g,rate:g.q?g.g/g.q:NaN,fill:g.q?g.a/g.q:NaN,
+      replace:g.g?(ot/p.months.length/P.stdHours)/g.g:NaN,lv:pcOf(depts,p.months,'lv'),ab:pcOf(depts,p.months,'ab'),absRate:w?aggOf(depts,p.months,'ab')/w:NaN,
+      lc:pearson(lr.map(r=>r.ld),lr.map(r=>r.ot))};
+  });
+}
+
+/* ========== 原生 SVG 圖表 ========== */
+const PAL=['var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s6)','var(--s7)','var(--s8)'];
+function nice(min,max,count=5){if(!isFinite(min)||!isFinite(max)){min=0;max=1}if(min===max){max=min+1}
+  const span=max-min,step0=span/count,mag=Math.pow(10,Math.floor(Math.log10(step0))),r=step0/mag;const step=(r<1.5?1:r<3?2:r<7?5:10)*mag;
+  const lo=Math.floor(min/step)*step,hi=Math.ceil(max/step)*step;const ticks=[];for(let v=lo;v<=hi+step/2;v+=step)ticks.push(+v.toFixed(10));return{lo,hi,ticks}}
+const T=(s)=>esc(s).replace(/\n/g,'&#10;');
+function legend(items){return `<div class="legend">${items.map(i=>`<span><i class="${i.line?'line':''}" style="background:${i.color}"></i>${esc(i.name)}</span>`).join('')}</div>`}
+function svgOpen(W,H,label){return `<svg class="ch" viewBox="0 0 ${W} ${H}" style="max-width:${W}px" role="img" aria-label="${esc(label||'圖表')}">`}
+function cw(wide,host){const base=host==='main'?Math.min(1360,innerWidth)-40-38:Math.min(1120,innerWidth)-40-26;const two=base>=980;return Math.max(460,Math.floor(wide||!two?base:(base-14)/2))}
+function xLabels(labels,x,y,step){const every=Math.max(1,Math.ceil(labels.length/14));return labels.map((l,i)=>i%every?'':`<text x="${x(i)}" y="${y}" text-anchor="middle">${esc(l)}</text>`).join('')}
+function yAxis(sc,y,x0,x1,f,side='l'){return sc.ticks.map(t=>`<line x1="${x0}" x2="${x1}" y1="${y(t)}" y2="${y(t)}" style="stroke:var(--line)" stroke-width="1"/>`+`<text x="${side==='l'?x0-6:x1+6}" y="${y(t)+4}" text-anchor="${side==='l'?'end':'start'}">${f(t)}</text>`).join('')}
+
+function chCombo({labels,bars,line,barFmt=fmt0,lineFmt=v=>fmt(v,1),title,W=720}){
+  const H=300,m={l:58,r:58,t:16,b:34},iw=W-m.l-m.r,ih=H-m.t-m.b;const n=labels.length;
+  const s1=nice(0,Math.max(...bars.vals.filter(isFinite),1)),lv=line.vals.filter(isFinite),s2=nice(0,Math.max(...lv,1));
+  const bw=iw/n,x=i=>m.l+bw*(i+.5),y1=v=>m.t+ih-(v-s1.lo)/(s1.hi-s1.lo)*ih,y2=v=>m.t+ih-(v-s2.lo)/(s2.hi-s2.lo)*ih;
+  let g=svgOpen(W,H,title)+yAxis(s1,y1,m.l,W-m.r,v=>barFmt(v));
+  g+=s2.ticks.map(t=>`<text x="${W-m.r+6}" y="${y2(t)+4}" text-anchor="start">${lineFmt(t)}</text>`).join('');
+  bars.vals.forEach((v,i)=>{if(!isFinite(v))return;g+=`<rect x="${x(i)-bw*.32}" y="${y1(v)}" width="${bw*.64}" height="${Math.max(0,y1(0)-y1(v))}" rx="2" style="fill:${bars.color}" data-tip="${T(`${labels[i]}\n${bars.name}：${barFmt(v)}\n${line.name}：${lineFmt(line.vals[i])}`)}"/>`});
+  const pts=line.vals.map((v,i)=>isFinite(v)?`${x(i)},${y2(v)}`:null).filter(Boolean);
+  g+=`<polyline points="${pts.join(' ')}" fill="none" style="stroke:${line.color}" stroke-width="2.5"/>`;
+  line.vals.forEach((v,i)=>{if(isFinite(v))g+=`<circle cx="${x(i)}" cy="${y2(v)}" r="4" style="fill:${line.color};stroke:var(--surface2)" stroke-width="2" data-tip="${T(`${labels[i]}\n${line.name}：${lineFmt(v)}\n${bars.name}：${barFmt(bars.vals[i])}`)}"/>`});
+  g+=xLabels(labels,x,H-10)+`<text x="14" y="${m.t+ih/2}" transform="rotate(-90 14 ${m.t+ih/2})" text-anchor="middle">${esc(bars.name)}</text><text x="${W-10}" y="${m.t+ih/2}" transform="rotate(90 ${W-10} ${m.t+ih/2})" text-anchor="middle">${esc(line.name)}</text></svg>`;
+  return legend([{name:bars.name+'（左軸）',color:bars.color},{name:line.name+'（右軸）',color:line.color,line:1}])+g;
+}
+function chLines({labels,series,yFmt=v=>fmt(v,1),y2Fmt,refs=[],title,height=280,W=720}){
+  const H=height,dual=series.some(s=>s.axis==='r'),m={l:58,r:dual?58:20,t:14,b:34},iw=W-m.l-m.r,ih=H-m.t-m.b,n=labels.length;
+  const lv=series.filter(s=>s.axis!=='r').flatMap(s=>s.vals).filter(isFinite).concat(refs.map(r=>r.v));const rv=series.filter(s=>s.axis==='r').flatMap(s=>s.vals).filter(isFinite);
+  const s1=nice(Math.min(0,...lv),Math.max(...lv,1)),s2=nice(Math.min(0,...rv),Math.max(...rv,1));
+  const x=i=>m.l+(n<=1?iw/2:iw*i/(n-1)),y1=v=>m.t+ih-(v-s1.lo)/(s1.hi-s1.lo)*ih,y2=v=>m.t+ih-(v-s2.lo)/(s2.hi-s2.lo)*ih;
+  let g=svgOpen(W,H,title)+yAxis(s1,y1,m.l,W-m.r,yFmt);
+  if(dual)g+=s2.ticks.map(t=>`<text x="${W-m.r+6}" y="${y2(t)+4}">${(y2Fmt||yFmt)(t)}</text>`).join('');
+  refs.forEach(r=>{g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y1(r.v)}" y2="${y1(r.v)}" style="stroke:${r.color||'var(--bad)'}" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W-m.r-4}" y="${y1(r.v)-5}" text-anchor="end" style="fill:${r.color||'var(--bad)'}">${esc(r.label)}</text>`});
+  series.forEach((s,si)=>{const y=s.axis==='r'?y2:y1;const f=s.axis==='r'?(y2Fmt||yFmt):yFmt;
+    let d='',pen=false;s.vals.forEach((v,i)=>{if(isFinite(v)){d+=(pen?'L':'M')+x(i)+','+y(v);pen=true}else pen=false});
+    g+=`<path d="${d}" fill="none" style="stroke:${s.color}" stroke-width="${s.w||2.2}" ${s.dash?'stroke-dasharray="6 4"':''}/>`;
+    s.vals.forEach((v,i)=>{if(isFinite(v))g+=`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" style="fill:${s.color}" data-tip="${T(`${labels[i]}\n${s.name}：${f(v)}`)}"/>`})});
+  g+=xLabels(labels,x,H-10)+'</svg>';
+  return legend(series.map(s=>({name:s.name+(dual?(s.axis==='r'?'（右軸）':'（左軸）'):''),color:s.color,line:1})).concat(refs.map(r=>({name:r.label,color:r.color||'var(--bad)',line:1}))))+g;
+}
+function chBarsH({items,fmtV=v=>fmt(v,1),ref,title,note,legendItems,act,W=720}){
+  const rowH=28,m={l:150,r:110,t:10,b:26},H=m.t+m.b+rowH*items.length,iw=W-m.l-m.r;
+  const vals=items.map(i=>i.value).filter(isFinite);const sc=nice(Math.min(0,...vals),Math.max(...vals,ref?ref.v:0,0.0001),4);
+  const x=v=>m.l+(v-sc.lo)/(sc.hi-sc.lo)*iw;
+  let g=svgOpen(W,H,title);
+  sc.ticks.forEach(t=>{g+=`<line x1="${x(t)}" x2="${x(t)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--line)"/><text x="${x(t)}" y="${H-8}" text-anchor="middle">${fmtV(t)}</text>`});
+  items.forEach((it,i)=>{const y=m.t+i*rowH;const v=isFinite(it.value)?it.value:0;const x0=x(Math.min(0,v)),w=Math.abs(x(v)-x(0));
+    g+=`<text x="${m.l-8}" y="${y+rowH/2+4}" text-anchor="end">${esc(it.label)}</text><rect x="${x0}" y="${y+5}" width="${Math.max(1,w)}" height="${rowH-10}" rx="3" style="fill:${it.color||'var(--s1)'};${act?'cursor:pointer':''}" ${act&&it.key?`data-act="${act}" data-key="${esc(it.key)}"`:''} data-tip="${T(it.tip||`${it.label}：${fmtV(it.value)}`)}"/>`;
+    g+=`<text x="${x(Math.max(0,v))+6}" y="${y+rowH/2+4}">${esc(it.note??fmtV(it.value))}</text>`});
+  if(ref)g+=`<line x1="${x(ref.v)}" x2="${x(ref.v)}" y1="${m.t}" y2="${H-m.b}" style="stroke:var(--bad)" stroke-dasharray="5 4" stroke-width="1.5"/>`;
+  g+='</svg>';
+  return legend(legendItems||[{name:'數值',color:'var(--s1)'}].concat(ref?[{name:ref.label,color:'var(--bad)',line:1}]:[]))+g;
+}
+function chGrouped({groups,series,fmtV=v=>fmt(v,1),title,W=720}){
+  const H=300,m={l:50,r:16,t:14,b:44},iw=W-m.l-m.r,ih=H-m.t-m.b;const vals=series.flatMap(s=>s.vals).filter(isFinite);const sc=nice(0,Math.max(...vals,1));
+  const gw=iw/groups.length,bw=gw*.8/series.length,y=v=>m.t+ih-(v-sc.lo)/(sc.hi-sc.lo)*ih;
+  let g=svgOpen(W,H,title)+yAxis(sc,y,m.l,W-m.r,fmtV);
+  groups.forEach((gr,i)=>{series.forEach((s,j)=>{const v=s.vals[i];if(!isFinite(v))return;const x=m.l+gw*i+gw*.1+bw*j;g+=`<rect x="${x}" y="${y(v)}" width="${bw-2}" height="${y(0)-y(v)}" rx="2" style="fill:${s.color}" data-tip="${T(`${gr}｜${s.name}\n${fmtV(v)}`)}"/>`});
+    g+=`<text x="${m.l+gw*(i+.5)}" y="${H-24}" text-anchor="middle">${esc(gr)}</text>`});
+  g+='</svg>';return legend(series.map(s=>({name:s.name,color:s.color})))+g;
+}
+function heatColor(t){t=Math.max(0,Math.min(1,t));return `color-mix(in srgb, var(--heat1) ${Math.round(8+t*92)}%, var(--heat0))`}
+function chHeat({rows,cols,vals,fmtV=v=>fmt(v,1),act,rowKeys,colKeys,title,marks,legendText,W:W0=720}){
+  const cw=Math.max(34,Math.min(80,(W0-170)/cols.length)),rh=26,m={l:150,t:28,r:10,b:30},W=m.l+cw*cols.length+m.r,H=m.t+rh*rows.length+m.b;
+  const all=vals.flat().filter(isFinite);const lo=Math.min(...all,0),hi=Math.max(...all,1);
+  let g=svgOpen(W,H,title);
+  cols.forEach((c,j)=>g+=`<text x="${m.l+cw*j+cw/2}" y="${m.t-8}" text-anchor="middle">${esc(c)}</text>`);
+  rows.forEach((r,i)=>{g+=`<text x="${m.l-8}" y="${m.t+rh*i+rh/2+4}" text-anchor="end">${esc(r)}</text>`;
+    cols.forEach((c,j)=>{const v=vals[i][j];const t=(v-lo)/(hi-lo||1);const fill=isFinite(v)?heatColor(t):'var(--surface)';
+      const mk=marks&&marks[i]&&marks[i][j];
+      g+=`<rect x="${m.l+cw*j+1}" y="${m.t+rh*i+1}" width="${cw-2}" height="${rh-2}" rx="3" style="fill:${fill};${act?'cursor:pointer':''}${mk?';stroke:var(--bad);stroke-width:2':''}" ${act&&isFinite(v)?`data-act="${act}" data-r="${esc(rowKeys[i])}" data-c="${esc(colKeys[j])}"`:''} data-tip="${T(`${r}｜${c}\n${isFinite(v)?fmtV(v):'無資料'}${mk?'\n'+mk:''}${act&&isFinite(v)?'\n點擊查看明細':''}`)}"/>`;
+      if(isFinite(v)&&cw>=40)g+=`<text x="${m.l+cw*j+cw/2}" y="${m.t+rh*i+rh/2+4}" text-anchor="middle" style="fill:${t>.55?'#fff':'var(--ink)'};pointer-events:none;font-size:10.5px">${fmtV(v)}</text>`})});
+  g+='</svg>';
+  return `<div class="legend"><span><i style="background:${heatColor(0)}"></i>低 ${fmtV(lo)}</span><span><i style="background:${heatColor(.5)}"></i>中</span><span><i style="background:${heatColor(1)}"></i>高 ${fmtV(hi)}</span>${marks?'<span><i style="background:none;border:2px solid var(--bad)"></i>超過門檻</span>':''}${legendText?`<span>${esc(legendText)}</span>`:''}</div><div class="chart-scroll">${g}</div>`;
+}
+function chPareto({items,pctLine=0.8,title,W=720}){
+  const H=300,m={l:52,r:52,t:14,b:30},iw=W-m.l-m.r,ih=H-m.t-m.b,n=items.length;if(!n)return '<p class="muted">沒有資料</p>';
+  const tot=sum(items.map(i=>i.value));const sc=nice(0,Math.max(...items.map(i=>i.value),1));const bw=iw/n,x=i=>m.l+bw*(i+.5),y=v=>m.t+ih-v/sc.hi*ih,yp=p=>m.t+ih-p*ih;
+  let g=svgOpen(W,H,title)+yAxis(sc,y,m.l,W-m.r,fmt0);[0,.25,.5,.75,1].forEach(p=>g+=`<text x="${W-m.r+6}" y="${yp(p)+4}">${p*100}%</text>`);
+  let acc=0,cut=-1;const pts=[];items.forEach((it,i)=>{acc+=it.value;const p=tot?acc/tot:0;if(cut<0&&p>=pctLine-1e-9)cut=i;pts.push([x(i),yp(p),p]);
+    g+=`<rect x="${x(i)-bw*.42}" y="${y(it.value)}" width="${Math.max(.8,bw*.84)}" height="${y(0)-y(it.value)}" style="fill:${i<=cut||cut<0?'var(--s1)':'var(--s6)'};opacity:${i<=cut||cut<0?1:.55}" data-tip="${T(`第 ${i+1} 名 ${it.label}\n累計加班：${fmt(it.value)} 小時\n累積占比：${pct(p)}`)}"/>`});
+  g+=`<polyline points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="none" style="stroke:var(--s2)" stroke-width="2.2"/>`;
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yp(pctLine)}" y2="${yp(pctLine)}" style="stroke:var(--bad)" stroke-dasharray="5 4"/>`;
+  if(cut>=0)g+=`<line x1="${x(cut)}" x2="${x(cut)}" y1="${m.t}" y2="${m.t+ih}" style="stroke:var(--bad)" stroke-dasharray="3 3"/><text x="${x(cut)+6}" y="${m.t+12}" style="fill:var(--bad)">切點 ${cut+1}／${n} 人（${pct((cut+1)/n)}）</text>`;
+  g+=`<text x="${m.l}" y="${H-8}">員工依累計加班降冪排列（共 ${n} 人）</text></svg>`;
+  return legend([{name:'個人累計加班（左軸）',color:'var(--s1)'},{name:'累積占比（右軸）',color:'var(--s2)',line:1},{name:`${pct(pctLine,0)} 參考線與切點`,color:'var(--bad)',line:1}])+g;
+}
+function chLorenz({values,g:gv,title,W:W0=420}){
+  const W=Math.max(320,Math.min(W0,460)),H=W-40,m={l:50,r:16,t:14,b:40},iw=W-m.l-m.r,ih=H-m.t-m.b;const v=[...values].sort((a,b)=>a-b),n=v.length,t=sum(v)||1;
+  const x=p=>m.l+p*iw,y=p=>m.t+ih-p*ih;let acc=0;const pts=[[0,0]];v.forEach((x0,i)=>{acc+=x0;pts.push([(i+1)/n,acc/t])});
+  let g=svgOpen(W,H,title);[0,.25,.5,.75,1].forEach(p=>{g+=`<line x1="${x(0)}" x2="${x(1)}" y1="${y(p)}" y2="${y(p)}" style="stroke:var(--line)"/><text x="${m.l-6}" y="${y(p)+4}" text-anchor="end">${p*100}%</text><text x="${x(p)}" y="${H-22}" text-anchor="middle">${p*100}%</text>`});
+  g+=`<polygon points="${pts.map(p=>x(p[0])+','+y(p[1])).join(' ')} ${x(1)},${y(1)}" style="fill:var(--s2);opacity:.18"/>`;
+  g+=`<line x1="${x(0)}" y1="${y(0)}" x2="${x(1)}" y2="${y(1)}" style="stroke:var(--ink3)" stroke-dasharray="5 4"/>`;
+  g+=`<polyline points="${pts.map(p=>x(p[0])+','+y(p[1])).join(' ')}" fill="none" style="stroke:var(--s1)" stroke-width="2.5"/>`;
+  [.2,.5,.8].forEach(q=>{const p=pts[Math.round(q*n)];if(p)g+=`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="5" style="fill:var(--s1)" data-tip="${T(`加班最少的 ${pct(p[0],0)} 員工\n合計占全部加班 ${pct(p[1])}`)}"/>`});
+  g+=`<text x="${x(.04)}" y="${y(.9)}" style="font-size:14px;font-weight:700;fill:var(--ink)">吉尼係數 ${fmt(gv,3)}</text><text x="${m.l+iw/2}" y="${H-6}" text-anchor="middle">員工累積比例（由加班少到多）</text></svg>`;
+  return legend([{name:'洛倫茲曲線',color:'var(--s1)',line:1},{name:'完全平均線',color:'var(--ink3)',line:1},{name:'不平均面積',color:'var(--s2)'}])+g;
+}
+function chScatter({points,xLabel,yLabel,xFmt=v=>fmt(v,1),yFmt=v=>fmt(v,1),quad,title,legendItems,act,W=720}){
+  const H=380,m={l:58,r:20,t:16,b:44},iw=W-m.l-m.r,ih=H-m.t-m.b;
+  const xs=points.map(p=>p.x).filter(isFinite),ys=points.map(p=>p.y).filter(isFinite);
+  const sx=nice(Math.min(0,...xs),Math.max(...xs,quad?quad.xm:0,0.0001)),sy=nice(Math.min(0,...ys),Math.max(...ys,quad?quad.ym:0,0.0001));
+  const x=v=>m.l+(v-sx.lo)/(sx.hi-sx.lo)*iw,y=v=>m.t+ih-(v-sy.lo)/(sy.hi-sy.lo)*ih;
+  let g=svgOpen(W,H,title)+yAxis(sy,y,m.l,W-m.r,yFmt);sx.ticks.forEach(t=>g+=`<text x="${x(t)}" y="${H-24}" text-anchor="middle">${xFmt(t)}</text>`);
+  if(quad){g+=`<line x1="${x(quad.xm)}" x2="${x(quad.xm)}" y1="${m.t}" y2="${m.t+ih}" style="stroke:var(--ink3)" stroke-dasharray="5 4"/><line x1="${m.l}" x2="${W-m.r}" y1="${y(quad.ym)}" y2="${y(quad.ym)}" style="stroke:var(--ink3)" stroke-dasharray="5 4"/>`;
+    const q=quad.names;g+=`<text x="${W-m.r-6}" y="${m.t+14}" text-anchor="end" style="font-weight:700;fill:var(--bad)">${q.HH}</text><text x="${m.l+6}" y="${m.t+14}" style="font-weight:700;fill:var(--warn)">${q.LH}</text><text x="${W-m.r-6}" y="${m.t+ih-6}" text-anchor="end" style="font-weight:700;fill:var(--ink2)">${q.HL}</text><text x="${m.l+6}" y="${m.t+ih-6}" style="font-weight:700;fill:var(--ok)">${q.LL}</text>`}
+  const placed=[];[...points].sort((a,b)=>(b.r||5)-(a.r||5)).forEach(p=>{if(!isFinite(p.x)||!isFinite(p.y))return;g+=`<circle cx="${x(p.x)}" cy="${y(p.y)}" r="${p.r||5}" style="fill:${p.color||'var(--s1)'};fill-opacity:.72;stroke:var(--surface2);${act?'cursor:pointer':''}" stroke-width="1" ${act?`data-act="${act}" data-key="${esc(p.key)}"`:''} data-tip="${T(p.tip)}"/>`;
+    if(p.text){let ly=y(p.y)-(p.r||5)-4;const lx=x(p.x);if(placed.some(q=>Math.abs(q[0]-lx)<60&&Math.abs(q[1]-ly)<13))ly=y(p.y)+(p.r||5)+12;if(placed.some(q=>Math.abs(q[0]-lx)<60&&Math.abs(q[1]-ly)<13))ly+=13;placed.push([lx,ly]);g+=`<text x="${lx}" y="${ly}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${esc(p.text)}</text>`}});
+  g+=`<text x="${m.l+iw/2}" y="${H-6}" text-anchor="middle">${esc(xLabel)}</text><text x="14" y="${m.t+ih/2}" transform="rotate(-90 14 ${m.t+ih/2})" text-anchor="middle">${esc(yLabel)}</text></svg>`;
+  return legend(legendItems||[])+g;
+}
+function chBox({groups,fmtV=v=>fmt(v,1),title,ref,W=720}){
+  const H=320,m={l:50,r:16,t:14,b:44},iw=W-m.l-m.r,ih=H-m.t-m.b;const all=groups.flatMap(g=>g.vals.map(v=>v.v));const sc=nice(0,Math.max(...all,ref?ref.v:0,1));
+  const gw=iw/groups.length,y=v=>m.t+ih-(v-sc.lo)/(sc.hi-sc.lo)*ih;let g=svgOpen(W,H,title)+yAxis(sc,y,m.l,W-m.r,fmtV);
+  if(ref)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(ref.v)}" y2="${y(ref.v)}" style="stroke:var(--bad)" stroke-dasharray="5 4"/><text x="${W-m.r-4}" y="${y(ref.v)-5}" text-anchor="end" style="fill:var(--bad)">${esc(ref.label)}</text>`;
+  groups.forEach((gr,i)=>{const v=gr.vals.map(x=>x.v);if(!v.length)return;const q1=quant(v,.25),q2=quant(v,.5),q3=quant(v,.75),iqr=q3-q1,lo=q1-1.5*iqr,hi=q3+1.5*iqr;
+    const inl=v.filter(x=>x>=lo&&x<=hi);const wl=Math.min(...inl),wh=Math.max(...inl);const cx=m.l+gw*(i+.5),bw=Math.min(46,gw*.5);
+    g+=`<line x1="${cx}" x2="${cx}" y1="${y(wh)}" y2="${y(wl)}" style="stroke:var(--ink2)"/><line x1="${cx-bw/4}" x2="${cx+bw/4}" y1="${y(wh)}" y2="${y(wh)}" style="stroke:var(--ink2)"/><line x1="${cx-bw/4}" x2="${cx+bw/4}" y1="${y(wl)}" y2="${y(wl)}" style="stroke:var(--ink2)"/>`;
+    g+=`<rect x="${cx-bw/2}" y="${y(q3)}" width="${bw}" height="${Math.max(1,y(q1)-y(q3))}" rx="3" style="fill:var(--s1);fill-opacity:.35;stroke:var(--s1)" data-tip="${T(`${gr.label}（${v.length} 筆員工月）\n最大（非離群）${fmtV(wh)}\nQ3 ${fmtV(q3)}\n中位數 ${fmtV(q2)}\nQ1 ${fmtV(q1)}\n最小 ${fmtV(wl)}`)}"/><line x1="${cx-bw/2}" x2="${cx+bw/2}" y1="${y(q2)}" y2="${y(q2)}" style="stroke:var(--s1)" stroke-width="2.5"/>`;
+    gr.vals.filter(x=>x.v<lo||x.v>hi).forEach(o=>g+=`<circle cx="${cx}" cy="${y(o.v)}" r="4" style="fill:var(--s5)" data-tip="${T(`離群值\n${o.tip}`)}"/>`);
+    g+=`<text x="${cx}" y="${H-24}" text-anchor="middle">${esc(gr.label)}</text>`});
+  g+='</svg>';return legend([{name:'四分位箱（Q1–Q3）',color:'var(--s1)'},{name:'離群員工月',color:'var(--s5)'}].concat(ref?[{name:ref.label,color:'var(--bad)',line:1}]:[]))+g;
+}
+function spark(vals,color='var(--accent)'){const v=vals.filter(isFinite);if(v.length<2)return '<svg width="84" height="26"></svg>';
+  const lo=Math.min(...v),hi=Math.max(...v),n=vals.length;const x=i=>2+80*i/(n-1),y=t=>23-(t-lo)/((hi-lo)||1)*20;
+  let d='',pen=false;vals.forEach((t,i)=>{if(isFinite(t)){d+=(pen?'L':'M')+x(i).toFixed(1)+','+y(t).toFixed(1);pen=true}else pen=false});
+  const li=vals.length-1;return `<svg width="84" height="26" viewBox="0 0 84 26" aria-hidden="true"><path d="${d}" fill="none" style="stroke:${color}" stroke-width="1.8"/>${isFinite(vals[li])?`<circle cx="${x(li)}" cy="${y(vals[li])}" r="2.5" style="fill:${color}"/>`:''}</svg>`}
+
+/* ========== 燈號、診斷、建議 ========== */
+const LT={g:'正常',y:'留意',r:'警示',n:'無資料'};
+const light=(l,t)=>`<span class="light ${l}">${esc(t||LT[l])}</span>`;
+const byChg=(c,P)=>!isFinite(c)?['n','無前期']:c>P.chgRed?['r','增幅偏高']:c>P.chgYellow?['y','小幅上升']:['g','平穩或下降'];
+const DN=d=>esc(dn(d));
+const EL=e=>`${esc(empLabel(e.emp))}（${DN(e.dept)}）`;
+const REC={
+ grow:['short','與持續成長部門主管盤點工作量來源，區分常態業務與專案，訂定加班上限與補人時程。'],
+ peak:['short','短期高峰部門不宜立即增編，改以跨部門支援、臨時人力或專案錯峰排程處理，並預先規劃下次高峰。'],
+ elevated:['short','加班水準整段墊高的部門，檢視第二季以後新增的業務或制度變動，評估是否需要調整分工或人力。'],
+ attrition:['now','人力流失推高個人負荷，優先補足離職缺額並檢視留任措施，補人前暫緩新增專案。'],
+ heads:['long','加班總量上升主要來自人數增加，屬業務擴張的正常現象，持續觀察人均即可。'],
+ unap:['now','要求主管每週核對實際工時與加班申請，補辦未核准時數並確認加班費或補休，降低工資爭議與工時紀錄合規風險。'],
+ conc:['short','加班集中度偏高，建立跨人員的工作負荷看板，讓主管看見負擔最重的員工並移轉部分工作。'],
+ imbalance:['short','重新分配部門內任務，把前幾名員工的工作拆分給同組成員，並建立交接與代理人制度。'],
+ chronic:['now','對超標月數達門檻的員工安排個別關懷面談與健康評估，下個月起調降其工作量。'],
+ tier3:['now','第三級高工時員工依職業促發腦心血管疾病認定參考指引，立即安排醫護面談並停止額外加班。'],
+ masked:['short','部門管理指標除了人均，也追蹤個人最高加班，避免平均數掩蓋個人過勞。'],
+ struct:['long','高缺口高加班部門列為優先補人對象，招募期間以約聘或外包暫時補位。'],
+ process:['short','低缺口卻高加班的部門，先檢視流程與分工（參考模組二），再決定是否增編。'],
+ overquota:['long','高缺口低加班的部門，檢討業務量與核定編制是否仍相符，避免無效招募。'],
+ replace:['long','加班替補比偏高代表加班正在代替缺額，把加班費成本與招募成本放在一起評估補人效益。'],
+ burnout:['now','耗竭警訊員工列為最優先關懷，由主管與人資在兩週內完成面談，提供休假與工作調整。'],
+ preburn:['short','高加班卻幾乎不休假的員工，主動安排排休，並確認是否因人力不足而不敢請假。'],
+ discipline:['short','低加班卻高異常缺勤的員工，個別了解原因，區分出勤紀律與個人或健康狀況，必要時轉介員工協助方案。'],
+ morale:['short','同部門多人異常缺勤同步上升，安排部門層級的士氣訪談並檢視主管管理方式。'],
+ hidden:['short','負荷指數高但加班低的員工，比對未核准加班與實際工作量，確認是否有未申報的工時。'],
+ corr:['long','缺口與加班呈正相關，將缺口率納入年度編制檢討的固定指標。'],
+ lag:['short','高峰月後請假明顯增加的員工比例偏高，代表加班後需要恢復期，排程時預留補休。'],
+ loadmis:['long','工作負荷指數與加班關聯偏弱，檢討負荷指數的計算方式或加班申報是否確實。'],
+ data:['long','原始資料欄位存在不一致，建議與資料提供單位確認定義後再做絕對數值判讀。']
+};
+const TIERNAME={now:'立即行動（2 週內）',short:'短期調整（1 季內）',long:'結構改善（半年以上）'};
+
+function diagM1(R){const P=S.params,m1=R.m1,out=[];
+  m1.dept.forEach(x=>{const name=DN(x.d);
+    if(x.growth){const why=[];if(x.c1)why.push(`近 ${P.growConsec} 個月人均連續上升（${x.pcM.filter(isFinite).slice(-P.growConsec-1).map(v=>fmt(v)).join(' → ')}）`);
+      if(x.c2)why.push(`迴歸斜率 ${fmt(x.reg.slope,2)} 小時／月、R² ${fmt(x.reg.r2,2)}`);if(x.c3)why.push(`最近一季人均較前一季成長 ${pct(x.qg)}`);
+      out.push({l:'r',tag:'grow',d:x.d,score:3+why.length,text:`${name} 判定為持續成長，觸發 ${why.join('；')}。`})}
+    if(x.peak){x.peaks.forEach(p=>out.push({l:'y',tag:'peak',d:x.d,score:2,text:`${name} 在 ${p.q} 人均 ${fmt(p.v)} 小時，較前一季 ${fmt(p.prev)} 上升 ${pct(p.v/p.prev-1)}，下一季回落到 ${fmt(p.next)}，判定為專案或季節性短期高峰，與持續性惡化不同${x.growth?'（但同時符合持續成長條件，請一併留意）':''}。`}))}
+    else if(x.laterHigher&&!x.growth)out.push({l:'y',tag:'elevated',d:x.d,score:2,text:`${name} 第一季以後各季人均（${x.pcQ.slice(1).map(v=>fmt(v)).join('、')}）都高於第一季的 ${fmt(x.pcQ[0])} 小時，加班水準整段墊高。`});
+    else if(x.laterHigher&&x.growth)out.push({l:'y',tag:'elevated',d:x.d,score:1,text:`${name} 第一季以後各季人均（${x.pcQ.slice(1).map(v=>fmt(v)).join('、')}）都高於第一季的 ${fmt(x.pcQ[0])} 小時。`});
+    if(x.dec.type==='attrition'){const sh=x.dec.headShare,base=`${name} 人均由 ${fmt(x.dec.pcA)} 升到 ${fmt(x.dec.pcB)} 小時（+${pct(x.dec.pcChg)}），平均人數由 ${fmt(x.dec.hA)} 降到 ${fmt(x.dec.hB)}`;
+      if(sh>=0.25)out.push({l:'r',tag:'attrition',d:x.d,score:3,text:`${base}，判定為人力流失推高個人負荷；以對數分解，人均上升約 ${pct(Math.min(1,sh),0)} 來自人數減少${sh<0.6?`，其餘來自總工作量增加 ${pct(x.dec.totChg)}`:''}。請對照模組三的缺口。`});
+      else out.push({l:'y',tag:'elevated',d:x.d,score:2,text:`${base}，但以對數分解人數減少只解釋約 ${pct(Math.max(0,sh),0)}，人均上升主要來自總工作量增加 ${pct(x.dec.totChg)}，屬工作量擴張而非單純人力流失。`})}
+    if(x.dec.type==='heads')out.push({l:'g',tag:'heads',d:x.d,score:1,text:`${name} 總加班上升 ${pct(x.dec.totChg)}，但人均僅變動 ${pct(x.dec.pcChg)}，主要是人數增加所致。`});
+  });
+  const c=m1.dec;if(isFinite(c.totChg)){if(c.totChg>0.10&&Math.abs(c.pcChg)<0.05)out.push({l:'g',tag:'heads',score:1,text:`全公司 ${c.from} 到 ${c.to} 總加班上升 ${pct(c.totChg)}，人均持平，屬人數增加所致。`});
+    else out.push({l:c.pcChg>P.chgRed?'r':c.pcChg>P.chgYellow?'y':'g',tag:null,score:1,text:`全公司 ${c.from} 到 ${c.to} 月均總加班變動 ${pct(c.totChg)}，人均變動 ${pct(c.pcChg)}，平均人數變動 ${pct(c.hChg)}。`})}
+  if(!m1.growDepts.length)out.push({l:'g',tag:null,score:0,text:'目前篩選範圍內沒有部門符合持續成長條件。'});
+  return out.sort((a,b)=>b.score-a.score);
+}
+function diagU(R){const P=S.params,u=R.u,out=[];
+  u.flag.forEach(x=>out.push({l:'r',tag:'unap',d:x.d,score:3,text:`${DN(x.d)} 未核准比率 ${pct(x.ratio)}，是全公司 ${pct(u.ratio)} 的 ${fmt(x.ratio/u.ratio,1)} 倍，判定為加班申請流程未落實或主管未核准實際工作量，可能引發工資爭議與工時紀錄合規風險。`}));
+  out.push({l:u.ratio>=P.unapRed?'r':u.ratio>=P.unapYellow?'y':'g',tag:null,score:1,text:`全公司未核准加班 ${fmt0(u.total)} 小時，占實際加班 ${pct(u.ratio)}。`});
+  if(!u.flag.length)out.push({l:'g',tag:null,score:0,text:`沒有部門的未核准比率高於全公司平均的 ${P.unapMult} 倍。`});
+  return out;
+}
+function diagM2(R){const P=S.params,m2=R.m2,out=[];
+  out.push({l:m2.gini>=P.giniHigh?'r':m2.gini>=P.giniMid?'y':'g',tag:m2.gini>=P.giniHigh?'conc':null,score:m2.gini>=P.giniHigh?3:1,
+    text:`全公司加班吉尼係數 ${fmt(m2.gini,3)}，屬「${m2.giniLevel}」；前 ${pct(P.topPct,0)}（${m2.k} 人）占全部加班 ${pct(m2.topShare)}，${m2.cutN} 人（${pct(m2.cut)}）累積到 ${pct(P.paretoPct,0)}。${m2.gini<P.giniHigh?'整體並非由少數人扛下大部分加班。':''}`});
+  m2.imbalance.forEach(x=>out.push({l:'r',tag:'imbalance',d:x.d,score:3,text:`${DN(x.d)} 部門內員工月加班變異係數 ${fmt(x.cv,2)}（門檻 ${P.cvThr}）${m2.gini<P.giniHigh?'，全公司集中度不高但部門內分工失衡':''}，負擔最重的是 ${x.top.map(e=>`${esc(empLabel(e.emp))} ${fmt(e.ot)} 小時`).join('、')}。`}));
+  if(m2.chronic.length){const t=m2.chronic[0];out.push({l:'r',tag:'chronic',score:4,text:`${m2.chronic.length} 位員工單月加班超過 ${P.t1Month} 小時的月數達 ${P.longMonths} 個月以上，最多為 ${EL(t)} 共 ${t.exceed} 個月，判定為長期高工時。`})}
+  if(m2.tiers[2])out.push({l:'r',tag:'tier3',score:5,text:`有 ${m2.tiers[2]} 位員工達第三級（單月 > ${P.t3Month} 小時或連續 2–6 月平均 > ${P.t3Avg} 小時），屬高度健康風險。`});
+  else if(m2.tiers[1])out.push({l:'r',tag:'chronic',score:3,text:`有 ${m2.tiers[1]} 位員工達第二級（連續 3 月合計 > ${P.t2Sum3} 小時或單月 > ${P.t2Month} 小時）。`});
+  if(m2.longCount)out.push({l:'y',tag:null,score:1,text:`共有 ${m2.longCount} 位員工曾超過第一級門檻（單月 > ${P.t1Month} 小時），涉及 ${R.F.filter(r=>r.ot>P.t1Month).length} 筆員工月紀錄。`});
+  m2.masked.forEach(x=>out.push({l:'y',tag:'masked',d:x.d,score:2,text:`${DN(x.d)} 人均 ${fmt(x.pc)} 小時不高於全公司 ${fmt(R.m1.pc)} 小時，但有 ${x.emps.length} 位員工超過第一級門檻（${x.emps.slice(0,3).map(e=>esc(empLabel(e.emp))).join('、')}），屬平均數掩蓋個人過勞。`}));
+  out.push({l:'n',tag:null,score:0,text:'高工時分級門檻參考台灣勞基法第 32 條與職業促發腦心血管疾病認定參考指引，僅供管理參考，實際適用以最新法規與勞資協議為準。'});
+  return out.sort((a,b)=>b.score-a.score);
+}
+const QN={HH:'結構性人力不足',LH:'流程或分配問題',HL:'業務量下降或編制偏高',LL:'健康'};
+function diagM3(R){const P=S.params,m3=R.m3,out=[];
+  m3.dept.forEach(x=>{if(!x.quad)return;const t=`${DN(x.d)} 缺口率 ${pct(x.rate)}、人均加班 ${fmt(x.pc)} 小時（中位數 ${pct(m3.xm)}、${fmt(m3.ymed)} 小時）`;
+    if(x.quad==='HH')out.push({l:'r',tag:'struct',d:x.d,score:3+(x.rate>=P.gapRed?1:0),text:`${t}，落在高缺口高加班象限，判定為結構性人力不足，建議優先補人。`});
+    if(x.quad==='LH')out.push({l:'y',tag:'process',d:x.d,score:2,text:`${t}，落在低缺口高加班象限，判定為流程或分配問題，請到模組二確認部門內分工。`});
+    if(x.quad==='HL')out.push({l:'y',tag:'overquota',d:x.d,score:1.5,text:`${t}，落在高缺口低加班象限，業務量可能下降或編制偏高，建議檢討編制。`});
+    if(x.quad==='LL')out.push({l:'g',tag:null,d:x.d,score:0,text:`${t}，落在低缺口低加班象限，判定為健康。`});
+    if(isFinite(x.replace)&&x.replace>P.replaceThr)out.push({l:'r',tag:'replace',d:x.d,score:2.5,text:`${DN(x.d)} 加班換算 ${fmt(x.fte,2)} 人，平均缺口 ${fmt(x.avgGap,1)} 人，加班替補比 ${fmt(x.replace,2)}，加班正在大量替補空缺。`});});
+  if(isFinite(m3.r))out.push({l:m3.r>=0.5?'r':m3.r>=0.3?'y':'g',tag:m3.r>=0.3?'corr':null,score:m3.r>=0.3?2:0,text:`部門缺口率與人均加班的相關係數 r = ${fmt(m3.r,2)}，${m3.r>=0.5?'呈明顯正相關':m3.r>=0.3?'呈中度正相關':m3.r>0?'正相關偏弱':'沒有正相關'}${m3.n<10?`。樣本僅 ${m3.n} 個部門，相關係數僅供方向參考`:''}。`});
+  if(isFinite(m3.lagCo))out.push({l:'n',tag:null,score:0,text:`全公司缺口人數領先 1 個月與人均加班的滯後相關 r = ${fmt(m3.lagCo,2)}（月份數少時僅供參考）。`});
+  if(S.health.gapMismatch)out.push({l:'n',tag:'data',score:0,text:`原始「人力缺口」欄位有 ${S.health.gapMismatch} 筆與重算值不同，可能經脫敏擾動或採不同定義，本模組一律採用重算值。`});
+  return out.sort((a,b)=>b.score-a.score);
+}
+function diagM4(R){const P=S.params,m4=R.m4,out=[];const L=(arr,k=5)=>arr.slice(0,k).map(EL).join('、')+(arr.length>k?` 等 ${arr.length} 人`:'');
+  if(m4.pat.burnout.length)out.push({l:'r',tag:'burnout',score:5,text:`耗竭警訊 ${m4.pat.burnout.length} 人，加班位於前 ${100-P.highPct}% 且後半期月均請假增加 ${P.leaveRise} 小時以上：${L(m4.pat.burnout)}，最優先關懷。`});
+  if(m4.pat.preburn.length)out.push({l:'y',tag:'preburn',score:3,text:`過勞前兆 ${m4.pat.preburn.length} 人，加班偏高卻幾乎不請假（請假位於後 ${P.lowPct}%）：${L(m4.pat.preburn)}，可能不敢或無法休假。`});
+  m4.morale.forEach(x=>out.push({l:'r',tag:'morale',d:x.d,score:3.5,text:`${DN(x.d)} 有 ${x.up.length} 位員工（${pct(x.up.length/x.n,0)}）後半期月均異常缺勤增加 ${P.absRise} 小時以上，判定為部門層級的管理或士氣問題。`}));
+  if(m4.pat.discipline.length)out.push({l:'y',tag:'discipline',score:2.5,text:`出勤紀律或個人狀況 ${m4.pat.discipline.length} 人，加班不高但異常缺勤偏高：${L(m4.pat.discipline)}。`});
+  if(m4.pat.hidden.length)out.push({l:'y',tag:'hidden',score:2,text:`負荷可能以未申報形式存在 ${m4.pat.hidden.length} 人，工作負荷指數偏高但加班偏低：${L(m4.pat.hidden)}，請對照未核准加班分析。`});
+  if(isFinite(m4.lag))out.push({l:m4.lag>=0.6?'r':m4.lag>=0.4?'y':'g',tag:m4.lag>=0.6?'lag':null,score:m4.lag>=0.6?2:0,text:`可評估的 ${m4.lagN} 位員工中，${m4.lagUp} 人（${pct(m4.lag)}）在個人加班最高月份後 1 到 2 個月的請假高於本人平均。`});
+  if(isFinite(m4.loadCorr))out.push({l:m4.loadCorr>=0.5?'g':m4.loadCorr>=0.2?'y':'r',tag:m4.loadCorr<0.2?'loadmis':null,score:m4.loadCorr<0.2?2:0,text:`工作負荷指數與實際加班的相關係數 ${fmt(m4.loadCorr,2)}，兩個負荷指標${m4.loadCorr>=0.5?'方向一致':m4.loadCorr>=0.2?'部分一致':'不一致，需檢討指標定義或申報落實度'}。`});
+  out.push({l:m4.priority.length?'y':'g',tag:null,score:1,text:`風險分數 ≥ ${P.riskThr} 的優先關注員工 ${m4.priority.length} 人，占 ${pct(m4.priority.length/(R.emps.length||1))}。`});
+  return out.sort((a,b)=>b.score-a.score);
+}
+function recsFrom(diags){const seen=new Set(),out=[];diags.forEach(d=>{if(d.tag&&REC[d.tag]&&!seen.has(d.tag)){seen.add(d.tag);out.push({tier:REC[d.tag][0],text:REC[d.tag][1],tag:d.tag})}});
+  if(!out.length)out.push({tier:'long',text:'目前指標在正常範圍，維持每月追蹤即可。'});return out}
+
+/* ========== KPI 定義 ========== */
+const MODS=[
+ {id:'m1',no:'1',name:'加班工時與趨勢',q:'負荷在哪個部門、哪個時間點惡化？',kpis:['m1_total','m1_pc','m1_mom','m1_qoq','m1_grow','m1_fte']},
+ {id:'u',no:'1-2',name:'未核准加班',q:'加班有沒有被制度看見？',kpis:['u_hours','u_ratio']},
+ {id:'m2',no:'2',name:'員工加班集中度',q:'加班是否集中在少數人身上？',kpis:['m2_top','m2_cut','m2_gini','m2_cv','m2_long','m2_topemp']},
+ {id:'m3',no:'3',name:'人力配置與缺口',q:'加班是否來自編制缺口？',kpis:['m3_gap','m3_rate','m3_fill','m3_corr','m3_rep']},
+ {id:'m4',no:'4',name:'出勤異常與工作負荷',q:'是否已出現耗竭或出勤紀律問題？',kpis:['m4_lv','m4_ab','m4_absrate','m4_risk','m4_pri','m4_lag','m4_lc']}
+];
+function kpiDef(id,R){const P=S.params,ps=R.periodSeries,m1=R.m1,u=R.u,m2=R.m2,m3=R.m3,m4=R.m4,PS=k=>ps.map(p=>p[k]);
+  const lastLbl=ps.length?ps[ps.length-1].label:'',d=ps.length>=2;
+  switch(id){
+  case 'm1_total':{const s=PS('ot'),c=d?s[s.length-1]/s[s.length-2]-1:NaN,[l,t]=byChg(c,P);return{name:'總加班時數',val:fmt0(m1.total),unit:'小時',sub:`${R.nM} 個月、${R.depts.length} 個部門`,series:s,delta:'pct',l,t}}
+  case 'm1_pc':{const l=m1.pc>=P.pcRed?'r':m1.pc>=P.pcYellow?'y':'g';return{name:'人均月加班時數',val:fmt(m1.pc),unit:'小時',sub:`平均人數 ${fmt(m1.avgHeads,1)}`,series:PS('pc'),delta:'pct',l,t:{r:'偏高',y:'留意',g:'正常'}[l]}}
+  case 'm1_mom':{const [l,t]=byChg(m1.mom,P);const n=R.ms.length;return{name:'人均月增率',val:pct(m1.mom),unit:'',sub:n>=2?`${ymLabel(R.ms[n-1])} 對 ${ymLabel(R.ms[n-2])}`:'需兩個月以上',series:m1.momSeries,delta:'pp',l,t}}
+  case 'm1_qoq':{const [l,t]=byChg(m1.qoq,P);const q=R.quarters;return{name:'人均季增率',val:pct(m1.qoq),unit:'',sub:q.length>=2?`${q[q.length-1]} 對 ${q[q.length-2]}`:'需兩季以上',series:m1.qoqSeries,delta:'pp',l,t}}
+  case 'm1_grow':{const k=m1.growDepts.length;return{name:'持續成長部門數',val:k,unit:'個',sub:k?m1.growDepts.map(x=>dn(x.d)).join('、'):'無',series:PS('pc'),delta:null,l:k>=2?'r':k?'y':'g',t:k?'有部門惡化':'未發現'}}
+  case 'm1_fte':{const r=m1.fte/m1.avgHeads,l=r>=P.pcRed/P.stdHours?'r':r>=P.pcYellow/P.stdHours?'y':'g';return{name:'加班換算人力',val:fmt(m1.fte,1),unit:'人',sub:`約等於平均人數的 ${pct(r)}`,series:PS('fte'),delta:'pct',l,t:{r:'偏高',y:'留意',g:'正常'}[l]}}
+  case 'u_hours':case 'u_ratio':{const l=u.ratio>=P.unapRed?'r':u.ratio>=P.unapYellow?'y':'g',t={r:'合規風險',y:'留意',g:'正常'}[l];
+    return id==='u_hours'?{name:'未核准加班時數',val:fmt0(u.total),unit:'小時',sub:`${u.flag.length} 個部門高於全公司 ${P.unapMult} 倍`,series:PS('un'),delta:'pct',l,t}:{name:'未核准加班比率',val:pct(u.ratio),unit:'',sub:`最高 ${u.dept.length?dn([...u.dept].sort((a,b)=>b.ratio-a.ratio)[0].d):'—'}`,series:PS('unR'),delta:'pp',l,t}}
+  case 'm2_top':{const l=m2.topShare>=0.5?'r':m2.topShare>=0.35?'y':'g';return{name:`前 ${pct(P.topPct,0)} 員工加班占比`,val:pct(m2.topShare),unit:'',sub:`前 ${m2.k} 人／共 ${m2.n} 人`,series:PS('top'),delta:'pp',l,t:{r:'高度集中',y:'中度集中',g:'分散'}[l]}}
+  case 'm2_cut':{const l=m2.cut<=0.35?'r':m2.cut<=0.5?'y':'g';return{name:`柏拉圖 ${pct(P.paretoPct,0)} 切點`,val:pct(m2.cut),unit:'',sub:`${m2.cutN} 人貢獻 ${pct(P.paretoPct,0)} 加班`,series:PS('cut'),delta:'pp',down:true,l,t:{r:'高度集中',y:'中度集中',g:'分散'}[l]}}
+  case 'm2_gini':{const l=m2.gini>=P.giniHigh?'r':m2.gini>=P.giniMid?'y':'g';return{name:'加班吉尼係數',val:fmt(m2.gini,3),unit:'',sub:'以員工期間累計加班計算',series:PS('gini'),delta:'abs3',l,t:m2.giniLevel}}
+  case 'm2_cv':{const k=m2.cvHigh.length,top=[...m2.cv].sort((a,b)=>b.cv-a.cv)[0];return{name:'負荷不均部門數',val:k,unit:'個',sub:top?`最高 ${dn(top.d)} CV ${fmt(top.cv,2)}`:'',series:PS('cvc'),delta:'abs',l:k>=3?'r':k?'y':'g',t:k?`CV > ${P.cvThr}`:'均衡'}}
+  case 'm2_long':{const l=(m2.tiers[1]||m2.tiers[2])?'r':m2.tiers[0]?'y':'g';return{name:'長期高工時人數',val:m2.longCount,unit:'人',sub:`第一級 ${m2.tiers[0]}、第二級 ${m2.tiers[1]}、第三級 ${m2.tiers[2]}`,series:PS('t1'),delta:'abs',l,t:{r:'有第二級以上',y:'有第一級',g:'無'}[l]}}
+  case 'm2_topemp':{const e=m2.topEmp;const l=!e?'n':e.exceed>=P.longMonths?'r':e.exceed?'y':'g';return{name:'超標月數最多員工',val:e?e.exceed:'—',unit:'個月',sub:e?`${empLabel(e.emp)}，${dn(e.dept)}`:'',series:e?R.ms.map(m=>e.mon[m]?e.mon[m].ot:NaN):[],delta:null,l,t:{r:'長期高工時',y:'曾超標',g:'未超標',n:'無資料'}[l]}}
+  case 'm3_gap':case 'm3_rate':{const l=m3.rate>=P.gapRed?'r':m3.rate>=P.gapYellow?'y':'g',t={r:'缺口大',y:'有缺口',g:'正常'}[l];
+    return id==='m3_gap'?{name:'重算缺口人數',val:fmt0(m3.gap),unit:'人',sub:`${ymLabel(m3.lastYM)}，另有超編 ${fmt0(m3.over)} 人`,series:PS('gap'),delta:'abs',l,t}:{name:'缺口率',val:pct(m3.rate),unit:'',sub:`${ymLabel(m3.lastYM)} 重算值`,series:PS('rate'),delta:'pp',l,t}}
+  case 'm3_fill':{const l=m3.fill>=1-P.gapYellow?'g':m3.fill>=1-P.gapRed?'y':'r';return{name:'編制達成率',val:pct(m3.fill),unit:'',sub:`在職 ${fmt0(m3.last.a)}／編制 ${fmt0(m3.last.q)}`,series:PS('fill'),delta:'pp',down:true,l,t:{r:'不足',y:'略低',g:'足額'}[l]}}
+  case 'm3_corr':{const r=m3.r,l=!isFinite(r)?'n':r>=0.5?'r':r>=0.3?'y':'g';return{name:'缺口率與人均加班相關',val:fmt(r,2),unit:'',sub:`n = ${m3.n} 個部門${m3.n<10?'，僅供方向參考':''}`,series:PS('rate'),delta:null,l,t:{r:'強正相關',y:'中度正相關',g:'關聯弱',n:'樣本不足'}[l]}}
+  case 'm3_rep':{const k=m3.dept.filter(x=>isFinite(x.replace)&&x.replace>P.replaceThr).length,v=m3.replace,l=!isFinite(v)?'g':v>P.replaceThr?'r':v>P.replaceThr*0.6?'y':'g';return{name:'加班替補比',val:isFinite(v)?fmt(v,2):'無缺口',unit:'',sub:`${k} 個部門 > ${P.replaceThr}`,series:PS('replace'),delta:'abs2',l,t:{r:'大量替補',y:'部分替補',g:'正常'}[l]}}
+  case 'm4_lv':{const s=PS('lv'),c=d?s[s.length-1]/s[s.length-2]-1:NaN,[l,t]=byChg(c,P);return{name:'人均月請假時數',val:fmt(m4.lvPc),unit:'小時',sub:'請假時數 ÷ 人月',series:s,delta:'pct',l,t}}
+  case 'm4_ab':{const l=m4.absRate>=P.absRed?'r':m4.absRate>=P.absYellow?'y':'g';return{name:'人均月異常缺勤時數',val:fmt(m4.abPc,2),unit:'小時',sub:'異常缺勤時數 ÷ 人月',series:PS('ab'),delta:'pct',l,t:{r:'偏高',y:'留意',g:'正常'}[l]}}
+  case 'm4_absrate':{const l=m4.absRate>=P.absRed?'r':m4.absRate>=P.absYellow?'y':'g',top=[...m4.dept].sort((a,b)=>b.rate-a.rate)[0];return{name:'異常缺勤率',val:pct(m4.absRate,2),unit:'',sub:top?`最高 ${dn(top.d)} ${pct(top.rate,2)}`:'',series:PS('absRate'),delta:'pp',l,t:{r:'偏高',y:'留意',g:'正常'}[l]}}
+  case 'm4_risk':{const l=m4.pat.burnout.length?'r':m4.pat.preburn.length?'y':'g';return{name:'高負荷風險分數',val:fmt0(m4.topRisk),unit:'分',sub:'風險分數前 10% 員工平均',series:PS('pc'),delta:null,l,t:{r:'有耗竭警訊',y:'有過勞前兆',g:'未見警訊'}[l]}}
+  case 'm4_pri':{const sh=m4.priority.length/(R.emps.length||1),l=sh>0.10?'r':sh>0.05?'y':'g';return{name:'優先關注人數',val:m4.priority.length,unit:'人',sub:`分數 ≥ ${P.riskThr}，占 ${pct(sh)}`,series:PS('t1'),delta:null,l,t:{r:'人數多',y:'留意',g:'少'}[l]}}
+  case 'm4_lag':{const l=!isFinite(m4.lag)?'n':m4.lag>=0.6?'r':m4.lag>=0.4?'y':'g';return{name:'加班後請假滯後',val:pct(m4.lag),unit:'',sub:`${m4.lagUp}／${m4.lagN} 人高峰後請假高於平均`,series:PS('lv'),delta:null,l,t:{r:'恢復需求高',y:'留意',g:'正常',n:'樣本不足'}[l]}}
+  case 'm4_lc':{const r=m4.loadCorr,l=!isFinite(r)?'n':r>=0.5?'g':r>=0.2?'y':'r';return{name:'負荷指數與加班相關',val:fmt(r,2),unit:'',sub:'員工月紀錄 Pearson r',series:PS('lc'),delta:'abs2',l,t:{g:'一致',y:'部分一致',r:'不一致',n:'無資料'}[l]}}
+  }
+}
+function deltaHTML(k){const s=(k.series||[]).filter(isFinite);if(!k.delta||s.length<2)return '<span class="delta flat">— 無前期比較</span>';
+  const a=s[s.length-2],b=s[s.length-1];let txt,dv;
+  if(k.delta==='pct'){dv=a?b/a-1:NaN;txt=pct(Math.abs(dv))}else if(k.delta==='pp'){dv=b-a;txt=fmt(Math.abs(dv)*100,Math.abs(dv)<0.001?2:1)+' 個百分點'}else if(k.delta==='abs3'){dv=b-a;txt=fmt(Math.abs(dv),3)}else if(k.delta==='abs2'){dv=b-a;txt=fmt(Math.abs(dv),2)}else{dv=b-a;txt=fmt(Math.abs(dv),0)}
+  if(!isFinite(dv))return '<span class="delta flat">— 無前期比較</span>';
+  const dir=Math.abs(dv)<1e-9?'flat':dv>0?'up':'down';const arrow=dir==='up'?'▲':dir==='down'?'▼':'＝';
+  const cls=k.down?(dir==='up'?'up good':dir==='down'?'down bad':'flat'):dir;
+  return `<span class="delta ${cls}">${arrow} ${txt}<span class="muted">（較前期）</span></span>`}
+
+/* ========== KPI 分析面板 ========== */
+const box=(title,cap,html,wide)=>`<div class="chart-box${wide?' wide':''}"><h4>${esc(title)}</h4>${cap?`<p class="cap">${cap}</p>`:''}${html}</div>`;
+const F_=(name,formula,sub)=>`<div class="f"><b>${esc(name)}</b><div><code>${formula}</code></div>${sub?`<div>${sub}</div>`:''}</div>`;
+const denomText=()=>S.denom==='staff'?'目前人均分母採「編制表實際在職人數」':'目前人均分母採「工時表當月有紀錄人數」';
+const sel=(id,label,opts,val)=>`<div class="f-item"><label for="${id}">${esc(label)}</label><select id="${id}" data-pf="${id.replace('pf-','')}">${opts.map(o=>`<option value="${esc(o[0])}" ${String(o[0])===String(val)?'selected':''}>${esc(o[1])}</option>`).join('')}</select></div>`;
+const deptOpts=R=>[['','全部部門'],...R.depts.map(d=>[d,dn(d)])];
+function table(cols,rows,opts={}){return `<div class="tbl-wrap"><table class="t"><thead><tr>${cols.map((c,i)=>`<th class="${c.r?'r':''} ${opts.sort?'sortable':''}" ${opts.sort?`data-act="sort" data-key="${i}"`:''}>${esc(c.h)}${opts.sortKey===i?(opts.sortDir>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${r.map((v,i)=>`<td class="${cols[i].r?'r':''}">${v}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${cols.length}" class="muted">沒有符合條件的資料</td></tr>`}</tbody></table></div>`}
+
+function panelM1(k,R,pf){const P=S.params,m1=R.m1;const ds=pf.dept?[pf.dept]:R.depts;
+  const labels=R.periods.map(p=>p.label),tot=R.periods.map(p=>R.aggOf(ds,p.months,'ot')),pcs=R.periods.map(p=>R.pcOf(ds,p.months));
+  const combo=box(`${pf.dept?dn(pf.dept):'全公司'}總加班與人均加班`,`依${S.f.gran==='q'?'季':'月'}彙總，長條為總時數，折線為人均`,chCombo({W:cw(true),labels,bars:{name:'總加班時數',vals:tot,color:'var(--s1)'},line:{name:'人均加班（小時）',vals:pcs,color:'var(--s2)'},title:'總加班與人均組合圖'}),true);
+  let heat=chHeat({W:cw(true),rows:R.depts.map(dn),cols:R.ms.map(ymLabel),vals:R.depts.map(d=>R.ms.map(m=>R.pcOf([d],[m]))),act:'heat',rowKeys:R.depts,colKeys:R.ms,title:'部門月份人均熱力圖'});
+  if(pf.drill){const [d,ym]=pf.drill;const rows=R.F.filter(r=>r.dept===d&&r.ym===+ym).sort((a,b)=>b.ot-a.ot);
+    heat+=`<div class="drill"><h4>${DN(d)} ${ymLabel(+ym)} 員工明細（${rows.length} 人）<button class="btn small" data-act="undrill" style="margin-left:8px">收合</button></h4>${table([{h:'員工'},{h:'職務'},{h:'實際加班',r:1},{h:'已核准',r:1},{h:'請假',r:1},{h:'異常缺勤',r:1},{h:'專案數',r:1},{h:'負荷指數',r:1}],rows.map(r=>[esc(empLabel(r.emp)),esc(r.job),fmt(r.ot),fmt(r.ota),fmt(r.lv),fmt(r.ab),fmt0(r.pj),fmt(r.ld)]))}</div>`}
+  const heatB=box('部門 × 月份人均加班熱力圖','點擊格子查看該部門該月的員工明細',heat,true);
+  const sl=[...m1.dept].filter(x=>isFinite(x.reg.slope)).sort((a,b)=>b.reg.slope-a.reg.slope);
+  const slope=box('各部門人均加班趨勢斜率',`最小平方法斜率（小時／月），紅色為符合持續成長條件；門檻斜率 > ${P.growSlope} 且 R² ≥ ${P.growR2}`,chBarsH({W:cw(false),items:sl.map(x=>({label:dn(x.d),value:x.reg.slope,color:x.growth?'var(--bad)':'var(--s1)',note:`${fmt(x.reg.slope,2)}，R² ${fmt(x.reg.r2,2)}`,tip:`${dn(x.d)}\n斜率 ${fmt(x.reg.slope,2)} 小時／月\nR² ${fmt(x.reg.r2,2)}\n${x.growth?'符合持續成長':'未符合持續成長'}`})),fmtV:v=>fmt(v,1),ref:{v:P.growSlope,label:`斜率門檻 ${P.growSlope}`},legendItems:[{name:'持續成長部門',color:'var(--bad)'},{name:'其他部門',color:'var(--s1)'},{name:`斜率門檻 ${P.growSlope}`,color:'var(--bad)',line:1}],title:'斜率排序'}));
+  const grouped=box('部門季度人均加班比較','每組長條為一個部門，顏色代表季度',chGrouped({W:cw(false),groups:R.depts.map(dn),series:R.quarters.map((q,i)=>({name:q,vals:m1.dept.map(x=>x.pcQ[i]),color:PAL[i%PAL.length]})),title:'部門季度比較'}));
+  const order={m1_grow:[slope,grouped,combo,heatB],m1_qoq:[grouped,combo,heatB,slope]}[k]||[combo,heatB,slope,grouped];
+  const filters=sel('pf-dept','組合圖部門',deptOpts(R),pf.dept||'')+`<span class="muted small">熱力圖可點擊下鑽；全域篩選列可切換月或季</span>`;
+  const n=R.ms.length,a=m1.pcM[n-2],b=m1.pcM[n-1],qa=m1.pcQ[R.quarters.length-2],qb=m1.pcQ[R.quarters.length-1];
+  const fm={
+    m1_total:F_('總加班時數','Σ 實際加班時數',`= ${fmt0(m1.total)} 小時（${R.F.length} 筆員工月紀錄）`),
+    m1_pc:F_('人均月加班時數','期間總加班時數 ÷ (期間月數 × 平均人數)',`= ${fmt0(m1.total)} ÷ (${n} × ${fmt(m1.avgHeads,2)}) = ${fmt(m1.pc,2)} 小時`),
+    m1_mom:F_('月增率','(本月人均 − 上月人均) ÷ 上月人均',`= (${fmt(b,2)} − ${fmt(a,2)}) ÷ ${fmt(a,2)} = ${pct(m1.mom)}`),
+    m1_qoq:F_('季增率','(本季人均 − 上季人均) ÷ 上季人均，以季度欄位彙總',`= (${fmt(qb,2)} − ${fmt(qa,2)}) ÷ ${fmt(qa,2)} = ${pct(m1.qoq)}`),
+    m1_fte:F_('加班換算人力（FTE）','總加班時數 ÷ (月數 × 月標準工時)',`= ${fmt0(m1.total)} ÷ (${n} × ${P.stdHours}) = ${fmt(m1.fte,2)} 人`),
+    m1_grow:F_('持續成長判定（任一成立）',`條件一 近 ${P.growConsec} 個月人均逐月上升；條件二 斜率 > ${P.growSlope} 且 R² ≥ ${P.growR2}；條件三 最近一季較前一季成長 ≥ ${pct(P.growQoQ,0)}`,table([{h:'部門'},{h:'條件一'},{h:'斜率',r:1},{h:'R²',r:1},{h:'條件二'},{h:'季成長',r:1},{h:'條件三'},{h:'判定'}],m1.dept.map(x=>[DN(x.d),x.c1?'成立':'—',fmt(x.reg.slope,2),fmt(x.reg.r2,2),x.c2?'成立':'—',pct(x.qg),x.c3?'成立':'—',x.growth?light('r','持續成長'):x.peak?light('y','短期高峰'):light('g','未成長')])))
+  };
+  const formulas=(fm[k]||'')+Object.entries(fm).filter(([id])=>id!==k&&id!=='m1_grow').map(([,v])=>v).join('')+`<p class="muted small">${denomText()}。</p>`;
+  const diags=diagM1(R);return{charts:order,filters,formulas,diags};
+}
+function panelU(k,R,pf){const P=S.params,u=R.u;const ds=pf.dept?[pf.dept]:R.depts;const topN=+(pf.top||15);
+  const rk=[...u.dept].sort((a,b)=>b.ratio-a.ratio);
+  const c1=box('部門別未核准加班比率','虛線為全公司比率 × '+P.unapMult+'，超過即判定流程未落實',chBarsH({W:cw(true),items:rk.map(x=>({label:dn(x.d),value:x.ratio,color:u.flag.includes(x)?'var(--bad)':'var(--s1)',note:`${pct(x.ratio)}（${fmt0(x.un)} 小時）`,tip:`${dn(x.d)}\n未核准 ${fmt(x.un)} 小時\n實際 ${fmt(x.ot)} 小時\n比率 ${pct(x.ratio)}`})),fmtV:v=>pct(v,0),ref:{v:u.ratio*P.unapMult,label:`全公司 ${P.unapMult} 倍`},legendItems:[{name:'超過門檻部門',color:'var(--bad)'},{name:'其他部門',color:'var(--s1)'},{name:`全公司比率 × ${P.unapMult}`,color:'var(--bad)',line:1}]}),true);
+  const labels=R.periods.map(p=>p.label),un=R.periods.map(p=>R.aggOf(ds,p.months,'un')),rt=R.periods.map((p,i)=>{const o=R.aggOf(ds,p.months,'ot');return o?un[i]/o*100:NaN});
+  const c2=box(`${pf.dept?dn(pf.dept):'全公司'}未核准加班走勢`,'',chCombo({W:cw(true),labels,bars:{name:'未核准時數',vals:un,color:'var(--s5)'},line:{name:'未核准比率（%）',vals:rt,color:'var(--s1)'},lineFmt:v=>fmt(v,1)+'%'}),true);
+  const emps=u.emps.filter(e=>!pf.dept||e.dept===pf.dept).slice(0,topN);
+  const c3=box(`未核准時數最高的 ${topN} 位員工`,'',table([{h:'員工'},{h:'部門'},{h:'職務'},{h:'實際加班',r:1},{h:'未核准',r:1},{h:'未核准比率',r:1}],emps.map(e=>[esc(empLabel(e.emp)),DN(e.dept),esc(e.job),fmt(e.ot),fmt(e.un),pct(e.ot?e.un/e.ot:NaN)])),true);
+  const filters=sel('pf-dept','部門',deptOpts(R),pf.dept||'')+sel('pf-top','名單人數',[[10,'10 人'],[15,'15 人'],[30,'30 人'],[50,'50 人']],topN);
+  const fa=F_('未核准加班時數','Σ max(0, 實際加班時數 − 已核准加班時數)',`= ${fmt0(u.total)} 小時（核准大於實際的紀錄以 0 計）`),fb=F_('未核准加班比率','未核准加班時數 ÷ 實際加班時數',`= ${fmt0(u.total)} ÷ ${fmt0(R.m1.total)} = ${pct(u.ratio)}`);
+  return{charts:k==='u_ratio'?[c1,c2,c3]:[c2,c1,c3],filters,formulas:k==='u_ratio'?fb+fa:fa+fb,diags:diagU(R)};
+}
+function panelM2(k,R,pf){const P=S.params,m2=R.m2;const sub=m2.sorted.filter(e=>!pf.dept||e.dept===pf.dept);const topN=+(pf.top||20);
+  const g=gini(sub.map(e=>e.ot));
+  const par=box(`員工累計加班柏拉圖（${pf.dept?dn(pf.dept):'全公司'}）`,'',chPareto({W:cw(true),items:sub.map(e=>({label:empLabel(e.emp),value:e.ot})),pctLine:P.paretoPct}),true);
+  const lor=box(`洛倫茲曲線（${pf.dept?dn(pf.dept):'全公司'}）`,`吉尼係數 ${fmt(g,3)}，0 代表完全平均，1 代表全由一人承擔`,chLorenz({W:cw(false),values:sub.map(e=>e.ot),g}));
+  const bx=box('各部門員工月加班盒鬚圖','每個點是一筆員工月紀錄，紅點為離群值',chBox({W:cw(false),groups:R.depts.map(d=>({label:dn(d),vals:R.F.filter(r=>r.dept===d).map(r=>({v:r.ot,tip:`${empLabel(r.emp)}｜${ymLabel(r.ym)}\n加班 ${fmt(r.ot)} 小時`}))})),ref:{v:P.t1Month,label:`第一級 ${P.t1Month} 小時`}}));
+  const he=[...m2.longEmps].filter(e=>!pf.dept||e.dept===pf.dept).slice(0,topN);
+  const strip=box('高工時員工 × 月份熱力條',`曾超過第一級門檻的員工，紅框代表該月 > ${P.t1Month} 小時`,he.length?chHeat({W:cw(true),rows:he.map(e=>`${empLabel(e.emp)}｜${dn(e.dept)}`),cols:R.ms.map(ymLabel),vals:he.map(e=>R.ms.map(m=>e.mon[m]?e.mon[m].ot:NaN)),marks:he.map(e=>R.ms.map(m=>e.mon[m]&&e.mon[m].ot>P.t1Month?`超過 ${P.t1Month} 小時`:'')),fmtV:v=>fmt(v,0)}):'<p class="muted">沒有員工超過第一級門檻。</p>',true);
+  const lt=box('長期高工時員工清單','',table([{h:'員工'},{h:'部門'},{h:'等級'},{h:'超標月數',r:1},{h:'單月最高',r:1},{h:'連續 3 月合計最高',r:1},{h:'累計加班',r:1},{h:'觸發依據'}],he.map(e=>[esc(empLabel(e.emp)),DN(e.dept),light(e.tier>=2?'r':'y',`第${['','一','二','三'][e.tier]}級`),e.exceed,fmt(e.maxM),fmt(e.s3),fmt(e.ot),esc(e.tierReason)])),true);
+  const order={m2_cv:[bx,strip,par,lor],m2_long:[strip,lt,bx,par],m2_topemp:[strip,lt,par,bx],m2_gini:[lor,par,bx,strip]}[k]||[par,lor,bx,strip];
+  const filters=sel('pf-dept','部門',deptOpts(R),pf.dept||'')+sel('pf-top','熱力條人數',[[10,'10 人'],[20,'20 人'],[40,'40 人'],[999,'全部']],topN);
+  const mu=m2.total/(m2.n||1),cvt=table([{h:'部門'},{h:'員工月筆數',r:1},{h:'平均',r:1},{h:'標準差',r:1},{h:'CV',r:1},{h:'判定'}],m2.cv.map(x=>[DN(x.d),x.n,fmt(x.mean),fmt(std(x.vals)),fmt(x.cv,2),x.cv>P.cvThr?light('r','負荷不均'):light('g','均衡')]));
+  const t=m2.topEmp;
+  const fm={m2_top:F_(`前 ${pct(P.topPct,0)} 員工加班占比`,'累計加班排名前段員工的加班總和 ÷ 全體加班總和',`= ${fmt0(sum(m2.sorted.slice(0,m2.k).map(e=>e.ot)))} ÷ ${fmt0(m2.total)} = ${pct(m2.topShare)}（前 ${m2.k}／${m2.n} 人）`),
+    m2_cut:F_('柏拉圖切點','累積占比達 '+pct(P.paretoPct,0)+' 所需員工數 ÷ 總員工數',`= ${m2.cutN} ÷ ${m2.n} = ${pct(m2.cut)}`),
+    m2_gini:F_('加班吉尼係數','G = Σᵢ Σⱼ |xᵢ − xⱼ| ÷ (2n² × 平均值)',`n = ${m2.n}，平均值 = ${fmt(mu,2)} 小時，G = ${fmt(m2.gini,3)}，屬「${m2.giniLevel}」（中度下限 ${P.giniMid}、偏高下限 ${P.giniHigh}、高度下限 ${P.giniVery}）`),
+    m2_cv:F_('部門內變異係數','CV = 部門內員工月加班標準差 ÷ 平均，CV > '+P.cvThr+' 標記負荷不均',cvt),
+    m2_long:F_('長期高工時分級',`第一級 單月 > ${P.t1Month}；第二級 任連續 3 月合計 > ${P.t2Sum3} 或單月 > ${P.t2Month}；第三級 單月 > ${P.t3Month} 或連續 2–6 月平均 > ${P.t3Avg}`,`第一級 ${m2.tiers[0]} 人、第二級 ${m2.tiers[1]} 人、第三級 ${m2.tiers[2]} 人。門檻僅供管理參考，實際適用以最新法規與勞資協議為準。`),
+    m2_topemp:F_('超標月數','單月實際加班 > '+P.t1Month+' 小時的月數',t?`${esc(empLabel(t.emp))}（${DN(t.dept)}）共 ${t.exceed} 個月：${t.exceedMonths.map(ymLabel).join('、')}`:'')};
+  return{charts:order,filters,formulas:fm[k]+Object.entries(fm).filter(([id])=>id!==k).map(([,v])=>v).join(''),diags:diagM2(R)};
+}
+function panelM3(k,R,pf){const P=S.params,m3=R.m3;const month=+(pf.month||m3.lastYM);const dsel=pf.dept||(m3.dept.find(x=>x.quad==='HH')||m3.dept[0]||{}).d;
+  const sm=R.depts.map(d=>S.data.staffMap[d+'|'+month]).map((s,i)=>s||{dept:R.depts[i],quota:NaN,act:NaN});
+  const bar=box(`各部門編制與在職對照（${ymLabel(month)}）`,'紅色長條為重算缺口人數',chGrouped({W:cw(true),groups:R.depts.map(dn),series:[{name:'核定編制',vals:sm.map(s=>s.quota),color:'var(--s6)'},{name:'實際在職',vals:sm.map(s=>s.act),color:'var(--s1)'},{name:'重算缺口',vals:sm.map(s=>Math.max(0,s.quota-s.act)),color:'var(--bad)'}],fmtV:fmt0}),true);
+  const pts=m3.dept.map(x=>({x:x.rate*100,y:x.pc,r:6+Math.sqrt(x.avgAct||1)*2.6,color:{HH:'var(--bad)',LH:'var(--warn)',HL:'var(--s6)',LL:'var(--ok)'}[x.quad]||'var(--s1)',text:dn(x.d),
+    tip:`${dn(x.d)}\n缺口率 ${pct(x.rate)}\n人均加班 ${fmt(x.pc)} 小時\n平均在職 ${fmt(x.avgAct,1)} 人\n象限：${QN[x.quad]}`}));
+  const bub=box('缺口率與人均加班泡泡圖',`泡泡大小為部門平均在職人數，虛線為兩軸中位數；r = ${fmt(m3.r,2)}${m3.n<10?`，樣本僅 ${m3.n} 個部門，相關係數僅供方向參考`:''}`,chScatter({W:cw(true),points:pts,xLabel:'缺口率（%）',yLabel:'人均月加班（小時）',xFmt:v=>fmt(v,0)+'%',quad:{xm:m3.xm*100,ym:m3.ymed,names:QN},legendItems:[{name:'結構性人力不足',color:'var(--bad)'},{name:'流程或分配問題',color:'var(--warn)'},{name:'業務量下降或編制偏高',color:'var(--s6)'},{name:'健康',color:'var(--ok)'}]}),true);
+  const dx=m3.dept.find(x=>x.d===dsel),d1=R.m1.dept.find(x=>x.d===dsel);
+  const tr=dx?box(`${dn(dsel)} 缺口與人均加班走勢`,`同期相關 r = ${fmt(dx.lag0,2)}；缺口領先 1 個月的滯後相關 r = ${fmt(dx.lag1,2)}（月份少時僅供參考）`,chLines({W:cw(true),labels:R.ms.map(ymLabel),series:[{name:'重算缺口人數',vals:dx.gapM,color:'var(--bad)'},{name:'人均加班（小時）',vals:d1.pcM,color:'var(--s1)',axis:'r'}],yFmt:v=>fmt(v,0),y2Fmt:v=>fmt(v,0)}),true):'';
+  const gr=S.health.gapRows.filter(r=>r.ym>=S.f.start&&r.ym<=S.f.end&&S.f.depts.has(r.dept)&&(!pf.dept||r.dept===pf.dept));
+  const raw=box('原始「人力缺口」與重算值對照',`共 ${gr.length} 筆，差異 ${gr.filter(r=>r.gapRaw!==r.gapCalc).length} 筆；分析一律採用重算值`,table([{h:'部門'},{h:'月份'},{h:'核定編制',r:1},{h:'實際在職',r:1},{h:'原始缺口',r:1},{h:'重算缺口',r:1},{h:'差異',r:1}],gr.map(r=>[DN(r.dept),ymLabel(r.ym),fmt0(r.quota),fmt0(r.act),fmt0(r.gapRaw),fmt0(r.gapCalc),r.gapRaw!==r.gapCalc?`<b style="color:var(--bad)">${fmt0(r.gapRaw-r.gapCalc)}</b>`:'0'])),true);
+  const order={m3_corr:[bub,tr,bar,raw],m3_rep:[bub,tr,bar,raw]}[k]||[bar,bub,tr,raw];
+  const filters=sel('pf-month','對照月份',R.ms.map(m=>[m,ymLabel(m)]),month)+sel('pf-dept','走勢部門',R.depts.map(d=>[d,dn(d)]),dsel);
+  const L=m3.last;
+  const fm={m3_gap:F_('重算缺口人數','Σ max(0, 核定編制人數 − 實際在職人數)；負值另列為超編',`${ymLabel(m3.lastYM)}：缺口 ${fmt0(L.g)} 人，超編 ${fmt0(L.o)} 人`),
+    m3_rate:F_('缺口率','重算缺口人數 ÷ 核定編制人數',`= ${fmt0(L.g)} ÷ ${fmt0(L.q)} = ${pct(m3.rate)}（≥ ${pct(P.gapYellow,0)} 黃燈、≥ ${pct(P.gapRed,0)} 紅燈）`),
+    m3_fill:F_('編制達成率','實際在職人數 ÷ 核定編制人數',`= ${fmt0(L.a)} ÷ ${fmt0(L.q)} = ${pct(m3.fill)}`),
+    m3_corr:F_('缺口率與人均加班相關','Pearson r，以部門期間平均缺口率與人均加班計算',`n = ${m3.n}，r = ${fmt(m3.r,3)}${m3.n<10?`。樣本僅 ${m3.n} 個部門，相關係數僅供方向參考`:''}`),
+    m3_rep:F_('加班替補比','部門加班換算 FTE ÷ 部門平均缺口人數，> '+P.replaceThr+' 代表加班大量替補空缺；平均缺口 < '+P.replaceMinGap+' 人的部門比值不穩定，不計',table([{h:'部門'},{h:'加班 FTE',r:1},{h:'平均缺口',r:1},{h:'替補比',r:1}],m3.dept.map(x=>[DN(x.d),fmt(x.fte,2),fmt(x.avgGap,2),isFinite(x.replace)?fmt(x.replace,2):x.avgGap>0?`缺口 < ${P.replaceMinGap} 人不計`:'無缺口'])))};
+  return{charts:order,filters,formulas:fm[k]+Object.entries(fm).filter(([id])=>id!==k).map(([,v])=>v).join('')+`<p class="muted small">缺口指標以編制表為準，不受職務篩選影響；${denomText()}。</p>`,diags:diagM3(R)};
+}
+function panelM4(k,R,pf){const P=S.params,m4=R.m4;const em=R.emps.filter(e=>!pf.dept||e.dept===pf.dept);
+  const abMax=quant(R.emps.map(e=>e.avgAb),.9)||1;const abCol=v=>v<=0.0001?'var(--s1)':v<abMax?'var(--warn)':'var(--bad)';
+  const sc=box('員工加班與請假散佈圖','顏色代表月均異常缺勤，大小代表平均參與專案數；點擊開啟個人時間軸',chScatter({W:cw(true),points:em.map(e=>({x:e.ot,y:e.lv,r:3+(e.avgPj||1)*1.6,color:abCol(e.avgAb),key:e.emp,tip:`${empLabel(e.emp)}｜${dn(e.dept)}\n累計加班 ${fmt(e.ot)}\n累計請假 ${fmt(e.lv)}\n月均異常缺勤 ${fmt(e.avgAb,2)}\n平均專案數 ${fmt(e.avgPj,1)}\n風險分數 ${fmt0(e.risk)}`})),xLabel:'期間累計加班（小時）',yLabel:'期間累計請假（小時）',act:'emp',
+    legendItems:[{name:'無異常缺勤',color:'var(--s1)'},{name:'有異常缺勤',color:'var(--warn)'},{name:'異常缺勤偏高（前 10%）',color:'var(--bad)'},{name:'點越大專案越多',color:'var(--ink3)'}]}),true);
+  const sk=pf.sortKey??7,sd=pf.sortDir??-1;const PN={burnout:'耗竭警訊',preburn:'過勞前兆',discipline:'出勤紀律',hidden:'未申報負荷'};
+  let pr=(k==='m4_pri'||k==='m4_risk'?em.filter(e=>e.risk>=P.riskThr):[...em].sort((a,b)=>b.risk-a.risk).slice(0,30));
+  const keyF=[e=>e.emp,e=>dn(e.dept),e=>e.job,e=>e.ot,e=>e.lv,e=>e.ab,e=>e.avgLd,e=>e.risk];
+  pr=[...pr].sort((a,b)=>{const x=keyF[sk]?keyF[sk](a):0,y=keyF[sk]?keyF[sk](b):0;return (x>y?1:x<y?-1:0)*sd});
+  const tb=box(k==='m4_pri'||k==='m4_risk'?`優先關注名單（風險分數 ≥ ${P.riskThr}，${pr.length} 人）`:'風險分數前 30 名員工',`點欄位標題排序；<button class="btn small" data-act="exp-pri">匯出 CSV</button>`,table([{h:'員工編號'},{h:'部門'},{h:'職務'},{h:'累計加班',r:1},{h:'累計請假',r:1},{h:'累計異常缺勤',r:1},{h:'平均負荷指數',r:1},{h:'風險分數',r:1},{h:'觸發原因'}],
+    pr.map(e=>[`<button class="linkbtn" data-act="emp" data-key="${esc(e.emp)}">${esc(empLabel(e.emp))}</button>`,DN(e.dept),esc(e.job),fmt(e.ot),fmt(e.lv),fmt(e.ab),fmt(e.avgLd),`<b>${fmt0(e.risk)}</b>`,esc([...e.pattern.map(p=>PN[p]),...e.triggers].join('、')||'—')]),{sort:1,sortKey:sk,sortDir:sd}),true);
+  const ar=[...m4.dept].sort((a,b)=>b.rate-a.rate);
+  const abs=box('部門異常缺勤率排序','',chBarsH({W:cw(false),items:ar.map(x=>({label:dn(x.d),value:x.rate,color:x.rate>=P.absRed?'var(--bad)':x.rate>=P.absYellow?'var(--warn)':'var(--s1)',note:pct(x.rate,2)})),fmtV:v=>pct(v,1),ref:{v:P.absYellow,label:`黃燈 ${pct(P.absYellow,1)}`},legendItems:[{name:'紅燈',color:'var(--bad)'},{name:'黃燈',color:'var(--warn)'},{name:'正常',color:'var(--s1)'}]}));
+  const eid=pf.emp&&R.EM[pf.emp]?pf.emp:(m4.priority[0]||[...R.emps].sort((a,b)=>b.risk-a.risk)[0]||{}).emp;const e=R.EM[eid];
+  const tl=e?box(`個人月度時間軸：${empLabel(e.emp)}`,`${esc(dn(e.dept))}，${esc(e.job)}，到職 ${esc(S.data.E[e.emp]?.hire||'—')}，風險分數 ${fmt0(e.risk)}`,chLines({W:cw(true),labels:R.ms.map(ymLabel),series:[{name:'實際加班',vals:R.ms.map(m=>e.mon[m]?.ot??NaN),color:'var(--s1)'},{name:'請假',vals:R.ms.map(m=>e.mon[m]?.lv??NaN),color:'var(--s2)'},{name:'異常缺勤',vals:R.ms.map(m=>e.mon[m]?.ab??NaN),color:'var(--bad)'},{name:'工作負荷指數',vals:R.ms.map(m=>e.mon[m]?.ld??NaN),color:'var(--s3)',axis:'r',dash:1}],yFmt:v=>fmt(v,0),y2Fmt:v=>fmt(v,0)}),true):'';
+  const order={m4_absrate:[abs,sc,tb,tl],m4_ab:[abs,sc,tb,tl],m4_pri:[tb,tl,sc,abs],m4_risk:[tb,sc,tl,abs]}[k]||[sc,tl,tb,abs];
+  const filters=sel('pf-dept','部門',deptOpts(R),pf.dept||'')+sel('pf-emp','時間軸員工',[...R.emps].sort((a,b)=>b.risk-a.risk).map(x=>[x.emp,`${empLabel(x.emp)}（${fmt0(x.risk)} 分）`]),eid||'');
+  const W=S.params,top=e;
+  const fm={m4_lv:F_('人均月請假時數','Σ 請假時數 ÷ Σ 人月',`= ${fmt0(R.aggOf(R.depts,R.ms,'lv'))} ÷ ${fmt0(R.m1.headsSum)} = ${fmt(m4.lvPc,2)} 小時`),
+    m4_ab:F_('人均月異常缺勤時數','Σ 異常缺勤時數 ÷ Σ 人月',`= ${fmt(R.aggOf(R.depts,R.ms,'ab'),1)} ÷ ${fmt0(R.m1.headsSum)} = ${fmt(m4.abPc,2)} 小時`),
+    m4_absrate:F_('異常缺勤率','部門異常缺勤總時數 ÷ 部門 (工作日數 × 8) 總和',`全公司 = ${fmt(R.aggOf(R.depts,R.ms,'ab'),1)} ÷ ${fmt0(R.aggOf(R.depts,R.ms,'wdh'))} = ${pct(m4.absRate,2)}`),
+    m4_risk:F_('高負荷風險分數（0–100）',`${W.wOt} × 加班百分位 + ${W.wLoad} × 負荷指數百分位 + ${W.wProj} × 專案數百分位 + ${W.wAbs} × 異常缺勤百分位 + ${W.wLeave} × 請假變化百分位`,top?`${esc(empLabel(top.emp))}：${W.wOt}×${fmt0(top.p.ot)} + ${W.wLoad}×${fmt0(top.p.ld)} + ${W.wProj}×${fmt0(top.p.pj)} + ${W.wAbs}×${fmt0(top.p.ab)} + ${W.wLeave}×${fmt0(top.p.lc)} = ${fmt(top.risk,1)} 分。請假變化 = 後半期月均請假 − 前半期月均請假（本例 ${fmt(top.lvChg,1)} 小時）。權重和不為 1 時自動正規化。`:''),
+    m4_pri:F_('優先關注人數',`風險分數 ≥ ${P.riskThr} 的員工數`,`= ${m4.priority.length} 人／共 ${R.emps.length} 人`),
+    m4_lag:F_('加班後請假滯後','個人加班最高月份之後 1 到 2 個月的平均請假 > 本人期間月均請假的員工比例',`= ${m4.lagUp} ÷ ${m4.lagN} = ${pct(m4.lag)}${top&&top.lagEval?`；${esc(empLabel(top.emp))} 高峰在 ${ymLabel(top.peakYM)}，之後請假 ${fmt(top.lagAfter,1)}，本人平均 ${fmt(top.avgLv,1)}`:''}`),
+    m4_lc:F_('負荷指數與加班相關','Pearson r（工作負荷指數，實際加班時數），以員工月紀錄計算',`r = ${fmt(m4.loadCorr,3)}`)};
+  return{charts:order,filters,formulas:fm[k]+Object.entries(fm).filter(([id])=>id!==k).map(([,v])=>v).join('')+`<p class="muted small">${denomText()}。</p>`,diags:diagM4(R)};
+}
+function renderPanel(){const R=S.R,k=S.panel;const host=$('#panel-host');if(!k||!R||R.empty){host.innerHTML='';document.body.style.overflow='';return}
+  const def=kpiDef(k,R);const mod=MODS.find(m=>m.kpis.includes(k));const pf=S.pf;
+  const fn={m1:panelM1,u:panelU,m2:panelM2,m3:panelM3,m4:panelM4}[mod.id];const p=fn(k,R,pf);const recs=recsFrom(p.diags);
+  const scrollTop=$('.panel',host)?.scrollTop||0;
+  host.innerHTML=`<div class="panel-back" data-act="close-bg"><section class="panel" role="dialog" aria-modal="true" aria-label="${esc(def.name)}分析面板">
+   <div class="panel-head"><div><div class="muted small">模組 ${mod.no}｜${esc(mod.name)}</div><h2>${esc(def.name)}　<span class="num">${esc(String(def.val))}</span><small class="muted"> ${esc(def.unit)}</small> ${light(def.l,def.t)}</h2></div><button class="btn close" data-act="close">關閉</button></div>
+   <div class="panel-body">
+    <div class="p-sec"><h3><span class="n">1</span>圖表區</h3><div class="charts">${p.charts.filter(Boolean).join('')}</div></div>
+    <div class="p-sec card"><h3><span class="n">2</span>面板篩選器</h3><div class="panel-filters">${p.filters}</div></div>
+    <div class="p-sec card formula"><h3><span class="n">3</span>計算公式（代入目前篩選後數值）</h3>${p.formulas}</div>
+    <div class="p-sec card"><h3><span class="n">4</span>異常診斷</h3><ul class="diag">${p.diags.map(d=>`<li>${light(d.l,{r:'警示',y:'留意',g:'正常',n:'說明'}[d.l])}<div>${d.text}</div></li>`).join('')}</ul></div>
+    <div class="p-sec card"><h3><span class="n">5</span>管理建議</h3><ul class="diag">${recs.map(r=>`<li><span class="light n">${esc(TIERNAME[r.tier])}</span><div>${esc(r.text)}</div></li>`).join('')}</ul></div>
+   </div></section></div>`;
+  document.body.style.overflow='hidden';const pn=$('.panel',host);if(pn)pn.scrollTop=scrollTop;
+}
+
+/* ========== 綜合診斷 ========== */
+const CAUSE={struct:['結構性缺口','var(--bad)'],dist:['分配不均','var(--warn)'],peak:['短期高峰','var(--s6)'],burn:['耗竭風險','var(--bad)'],comp:['流程合規','var(--s3)'],mgmt:['管理問題','var(--s5)'],ok:['健康','var(--ok)']};
+function deptDiagnosis(R){const P=S.params;
+  return R.depts.map(d=>{
+    const a=R.m1.dept.find(x=>x.d===d),u=R.u.dept.find(x=>x.d===d),cv=R.m2.cv.find(x=>x.d===d),g=R.m3.dept.find(x=>x.d===d);
+    const de=R.emps.filter(e=>e.dept===d);const burn=de.filter(e=>e.pattern.includes('burnout')),pre=de.filter(e=>e.pattern.includes('preburn')),pri=de.filter(e=>e.risk>=P.riskThr);
+    const tier2=de.filter(e=>e.tier>=2),tier1=de.filter(e=>e.tier>=1);const morale=R.m4.morale.find(x=>x.d===d);
+    // 各模組燈號
+    const L1=a.growth?'r':(a.peak||a.laterHigher||a.pc>=P.pcYellow)?'y':'g';
+    const LU=R.u.flag.includes(u)?'r':(u&&u.ratio>R.u.ratio*1.2)?'y':'g';
+    const L2=(cv&&cv.cv>P.cvThr)||tier2.length?'r':tier1.length?'y':'g';
+    const L3=!g?'n':g.rate>=P.gapRed?'r':g.rate>=P.gapYellow?'y':'g';
+    const L4=burn.length||morale?'r':(pre.length||pri.length)?'y':'g';
+    // 根因評分（交叉引用各模組）
+    const sc={struct:0,dist:0,peak:0,burn:0,comp:0,mgmt:0},ev={struct:[],dist:[],peak:[],burn:[],comp:[],mgmt:[]};
+    if(g&&g.quad==='HH'){sc.struct+=3;ev.struct.push(`缺口率 ${pct(g.rate)} 與人均 ${fmt(g.pc)} 小時皆高於中位數`)}
+    if(g&&g.rate>=P.gapYellow){sc.struct+=1;if(g.quad!=='HH')ev.struct.push(`缺口率 ${pct(g.rate)}`)}
+    if(g&&isFinite(g.replace)&&g.replace>P.replaceThr){sc.struct+=1;ev.struct.push(`加班替補比 ${fmt(g.replace,2)}`)}
+    if(a.dec.type==='attrition'){const sh=a.dec.headShare;if(sh>=0.25){sc.struct+=1.5;ev.struct.push(`人數下降推高人均 ${pct(a.dec.pcChg)}（人數因素約占 ${pct(Math.min(1,sh),0)}）`)}}
+    const peakOnly=a.peak&&!a.growth;
+    if(a.growth){if(g&&g.rate>=P.gapYellow){sc.struct+=1;ev.struct.push('人均持續成長')}else{sc.dist+=1;ev.dist.push('人均持續成長但缺口不大')}}
+    if(cv&&cv.cv>P.cvThr){sc.dist+=2.5;ev.dist.push(`部門內 CV ${fmt(cv.cv,2)}`)}
+    // 短期高峰會墊高期間平均並造成高峰期個人超標，交叉引用時歸給高峰
+    if(peakOnly){sc.peak+=3;ev.peak.push(`${a.peaks.map(p=>`${p.q} 人均 ${fmt(p.v)} 小時，前後季 ${fmt(p.prev)}、${fmt(p.next)}`).join('；')}`);
+      if(g&&g.quad==='LH')ev.peak.push('期間平均偏高源自高峰季');
+      const pm=new Set(a.peaks.flatMap(p=>R.qMonths(p.q)));const outPk=de.filter(e=>e.exceedMonths.some(m=>!pm.has(m)));
+      if(outPk.length){sc.dist+=1;ev.dist.push(`高峰季以外仍有 ${outPk.length} 人超標`)}}
+    else{if(g&&g.quad==='LH'){sc.dist+=1.5;ev.dist.push('低缺口卻高加班')}
+      if(R.m2.masked.some(x=>x.d===d)){sc.dist+=1;ev.dist.push('平均不高但有個人超標')}}
+    if(burn.length){sc.burn+=2+Math.min(2,burn.length);ev.burn.push(`耗竭警訊 ${burn.length} 人`)}
+    if(tier2.length){sc.burn+=1;ev.burn.push(`第二級以上高工時 ${tier2.length} 人`)}
+    if(pre.length>=2){sc.burn+=1;ev.burn.push(`過勞前兆 ${pre.length} 人`)}
+    if(R.u.flag.includes(u)){sc.comp+=3;ev.comp.push(`未核准比率 ${pct(u.ratio)}，為全公司 ${fmt(u.ratio/R.u.ratio,1)} 倍`)}
+    if(morale){sc.mgmt+=3.5;ev.mgmt.push(`${morale.up.length} 人異常缺勤同步上升`)}
+    const best=Object.entries(sc).sort((x,y)=>y[1]-x[1])[0];const cause=best[1]>=2?best[0]:'ok';
+    const second=Object.entries(sc).sort((x,y)=>y[1]-x[1]).filter(([c,v])=>c!==cause&&v>=2).map(([c])=>CAUSE[c][0]);
+    return{d,L:{m1:L1,u:LU,m2:L2,m3:L3,m4:L4},cause,score:best[1],evidence:cause==='ok'?['各模組未觸發主要警訊']:ev[cause],second,sc};
+  });
+}
+function findings(R,DD){const P=S.params,F=[];const H=S.health;
+  const confAdj=(base,reasons)=>{const lv=['低','中','高'];let i=lv.indexOf(base);reasons.forEach(r=>{if(r)i--});return lv[Math.max(0,i)]};
+  R.m1.growDepts.forEach(x=>F.push({impact:x.reg.slope*x.avgHeads*R.nM+10,title:`${dn(x.d)} 加班持續惡化`,kpi:'m1_grow',
+    evidence:`人均由 ${fmt(x.pcQ[0])}（${R.quarters[0]}）走到 ${fmt(x.pcQ[x.pcQ.length-1])}（${R.quarters[R.quarters.length-1]}），斜率 ${fmt(x.reg.slope,2)} 小時／月，R² ${fmt(x.reg.r2,2)}。`,
+    cause:(()=>{const dd=DD.find(y=>y.d===x.d);return `交叉比對後主要根因判定為「${CAUSE[dd.cause][0]}」，依據 ${dd.evidence.join('、')}。`})(),
+    conf:confAdj('高',[R.nM<6,S.denom==='rec'&&H.staffMismatch>0&&false]),tags:['grow']}));
+  const st=DD.filter(x=>x.cause==='struct');if(st.length)F.push({impact:sum(st.map(x=>{const g=R.m3.dept.find(y=>y.d===x.d);return (g?.avgGap||0)*20}))+8,title:`${st.map(x=>dn(x.d)).join('、')} 屬結構性人力不足`,kpi:'m3_rate',
+    evidence:st.map(x=>{const g=R.m3.dept.find(y=>y.d===x.d);return `${dn(x.d)} 缺口率 ${pct(g?.rate)}、加班換算 ${fmt(g?.fte,2)} 人、平均缺口 ${fmt(g?.avgGap,1)} 人`}).join('；')+`。全體部門缺口率與人均加班 r = ${fmt(R.m3.r,2)}。`,
+    cause:'加班正在填補編制缺口，單靠控管加班無法解決。',conf:confAdj('高',[R.m3.n<10,H.gapMismatch>0]),confNote:[R.m3.n<10?`樣本僅 ${R.m3.n} 個部門`:'',H.gapMismatch?'原始缺口欄位與重算值不一致':''].filter(Boolean).join('，'),tags:['struct','replace']});
+  const m2=R.m2;if(m2.chronic.length||m2.tiers[2]||m2.tiers[1])F.push({impact:m2.chronic.length*6+m2.tiers[2]*10+m2.tiers[1]*4+6,title:'個人長期高工時',kpi:'m2_long',
+    evidence:`${m2.longCount} 人曾單月超過 ${P.t1Month} 小時（第二級 ${m2.tiers[1]} 人、第三級 ${m2.tiers[2]} 人），${m2.chronic.length} 人超標達 ${P.longMonths} 個月以上，最多為 ${empLabel(m2.topEmp.emp)}（${dn(m2.topEmp.dept)}）${m2.topEmp.exceed} 個月。`,
+    cause:`全公司吉尼係數 ${fmt(m2.gini,3)} 屬「${m2.giniLevel}」，高工時集中在特定個人而非全面性。`,conf:confAdj('高',[H.suspicious>0]),tags:m2.tiers[2]?['tier3','chronic']:['chronic']});
+  const b=R.m4.pat.burnout;if(b.length)F.push({impact:b.length*8+5,title:'耗竭警訊員工',kpi:'m4_risk',evidence:`${b.length} 人加班偏高且後半期請假明顯增加：${b.slice(0,5).map(e=>`${empLabel(e.emp)}（${dn(e.dept)}）`).join('、')}${b.length>5?' 等':''}。加班高峰後請假上升者占 ${pct(R.m4.lag)}。`,
+    cause:'長期加班後開始以請假恢復，若不調整工作量，可能演變為離職或健康事件。',conf:confAdj('中',[R.nM<6]),tags:['burnout','lag']});
+  if(R.u.flag.length)F.push({impact:sum(R.u.flag.map(x=>x.un))/20+5,title:`${R.u.flag.map(x=>dn(x.d)).join('、')} 未核准加班偏高`,kpi:'u_ratio',evidence:R.u.flag.map(x=>`${dn(x.d)} 未核准 ${fmt0(x.un)} 小時，比率 ${pct(x.ratio)}`).join('；')+`，全公司 ${pct(R.u.ratio)}。`,
+    cause:'加班申請流程未落實或主管未核准實際工作量，工時紀錄與實際勞動脫節。',conf:'高',tags:['unap']});
+  const pk=R.m1.dept.filter(x=>x.peak&&!x.growth);if(pk.length)F.push({impact:4,title:`${pk.map(x=>dn(x.d)).join('、')} 為短期高峰`,kpi:'m1_qoq',evidence:pk.map(x=>x.peaks.map(p=>`${dn(x.d)} ${p.q} 人均 ${fmt(p.v)}，前季 ${fmt(p.prev)}、後季 ${fmt(p.next)}`).join('')).join('；')+'。',
+    cause:'專案或季節性高峰，已自行回落，不屬持續性惡化。',conf:'中',tags:['peak']});
+  const im=R.m2.imbalance;if(im.length)F.push({impact:im.length*5,title:`${im.map(x=>dn(x.d)).join('、')} 部門內分工失衡`,kpi:'m2_cv',evidence:im.map(x=>`${dn(x.d)} CV ${fmt(x.cv,2)}`).join('；')+'。',cause:'同部門員工負荷差異大，問題在任務分配而非總人力。',conf:'中',tags:['imbalance']});
+  R.m4.morale.forEach(x=>F.push({impact:x.up.length*4,title:`${dn(x.d)} 多人異常缺勤上升`,kpi:'m4_absrate',evidence:`${x.up.length} 位員工後半期異常缺勤增加。`,cause:'部門層級的管理或士氣問題。',conf:'中',tags:['morale']}));
+  F.sort((a,b)=>b.impact-a.impact);
+  // 資料不一致時降低信心
+  if(H.staffMismatch&&S.denom==='rec')F.forEach(f=>{if(f.kpi.startsWith('m1')&&f.conf==='高'){f.conf='中';f.confNote=(f.confNote?f.confNote+'，':'')+'編制表在職人數與工時紀錄人數不一致，人均分母存在差異'}});
+  return F.slice(0,5);
+}
+function renderReport(){const R=S.R;if(!R||R.empty)return '<div class="card">目前篩選範圍沒有資料，請調整篩選條件。</div>';
+  const DD=deptDiagnosis(R),FD=findings(R,DD);const P=S.params;
+  const allDiag=[...diagM1(R),...diagU(R),...diagM2(R),...diagM3(R),...diagM4(R)];
+  const recs={now:[],short:[],long:[]};const seen=new Set();
+  allDiag.filter(d=>d.tag&&REC[d.tag]).forEach(d=>{const key=d.tag;if(!seen.has(key)){seen.add(key);recs[REC[key][0]].push({text:REC[key][1],ev:[],kpi:tagKpi(key)})}const r=Object.values(recs).flat().find(x=>x.text===REC[key][1]);if(r.ev.length<3)r.ev.push(d.text.replace(/<[^>]+>/g,''))});
+  const cell=(l,kpi)=>`<button class="cell" data-act="open" data-key="${kpi}" aria-label="開啟分析面板">${light(l)}</button>`;
+  const mat=`<div class="tbl-wrap" style="max-height:none"><table class="t matrix"><thead><tr><th>部門</th><th>模組一 趨勢</th><th>未核准</th><th>模組二 集中度</th><th>模組三 缺口</th><th>模組四 耗竭</th><th>主要根因</th><th style="text-align:left">判定依據</th></tr></thead><tbody>${DD.map(x=>`<tr><td><b>${DN(x.d)}</b></td><td>${cell(x.L.m1,'m1_grow')}</td><td>${cell(x.L.u,'u_ratio')}</td><td>${cell(x.L.m2,'m2_cv')}</td><td>${cell(x.L.m3,'m3_rate')}</td><td>${cell(x.L.m4,'m4_risk')}</td><td><span class="cause" style="color:${CAUSE[x.cause][1]};border:1px solid ${CAUSE[x.cause][1]}">${CAUSE[x.cause][0]}</span></td><td style="text-align:left" class="small">${esc(x.evidence.join('、'))}${x.second.length?`<br><span class="muted">次要 ${esc(x.second.join('、'))}</span>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+  return `<div class="stack">
+  <div class="card"><div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center"><h2 class="sec" style="margin:0">綜合診斷報告</h2><span class="muted small">${ymLabel(R.ms[0])} 至 ${ymLabel(R.ms[R.ms.length-1])}，${R.depts.length} 個部門，${R.emps.length} 位員工；${denomText()}</span><button class="btn noprint" data-act="print" style="margin-left:auto">列印或存成 PDF</button></div>
+   <p class="small muted" style="margin:8px 0 0">加班是症狀，根因分為人力結構性不足、工作分配不均、員工耗竭或管理問題。以下交叉引用四個模組與未核准加班的結果，為每個部門判定一個主要根因。</p></div>
+  <div class="card"><h3>部門診斷矩陣</h3><p class="small muted">點擊燈號開啟對應分析面板。</p>${mat}</div>
+  <div class="card"><h3>最重要的發現</h3>${FD.length?FD.map((f,i)=>`<div class="finding"><div class="fh"><span class="rank">發現 ${i+1}</span><b>${esc(f.title)}</b><span class="light ${f.conf==='高'?'g':f.conf==='中'?'y':'r'}">信心 ${f.conf}</span><button class="linkbtn small noprint" data-act="open" data-key="${f.kpi}">查看分析面板</button></div><dl><dt>數據證據</dt><dd>${esc(f.evidence)}</dd><dt>根因推論</dt><dd>${esc(f.cause)}</dd><dt>信心說明</dt><dd>${esc(f.confNote||'資料一致、樣本充足')}</dd></dl></div>`).join(''):'<p class="muted">目前篩選範圍沒有需要特別關注的發現。</p>'}</div>
+  <div class="card"><h3>管理建議</h3><div class="recs">${['now','short','long'].map(t=>`<div><h4 style="margin:0">${TIERNAME[t]}</h4><ul>${recs[t].length?recs[t].map(r=>`<li>${esc(r.text)}<div class="small muted">觸發數據 ${esc(r.ev.join('；'))}</div><button class="linkbtn small noprint" data-act="open" data-key="${r.kpi}">查看數據</button></li>`).join(''):'<li class="muted">無</li>'}</ul></div>`).join('')}</div></div>
+  <div class="card"><h3>關鍵圖表</h3><div class="charts">${box('部門人均加班趨勢','',chLines({W:cw(true,'main'),labels:R.ms.map(ymLabel),series:R.m1.dept.map((x,i)=>({name:dn(x.d),vals:x.pcM,color:PAL[i%PAL.length]}))}),true)}${box('缺口率與人均加班','',chScatter({W:cw(false,'main'),points:R.m3.dept.map(x=>({x:x.rate*100,y:x.pc,r:6+Math.sqrt(x.avgAct||1)*2.4,color:{HH:'var(--bad)',LH:'var(--warn)',HL:'var(--s6)',LL:'var(--ok)'}[x.quad],text:dn(x.d),tip:`${dn(x.d)}\n${QN[x.quad]}`})),xLabel:'缺口率（%）',yLabel:'人均月加班（小時）',xFmt:v=>fmt(v,0)+'%',quad:{xm:R.m3.xm*100,ym:R.m3.ymed,names:QN},legendItems:[{name:'結構性人力不足',color:'var(--bad)'},{name:'流程或分配問題',color:'var(--warn)'},{name:'業務量下降或編制偏高',color:'var(--s6)'},{name:'健康',color:'var(--ok)'}]}))}${box('洛倫茲曲線','',chLorenz({W:cw(false,'main'),values:R.m2.sorted.map(e=>e.ot),g:R.m2.gini}))}</div></div>
+  <div class="foot-note">本資料經去識別化與擾動處理，請著重相對趨勢、排序與型態，而非單一絕對數值。</div></div>`;
+}
+function tagKpi(t){return{grow:'m1_grow',peak:'m1_qoq',elevated:'m1_qoq',attrition:'m1_pc',heads:'m1_total',unap:'u_ratio',conc:'m2_gini',imbalance:'m2_cv',chronic:'m2_long',tier3:'m2_long',masked:'m2_long',struct:'m3_rate',process:'m3_corr',overquota:'m3_rate',replace:'m3_rep',burnout:'m4_risk',preburn:'m4_pri',discipline:'m4_absrate',morale:'m4_absrate',hidden:'m4_lc',corr:'m3_corr',lag:'m4_lag',loadmis:'m4_lc',data:'m3_gap'}[t]||'m1_total'}
+
+/* ========== 介面 ========== */
+function recompute(){if(!S.data)return;S.R=analyze();render()}
+function render(){
+  const has=!!S.data,ready=has&&['health','modules','report'].includes(S.view);
+  $('#tabs').classList.toggle('hidden',!ready);$('#filters').classList.toggle('hidden',!(ready&&S.view!=='health'));
+  $$('[data-need-data]').forEach(b=>b.disabled=!ready);
+  $$('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.key===S.view));
+  const meta=$('#meta');
+  if(has){const D=S.data;meta.innerHTML=`<span>資料期間 ${ymLabel(D.months[0])}–${ymLabel(D.months[D.months.length-1])}</span><span>${fmt0(D.H.length)} 筆工時紀錄</span><span>${new Set(D.H.map(r=>r.emp)).size} 位員工</span><span>${D.depts.length} 個部門</span>`}else meta.innerHTML='<span>尚未載入資料</span>';
+  if(ready)renderFilters();
+  const main=$('#main');
+  if(S.view==='upload')main.innerHTML=viewUpload();
+  else if(S.view==='mapping')main.innerHTML=viewMapping();
+  else if(S.view==='health')main.innerHTML=`<div class="view">${viewHealth()}</div>`;
+  else if(S.view==='modules')main.innerHTML=`<div class="view">${viewModules()}</div>`;
+  else if(S.view==='report')main.innerHTML=`<div class="view print-me">${renderReport()}</div>`;
+  renderPanel();
+}
+function viewUpload(){return `<div class="drop" id="drop">
+  <h2>上傳人資加班工時 XLSX</h2>
+  <p>需包含「員工月度工時」「員工資料」「部門人力編制」「部門資料」四張工作表。檔案只在這台電腦的瀏覽器裡解析與計算，不會上傳到任何地方。</p>
+  <p style="margin-top:18px"><label class="btn primary" for="file-in" style="display:inline-block">選擇 XLSX 檔案</label> <span class="muted small">或把檔案拖曳到這裡</span></p>
+  ${XLSX_OK?`<p class="small"><button class="linkbtn" data-act="show-csv">改用四個 CSV 上傳</button></p>`:''}
+  <div class="csv-fallback ${XLSX_OK?'hidden':''}" id="csv-box">${XLSX_OK?'':'<b>這個瀏覽器不支援 XLSX 解壓縮（DecompressionStream），請改為上傳四個 CSV（UTF-8）。</b>'}
+   <div class="grid">${Object.entries(ROLES).map(([k,r])=>`<label class="small">${esc(r.label)}<br><input type="file" accept=".csv,text/csv" data-csv="${k}"></label>`).join('')}</div>
+   <p class="small"><button class="btn" data-act="load-csv">載入 CSV</button> <span class="muted" id="csv-status"></span></p></div>
+  </div>`}
+function viewMapping(){const M=S.mapping;const sheets=S.sheets;let missing=0;
+  const cards=Object.entries(ROLES).map(([role,def])=>{const m=M[role];const h=m.sheet>=0?headerOf(sheets[m.sheet]):[];
+    const rows=def.fields.map(f=>{const c=m.cols[f[0]]??-1;if(f[2]&&c<0)missing++;const ok=c>=0;
+      return `<div class="map-row"><span>${esc(f[1])}${f[2]?' <span class="req">*</span>':''}</span><select data-map-col="${role}|${f[0]}" ${m.sheet<0?'disabled':''}><option value="-1">（未對應）</option>${h.map((x,i)=>`<option value="${i}" ${i===c?'selected':''}>${esc(x||'第 '+(i+1)+' 欄')}</option>`).join('')}</select><span title="${ok?'已對應':f[2]?'必要欄位未對應':'選填欄位'}">${ok?'✓':f[2]?'⚠':'－'}</span></div>`}).join('');
+    if(m.sheet<0)missing++;
+    return `<div class="card"><h3>${esc(def.label)}</h3><div class="map-row" style="margin-bottom:6px"><span>工作表</span><select data-map-sheet="${role}"><option value="-1">（請選擇）</option>${sheets.map((s,i)=>`<option value="${i}" ${i===m.sheet?'selected':''}>${esc(s.name)}（${s.rows.length-1} 列）</option>`).join('')}</select><span>${m.sheet>=0?'✓':'⚠'}</span></div>
+     <p class="small muted" style="margin:0 0 6px">${m.sheet<0?'名稱不符，請手動指定工作表':m.auto?'已依工作表名稱或欄位自動辨識':'手動指定'}</p>${rows}${role==='emp'?'<p class="small muted">公司Email 只用於辨識欄位，不會載入、顯示或匯出。</p>':''}</div>`}).join('');
+  const auto=Object.values(M).filter(m=>m.sheet>=0).length;
+  return `<div class="stack"><div class="card"><h2 class="sec" style="margin:0 0 6px">確認工作表與欄位對應</h2>
+   <p style="margin:0">${auto===4?'四張工作表已自動辨識。':`已辨識 ${auto}／4 張工作表，請手動指定其餘工作表。`}欄位名稱以同義詞字典比對（含全形半形與空白差異），標示 <span class="req">*</span> 的為必要欄位。</p>
+   <p style="margin:10px 0 0"><button class="btn primary" data-act="confirm-map" ${missing?'disabled':''}>確認對應並執行資料健檢</button> ${missing?`<span class="req small">尚有 ${missing} 個必要項目未對應</span>`:''} <button class="btn" data-act="reupload">重新選擇檔案</button></p></div>
+   <div class="map-grid">${cards}</div></div>`}
+function viewHealth(){const H=S.health;const it=H.items;
+  const g4=H.gapRows;const diff=g4.filter(r=>r.gapRaw!==r.gapCalc);
+  return `<div class="stack"><div class="card"><div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center"><h2 class="sec" style="margin:0">資料健檢</h2><span class="muted small">以完整上傳資料檢查，不受篩選影響</span><button class="btn primary" data-act="tab" data-key="modules" style="margin-left:auto">前往模組分析</button></div>
+  <div class="tbl-wrap" style="max-height:none;margin-top:12px"><table class="t"><thead><tr><th>檢查項目</th><th>結果</th><th class="r">問題筆數</th><th>處理方式</th><th>受影響模組</th></tr></thead><tbody>
+  ${it.map(x=>`<tr class="health-row"><td>${esc(x.name)}</td><td>${light(x.light,x.light==='g'?'通過':x.light==='y'?'需注意':'需處理')}<div class="small">${esc(x.result)}</div>
+    ${x.id==='h4'?`<details class="more"><summary>原始值與重算值並列（差異 ${diff.length} 筆）</summary><div class="tbl-wrap" style="margin-top:6px">${table([{h:'部門'},{h:'月份'},{h:'核定編制',r:1},{h:'實際在職',r:1},{h:'原始缺口',r:1},{h:'重算缺口',r:1}],diff.map(r=>[DN(r.dept),ymLabel(r.ym),fmt0(r.quota),fmt0(r.act),fmt0(r.gapRaw),fmt0(r.gapCalc)])).replace('class="tbl-wrap"','')}</div><p class="small">原始缺口欄位可能經脫敏擾動或採不同定義，分析採用重算值。</p></details>`:''}
+    ${x.detail&&x.detail.length?`<details class="more"><summary>查看明細（${x.detail.length} 項）</summary><ul class="small">${x.detail.slice(0,60).map(d=>`<li>${esc(d)}</li>`).join('')}${x.detail.length>60?'<li>…</li>':''}</ul></details>`:''}</td>
+    <td class="r num">${fmt0(x.count)}</td><td class="small">${esc(x.action)}</td><td class="small">${esc(x.mods)}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="foot-note">本資料經去識別化與擾動處理，請著重相對趨勢、排序與型態，而非單一絕對數值。</div></div></div>`}
+function viewModules(){const R=S.R;if(!R||R.empty)return '<div class="card">目前篩選範圍沒有資料，請調整期間、部門或職務。</div>';
+  return `<div class="chain">${MODS.map(m=>`<section class="mod" aria-labelledby="mh-${m.id}"><div class="mod-dot" aria-hidden="true">${m.no}</div>
+   <div class="mod-head"><h2 id="mh-${m.id}">模組 ${m.no}　${esc(m.name)}</h2><span class="q">${esc(m.q)}</span></div>
+   <div class="kpis">${m.kpis.map(id=>{const k=kpiDef(id,R);return `<button class="kpi ${k.l}" data-act="open" data-key="${id}" aria-expanded="${S.panel===id}">
+     <div class="k-top"><span class="k-name">${esc(k.name)}</span>${light(k.l,k.t)}</div>
+     <div class="k-val num">${esc(String(k.val))}<small>${esc(k.unit)}</small></div><div class="k-sub">${esc(k.sub)}</div>
+     <div class="k-foot">${deltaHTML(k)}${spark(k.series||[],k.l==='r'?'var(--bad)':k.l==='y'?'var(--warn)':'var(--accent)')}</div></button>`}).join('')}</div></section>`).join('')}</div>
+   <p class="small muted">${denomText()}。點擊任一圖卡開啟分析面板。</p>`}
+function renderFilters(){const D=S.data,f=S.f;const mo=D.months.map(m=>`<option value="${m}">${ymLabel(m)}</option>`).join('');
+  const msHTML=(key,label,all,setv,nm)=>`<div class="f-item ms"><label>${label}</label><button class="ms-btn" data-act="ms" data-key="${key}" aria-haspopup="true">${setv.size===all.length?`全部（${all.length}）`:`已選 ${setv.size}／${all.length}`} ▾</button>
+    <div class="ms-pop hidden" id="ms-${key}"><div class="ms-tools"><button class="btn" data-act="ms-all" data-key="${key}">全選</button><button class="btn" data-act="ms-none" data-key="${key}">清除</button></div>${all.map(v=>`<label><input type="checkbox" data-ms="${key}" value="${esc(v)}" ${setv.has(v)?'checked':''}>${esc(nm(v))}</label>`).join('')}</div></div>`;
+  const open=$$('.ms-pop:not(.hidden)').map(x=>x.id);
+  $('#filter-bar').innerHTML=`<div class="f-item"><label for="f-start">期間</label><select id="f-start">${mo}</select><span>至</span><select id="f-end" aria-label="結束月份">${mo}</select></div>
+   <div class="f-item"><label>彙總</label><div class="seg"><button data-act="gran" data-key="m" aria-pressed="${f.gran==='m'}">月</button><button data-act="gran" data-key="q" aria-pressed="${f.gran==='q'}">季</button></div></div>
+   ${msHTML('depts','部門',D.depts,f.depts,dn)}${msHTML('jobs','職務',D.jobs,f.jobs,x=>x)}
+   <div class="f-item"><label for="f-denom">人均分母</label><select id="f-denom"><option value="rec">工時表當月有紀錄人數</option><option value="staff">編制表實際在職人數</option></select></div>
+   <span class="denom-note">${S.denom==='staff'&&f.jobs.size!==D.jobs.length?'職務篩選中採用編制人數分母時，分母不含職務條件':''}</span>`;
+  $('#f-start').value=f.start;$('#f-end').value=f.end;$('#f-denom').value=S.denom;open.forEach(id=>$('#'+id)?.classList.remove('hidden'));
+}
+function renderDrawer(open){const host=$('#drawer-host');if(!open){host.innerHTML='';return}const P=S.params;
+  host.innerHTML=`<div class="drawer-back" data-act="drawer-bg"><aside class="drawer" role="dialog" aria-modal="true" aria-label="參數設定"><div style="display:flex;align-items:center;gap:8px"><h2>參數設定</h2><button class="btn" data-act="drawer-close" style="margin-left:auto">關閉</button></div>
+   <p class="small muted" style="margin:4px 0 0">修改後全頁立即重算。比例請以小數輸入，例如 0.15 代表 15%。</p>
+   <p><button class="btn" data-act="param-export">匯出參數 JSON</button> <label class="btn" for="param-in">匯入參數 JSON</label> <button class="btn" data-act="param-reset">恢復預設</button></p>
+   ${PARAM_META.map(([g,items])=>`<fieldset><legend>${esc(g)}</legend>${items.map(([k,l])=>`<div class="p-row"><label for="p-${k}">${esc(l)}</label><input id="p-${k}" type="number" step="any" data-param="${k}" value="${P[k]}"></div>`).join('')}</fieldset>`).join('')}
+   <p class="small muted">長期高工時門檻預設參考台灣勞基法第 32 條與職業促發腦心血管疾病認定參考指引，僅供管理參考，實際適用以最新法規與勞資協議為準。</p></aside></div>`}
+
+/* ---- 匯出 ---- */
+const empCols=()=>S.mask?['員工編號']:['員工編號','員工姓名'];
+const empVals=id=>S.mask?[id]:[id,S.data.E[id]?.name||''];
+function exportCSV(kind){const R=S.R;if(!R||R.empty)return toast('目前沒有可匯出的資料');let rows,name;const PN={burnout:'耗竭警訊',preburn:'過勞前兆',discipline:'出勤紀律',hidden:'未申報負荷'};
+  if(kind==='m1'){name='模組一_部門趨勢判定';rows=[['部門代碼','部門名稱','期間人均月加班','趨勢斜率','R²','條件一連續上升','條件二迴歸','條件三季成長','最近一季成長率','持續成長','短期高峰季度'],...R.m1.dept.map(x=>[x.d,dn(x.d),x.pc.toFixed(2),x.reg.slope.toFixed(3),x.reg.r2.toFixed(3),x.c1?'是':'否',x.c2?'是':'否',x.c3?'是':'否',isFinite(x.qg)?(x.qg*100).toFixed(1)+'%':'',x.growth?'是':'否',x.peaks.map(p=>p.q).join(' ')])]}
+  else if(kind==='u'){name='未核准加班員工名單';rows=[[...empCols(),'部門代碼','部門名稱','職務','實際加班','未核准加班','未核准比率'],...R.u.emps.filter(e=>e.un>0).map(e=>[...empVals(e.emp),e.dept,dn(e.dept),e.job,e.ot.toFixed(1),e.un.toFixed(1),(e.un/e.ot*100).toFixed(1)+'%'])]}
+  else if(kind==='m2'){name='模組二_長期高工時名單';rows=[[...empCols(),'部門代碼','部門名稱','職務','等級','超標月數','超標月份','單月最高','連續3月合計最高','累計加班','觸發依據'],...R.m2.longEmps.map(e=>[...empVals(e.emp),e.dept,dn(e.dept),e.job,'第'+e.tier+'級',e.exceed,e.exceedMonths.map(ymLabel).join(' '),e.maxM.toFixed(1),e.s3.toFixed(1),e.ot.toFixed(1),e.tierReason])]}
+  else if(kind==='m3'){name='模組三_部門缺口與象限';rows=[['部門代碼','部門名稱','期間缺口率','平均缺口人數','平均在職','人均月加班','加班FTE','加班替補比','象限'],...R.m3.dept.map(x=>[x.d,dn(x.d),(x.rate*100).toFixed(1)+'%',x.avgGap.toFixed(2),x.avgAct.toFixed(1),x.pc.toFixed(2),x.fte.toFixed(2),isFinite(x.replace)?x.replace.toFixed(2):x.avgGap>0?'缺口過小不計':'無缺口',QN[x.quad]||''])]}
+  else if(kind==='m4'){name='模組四_優先關注名單';rows=[[...empCols(),'部門代碼','部門名稱','職務','累計加班','累計請假','累計異常缺勤','平均工作負荷指數','風險分數','觸發原因'],...[...R.emps].filter(e=>e.risk>=S.params.riskThr).sort((a,b)=>b.risk-a.risk).map(e=>[...empVals(e.emp),e.dept,dn(e.dept),e.job,e.ot.toFixed(1),e.lv.toFixed(1),e.ab.toFixed(1),isFinite(e.avgLd)?e.avgLd.toFixed(1):'',e.risk.toFixed(1),[...e.pattern.map(p=>PN[p]),...e.triggers].join('、')])]}
+  else if(kind==='diag'){name='綜合診斷_部門根因';const DD=deptDiagnosis(R);const LN={g:'綠',y:'黃',r:'紅',n:'無'};rows=[['部門代碼','部門名稱','模組一','未核准','模組二','模組三','模組四','主要根因','判定依據'],...DD.map(x=>[x.d,dn(x.d),LN[x.L.m1],LN[x.L.u],LN[x.L.m2],LN[x.L.m3],LN[x.L.m4],CAUSE[x.cause][0],x.evidence.join('、')])]}
+  else if(kind==='health'){name='資料健檢結果';rows=[['檢查項目','結果','問題筆數','處理方式','受影響模組'],...S.health.items.map(x=>[x.name,x.result,x.count,x.action,x.mods])]}
+  download(`${name}_${ymLabel(R.ms[0]).replace('/','')}-${ymLabel(R.ms[R.ms.length-1]).replace('/','')}.csv`,toCSV(rows),'text/csv;charset=utf-8');toast(`已匯出 ${name}${S.mask?'（遮罩模式）':''}`)}
+
+/* ---- 載入流程 ---- */
+async function handleFile(file){
+  try{
+    if(/\.csv$/i.test(file.name)){toast('單一 CSV 請使用「改用四個 CSV 上傳」');return}
+    if(!XLSX_OK){toast('這個瀏覽器不支援 XLSX 解壓縮，請改用 CSV');return}
+    const buf=await file.arrayBuffer();S.sheets=await parseXLSX(buf);S.fileName=file.name;
+    S.mapping=autoMap(S.sheets);S.view='mapping';S.panel=null;render();
+  }catch(e){console.error(e);alert('讀取失敗：'+e.message)}
+}
+async function loadCSVs(){const ins=$$('[data-csv]');const sheets=[];
+  for(const i of ins){if(!i.files[0])continue;const t=await i.files[0].text();sheets.push({name:ROLES[i.dataset.csv].label,rows:parseCSV(t)})}
+  if(!sheets.length){$('#csv-status').textContent='請至少選擇一個 CSV';return}
+  S.sheets=sheets;S.mapping=autoMap(sheets);S.view='mapping';render()}
+
+/* ---- 事件 ---- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');
+  if(!e.target.closest('.ms'))$$('.ms-pop').forEach(p=>p.classList.add('hidden'));
+  if(!e.target.closest('.menu'))$('#export-pop')?.classList.add('hidden');
+  if(!t)return;const a=t.dataset.act,k=t.dataset.key;
+  if(a==='close-bg'&&e.target!==t)return;if(a==='drawer-bg'&&e.target!==t)return;
+  switch(a){
+    case 'open':S.panel=k;S.pf={};if(S.view!=='modules'&&S.view!=='report')S.view='modules';render();break;
+    case 'close':case 'close-bg':S.panel=null;render();break;
+    case 'heat':S.pf.drill=[t.dataset.r,t.dataset.c];renderPanel();break;
+    case 'undrill':S.pf.drill=null;renderPanel();break;
+    case 'emp':S.pf.emp=k;renderPanel();setTimeout(()=>{const h=[...$$('.panel h4')].find(x=>x.textContent.startsWith('個人月度時間軸'));h&&h.scrollIntoView({behavior:'smooth',block:'center'})},30);break;
+    case 'sort':{const i=+k;if(S.pf.sortKey===i)S.pf.sortDir=-(S.pf.sortDir??-1);else{S.pf.sortKey=i;S.pf.sortDir=-1}renderPanel();break}
+    case 'exp-pri':exportCSV('m4');break;
+    case 'tab':S.view=k;S.panel=null;render();window.scrollTo(0,0);break;
+    case 'gran':S.f.gran=k;recompute();break;
+    case 'ms':{const p=$('#ms-'+k);const was=p.classList.contains('hidden');$$('.ms-pop').forEach(x=>x.classList.add('hidden'));if(was)p.classList.remove('hidden');break}
+    case 'ms-all':S.f[k]=new Set(k==='depts'?S.data.depts:S.data.jobs);recompute();break;
+    case 'ms-none':S.f[k]=new Set();recompute();break;
+    case 'show-csv':$('#csv-box').classList.remove('hidden');break;
+    case 'load-csv':loadCSVs();break;
+    case 'confirm-map':buildData();S.view='health';S.R=analyze();render();break;
+    case 'reupload':S.view='upload';S.sheets=null;S.mapping=null;S.data=null;render();break;
+    case 'export':$('#export-pop').classList.toggle('hidden');break;
+    case 'exp':$('#export-pop').classList.add('hidden');exportCSV(k);break;
+    case 'settings':renderDrawer(true);break;
+    case 'drawer-close':case 'drawer-bg':renderDrawer(false);break;
+    case 'param-export':download('加班儀表板參數.json',JSON.stringify(S.params,null,2),'application/json');break;
+    case 'param-reset':S.params={...DEFAULT_PARAMS};renderDrawer(true);recompute();break;
+    case 'print':S.panel=null;renderPanel();setTimeout(()=>window.print(),50);break;
+    case 'theme':{const r=document.documentElement;const cur=r.dataset.theme||'auto';const nx=cur==='auto'?'light':cur==='light'?'dark':'auto';if(nx==='auto')delete r.dataset.theme;else r.dataset.theme=nx;t.textContent={auto:'主題 自動',light:'主題 淺色',dark:'主題 深色'}[nx];break}
+  }
+});
+document.addEventListener('change',async e=>{const t=e.target;
+  if(t.id==='file-in'&&t.files[0]){await handleFile(t.files[0]);t.value=''}
+  else if(t.id==='param-in'&&t.files[0]){try{const o=JSON.parse(await t.files[0].text());for(const k of Object.keys(DEFAULT_PARAMS))if(isFinite(+o[k]))S.params[k]=+o[k];renderDrawer(true);recompute();toast('已匯入參數')}catch(err){alert('參數檔格式錯誤')}t.value=''}
+  else if(t.id==='f-start'||t.id==='f-end'){S.f.start=+$('#f-start').value;S.f.end=+$('#f-end').value;if(S.f.start>S.f.end)[S.f.start,S.f.end]=[S.f.end,S.f.start];recompute()}
+  else if(t.id==='f-denom'){S.denom=t.value;recompute()}
+  else if(t.dataset.ms){const set=S.f[t.dataset.ms];t.checked?set.add(t.value):set.delete(t.value);recompute()}
+  else if(t.dataset.pf){S.pf[t.dataset.pf]=t.value;if(t.dataset.pf==='dept')S.pf.drill=null;renderPanel()}
+  else if(t.dataset.param){const v=+t.value;if(isFinite(v)){S.params[t.dataset.param]=v;recompute()}}
+  else if(t.id==='mask-in'){S.mask=t.checked;render()}
+  else if(t.dataset.mapSheet){const role=t.dataset.mapSheet,i=+t.value;S.mapping[role].sheet=i;S.mapping[role].auto=false;if(i>=0)fillCols(S.mapping[role],S.sheets[i],ROLES[role]);else S.mapping[role].cols={};render()}
+  else if(t.dataset.mapCol){const [role,f]=t.dataset.mapCol.split('|');S.mapping[role].cols[f]=+t.value;render()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#drawer-host').innerHTML)renderDrawer(false);else if(S.panel){S.panel=null;render()}}});
+document.addEventListener('dragover',e=>{e.preventDefault();$('#drop')?.classList.add('over')});
+document.addEventListener('dragleave',e=>{if(!e.relatedTarget)$('#drop')?.classList.remove('over')});
+document.addEventListener('drop',e=>{e.preventDefault();$('#drop')?.classList.remove('over');const f=e.dataTransfer.files[0];if(f)handleFile(f)});
+/* 懸停提示框 */
+const tip=document.createElement('div');tip.className='tip hidden';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+function showTip(el,x,y){tip.textContent=el.getAttribute('data-tip');tip.classList.remove('hidden');const w=tip.offsetWidth,h=tip.offsetHeight;let L=x+14,Tp=y+14;if(L+w>innerWidth-8)L=x-w-14;if(Tp+h>innerHeight-8)Tp=y-h-14;tip.style.left=Math.max(4,L)+'px';tip.style.top=Math.max(4,Tp)+'px'}
+document.addEventListener('mousemove',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');if(el)showTip(el,e.clientX,e.clientY);else tip.classList.add('hidden')});
+document.addEventListener('touchstart',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');if(el){const t=e.touches[0];showTip(el,t.clientX,t.clientY)}else tip.classList.add('hidden')},{passive:true});
+document.addEventListener('scroll',()=>tip.classList.add('hidden'),true);
+render();
+
+let rsz;addEventListener('resize',()=>{clearTimeout(rsz);rsz=setTimeout(()=>{if(S.data&&(S.view==='report'||S.panel))render()},200)});
+
+</script>
+</body>
+</html>

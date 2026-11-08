@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>楊宏文 (楊老師) | 企業生成式 AI 導入顧問 • AI365 數位轉型專家</title>
+    <meta name="description" content="楊宏文（楊老師）專注於企業生成式人工智慧（Generative AI）導入、AI 數位轉型與 AI Agent 應用落地。提出「AI365」工作流（AI Workflow），協助企業將 AI 轉化為可制度化（AI Governance）、可衡量（AI ROI）、可擴張的企業級 AI 能力。深耕資訊人才培訓 25 年，輔導 800+ 學員通過 ITS AI 國際認證。">
+    <meta name="keywords" content="楊宏文, 楊老師, Hubert Yang, AI365, Generative AI, AI導入顧問, AI數位轉型, AI Agent, AI Workflow, RAG企業知識庫, AI Security, AI Governance, Prompt Engineering, Vibe Coding, AI企業培訓, ITS AI 國際認證, 普萊德科技AI顧問">
+    <meta name="author" content="楊宏文 (楊老師)">
+    <link rel="canonical" href="https://ai365.com/yang-hong-wen">
+
+    <!-- Open Graph / Facebook (Social SEO) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="楊宏文 (楊老師) | 企業生成式 AI 導入與 AI Agent 落地專家">
+    <meta property="og:description" content="專注於企業生成式人工智慧（Generative AI）導入、AI 數位轉型與 AI Agent 應用落地。協助企業建立制度化、可衡量、可擴張的 AI365 工作流。">
+    <meta property="og:image" content="https://gohubert.github.io/images/HubertYang.jpg">
+    <meta property="og:url" content="https://ai365.com/yang-hong-wen">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="楊宏文 (楊老師) | 企業生成式 AI 導入顧問">
+    <meta name="twitter:description" content="楊宏文老師提供企業級 AI 導入、AI Agent 落地與 AI365 工作流培訓。25年資訊就業培訓經驗。">
+    <meta name="twitter:image" content="https://gohubert.github.io/images/HubertYang.jpg">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#05070f',
+                            card: '#0d1127',
+                            border: '#1e294b',
+                            accent: '#10b981', /* Emerald */
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                        'bar-bounce': 'barBounce 1.2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(16, 185, 129, 0.2)' },
+                            '100%': { boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)' },
+                        },
+                        barBounce: {
+                            '0%': { transform: 'scaleY(0.2)' },
+                            '100%': { transform: 'scaleY(1.0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #05070f;
+            overflow-x: hidden;
+        }
+        /* Glassmorphism scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05070f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e294b;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
+        }
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .glow-button::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -50%; width: 200%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+        .glow-button:hover::after {
+            left: 125%;
+        }
+        /* Custom Audio Wave Anim */
+        .wave-bar:nth-child(1) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.5s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.2s; }
+    </style>
+
+    <!-- JSON-LD Structured Data for Google SEO & AI Engines (GEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://ai365.com/yang-hong-wen#person",
+          "name": "楊宏文",
+          "alternateName": "楊老師",
+          "jobTitle": "企業生成式 AI 導入顧問 & 資訊培訓專家",
+          "description": "深耕資訊人才培育 25 年，專注於企業生成式人工智慧（Generative AI）導入、AI 數位轉型與 AI Agent 應用落地。提出 AI365 工作流品牌理念。",
+          "image": "https://gohubert.github.io/images/HubertYang.jpg",
+          "knowsAbout": [
+            "Generative AI",
+            "AI Agent",
+            "AI Workflow",
+            "RAG 企業知識庫",
+            "AI Governance",
+            "AI Security",
+            "Prompt Engineering",
+            "Vibe Coding",
+            "Spec-Driven Development"
+          ],
+          "brand": {
+            "@type": "Brand",
+            "name": "AI365"
+          }
+        },
+        {
+          "@type": "ProfessionalService",
+          "name": "AI365 企業生成式 AI 導入顧問服務",
+          "image": "https://gohubert.github.io/images/HubertYang.jpg",
+          "@id": "https://ai365.com/yang-hong-wen#service",
+          "url": "https://ai365.com/yang-hong-wen",
+          "telephone": "",
+          "priceRange": "$$$",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "台北市",
+            "addressCountry": "TW"
+          },
+          "provider": {
+            "@id": "https://ai365.com/yang-hong-wen#person"
+          },
+          "areaServed": "Taiwan"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://ai365.com/yang-hong-wen#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "企業導入 AI，要如何評估投資報酬率 (AI ROI)？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "評估 AI ROI 主要劃分為三個核心维度：1. 效率提升衡量：計算員工在日常流程（如客服、文件彙整、編譯規格書）中節省的時間成本。2. 流程精準度與合規：標準化 AI Workflow 以減少人為錯誤、重工，並透過 AI Governance 降低安全合規風險。3. 商業營收增長能力：利用 RAG 企業知識庫縮短人才培育期，直接增進商業推進與決策效率。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "什麼是「AI365 工作流」與 YAML 標準化？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "「AI365 工作流」是楊宏文老師的核心方法論，強調讓 AI 融入日常。為避免低成效的 Prompt 工程，AI365 引進 YAML 標準化輸出以確保模型每次生成規格皆一致，並結合 Spec-Driven 與 Vibe Coding，由規格確定邏輯再利用 AI Agent 工具在數分鐘內快速渲染 MVP 系統，形成完整轉型閉環。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "楊老師如何處理企業導入中的 AI 治理 (AI Governance) 與 AI 安全性？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "楊老師與全智網及緯育合作，開辦 CompTIA Security AI+、ITS AI 及 CCS GAI 等國際認證課程。導入時核心著重於：1. 數據保護：設定敏感資料過濾層；2. 權限隔離：在建構企業級 RAG 知識庫時，精準劃分員工存取權限，確保機密或專利資訊不會發生未授權外洩。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+</head>
+<body class="text-slate-100 antialiased selection:bg-brand-accent selection:text-brand-dark">
+
+    <!-- Background Music Audio Tag -->
+    <audio id="bgm-player" src="https://gohubert.github.io/bgm/music-1.mp3" loop></audio>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-brand-dark/85 backdrop-blur-md border-b border-brand-border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center justify-between h-20" aria-label="主導覽列">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3 group" title="楊宏文 企業AI導入專家 首頁">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-cyan flex items-center justify-center text-brand-dark font-extrabold text-lg shadow-lg group-hover:scale-105 transition-transform">
+                        365
+                    </div>
+                    <div>
+                        <span class="block text-xl font-black tracking-wider bg-gradient-to-r from-white via-slate-100 to-brand-accent bg-clip-text text-transparent">楊宏文 <span class="text-xs font-medium text-slate-400">楊老師</span></span>
+                        <span class="block text-[10px] text-brand-cyan uppercase tracking-widest font-bold">Enterprise AI Transformation</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <a href="#about" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">定位理念</a>
+                    <a href="#ai365" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">AI365核心</a>
+                    <a href="#experience" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">專業經歷</a>
+                    <a href="#achievements" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">導入實績</a>
+                    <a href="#skills" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">核心技術</a>
+                    <a href="#clients" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">服務客戶</a>
+                    <a href="#faq-section" class="px-3 py-2 text-sm font-medium text-slate-300 hover:text-brand-accent transition-colors">知識問答</a>
+                    <a href="#chat-assistant" class="px-3 py-2 text-sm font-medium text-brand-cyan hover:text-brand-accent transition-colors flex items-center gap-1.5 bg-brand-cyan/10 border border-brand-cyan/20 rounded-full px-4 py-1.5"><i class="fa-solid fa-robot"></i> AI諮詢</a>
+                </div>
+
+                <!-- Call To Action -->
+                <div class="hidden lg:flex items-center">
+                    <a href="#contact" class="glow-button px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-cyan text-brand-dark font-bold text-sm hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center gap-2">
+                        <span>預約企業內訓 / 諮詢</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-slate-300 hover:text-brand-accent p-2 rounded-lg focus:outline-none" aria-label="切換選單">
+                        <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-drawer" class="hidden md:hidden absolute top-20 left-0 w-full bg-brand-dark/95 backdrop-blur-lg border-b border-brand-border py-6 px-4 space-y-4">
+            <a href="#about" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">定位理念</a>
+            <a href="#ai365" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">AI365核心</a>
+            <a href="#experience" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">專業經歷</a>
+            <a href="#achievements" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">導入實績</a>
+            <a href="#skills" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">核心技術</a>
+            <a href="#clients" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">服務客戶</a>
+            <a href="#faq-section" class="mobile-nav-link block px-4 py-3 text-slate-300 hover:text-brand-accent hover:bg-brand-card/50 rounded-xl font-medium transition-colors">知識問答</a>
+            <a href="#chat-assistant" class="mobile-nav-link block px-4 py-3 text-brand-cyan bg-brand-cyan/10 border border-brand-cyan/20 rounded-xl font-medium transition-colors"><i class="fa-solid fa-robot mr-2"></i> AI 智能諮詢</a>
+            <div class="pt-4 border-t border-brand-border">
+                <a href="#contact" class="mobile-nav-link block w-full text-center py-3 bg-gradient-to-r from-brand-accent to-brand-cyan text-brand-dark font-bold rounded-xl shadow-lg">
+                    預約企業內訓 / 諮詢
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main id="main-content">
+        <section id="about" class="relative pt-32 pb-20 md:pt-44 md:pb-28 overflow-hidden flex items-center">
+            <!-- Background Lighting FX -->
+            <div class="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-[500px] md:h-[500px] bg-brand-accent/10 rounded-full blur-[80px] pointer-events-none animate-pulse-slow"></div>
+            <div class="absolute bottom-1/4 right-10 w-64 h-64 md:w-[450px] md:h-[450px] bg-brand-purple/10 rounded-full blur-[100px] pointer-events-none"></div>
+            <!-- Cyber grid background -->
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Hero Info -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-xs sm:text-sm font-semibold tracking-wide mx-auto lg:mx-0">
+                            <span class="flex h-2.5 w-2.5 relative">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-accent"></span>
+                            </span>
+                            2026 企業生成式 AI 轉型首選顧問
+                        </div>
+                        
+                        <!-- Main Keyword Optimized H1 -->
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                            連結 AI 與商業落地<br>
+                            <span class="bg-gradient-to-r from-brand-accent via-brand-cyan to-brand-purple bg-clip-text text-transparent">
+                                讓 AI 成為組織制度與個人能力
+                            </span>
+                        </h1>
+                        
+                        <!-- Strong contextual descriptive block for AI crawlers -->
+                        <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                            專注於<strong>企業生成式人工智慧（Generative AI）導入</strong>、<strong>AI 數位轉型</strong>與 <strong>AI Agent 應用落地</strong>。我們協助企業將 AI 從實驗性的工具轉化為可制度化（AI Governance / AI治理）、可衡量（AI ROI / 成效評估）、可擴張（Scalable AI / 組織能力複製）的<strong>企業級 AI 能力</strong>。
+                        </p>
+
+                        <!-- Micro-cards detailing core concept -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 max-w-xl sm:max-w-none mx-auto lg:mx-0">
+                            <div class="p-4 rounded-xl bg-brand-card/40 border border-brand-border/60 hover:border-brand-accent/30 transition-all text-left">
+                                <h3 class="text-brand-accent font-bold text-sm mb-1"><i class="fa-solid fa-shield-halved mr-1.5"></i> 可制度化</h3>
+                                <p class="text-xs text-slate-400">建立 AI 治理規範 (AI Governance) 與數據安全流程。</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-brand-card/40 border border-brand-border/60 hover:border-brand-cyan/30 transition-all text-left">
+                                <h3 class="text-brand-cyan font-bold text-sm mb-1"><i class="fa-solid fa-chart-line mr-1.5"></i> 可衡量性</h3>
+                                <p class="text-xs text-slate-400">評估 AI 導入投資報酬率 (AI ROI) 與效率改善指標。</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-brand-card/40 border border-brand-border/60 hover:border-brand-purple/30 transition-all text-left">
+                                <h3 class="text-brand-purple font-bold text-sm mb-1"><i class="fa-solid fa-network-wired mr-1.5"></i> 可擴張性</h3>
+                                <p class="text-xs text-slate-400">建立可複製的組織能力與標準化 AI Workflow 範本。</p>
+                            </div>
+                        </div>
+
+                        <!-- CTA Actions -->
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                            <a href="#contact" class="glow-button px-8 py-4 rounded-xl bg-gradient-to-r from-brand-accent to-brand-cyan text-brand-dark font-extrabold shadow-lg hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all flex items-center justify-center gap-2 text-base">
+                                <span>立即預約企業 AI 導入諮詢</span>
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </a>
+                            <a href="#ai365" class="px-8 py-4 rounded-xl bg-brand-card border border-brand-border text-slate-200 hover:text-white hover:border-slate-500 font-bold transition-all flex items-center justify-center gap-2 text-base">
+                                <span>探索 AI365 核心心法</span>
+                                <i class="fa-solid fa-compass"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Premium Persona Card with REAL Portrait Image -->
+                    <div class="lg:col-span-5 relative mt-8 lg:mt-0 flex justify-center">
+                        <div class="relative w-full max-w-[420px] rounded-2xl bg-gradient-to-br from-brand-border to-brand-dark p-[2px] shadow-2xl">
+                            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-accent/20 to-brand-purple/20 opacity-40 blur-lg pointer-events-none"></div>
+                            <div class="bg-brand-dark/95 rounded-2xl p-6 sm:p-8 relative overflow-hidden" itemscope itemtype="https://schema.org/Person">
+                                <div class="absolute top-4 right-4 z-10 px-2.5 py-1 bg-brand-accent/20 border border-brand-accent/30 rounded text-[10px] text-brand-accent font-mono tracking-widest font-bold uppercase">
+                                    Enterprise Expert
+                                </div>
+                                
+                                <!-- User Portrait Block -->
+                                <div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden mb-6 bg-brand-card border border-brand-border group">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent opacity-60 z-10"></div>
+                                    <img 
+                                        src="https://gohubert.github.io/images/HubertYang.jpg" 
+                                        alt="楊宏文 老師 (Hubert Yang) 形象照" 
+                                        class="w-full h-full object-cover object-top scale-100 group-hover:scale-105 transition-transform duration-500"
+                                        itemprop="image"
+                                        onerror="this.src='https://placehold.co/400x500/0d1127/10b981?text=Hubert+Yang'"
+                                    />
+                                </div>
+
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <h2 class="text-xl font-extrabold text-white" itemprop="name">楊宏文 老師</h2>
+                                            <span class="text-xs px-2 py-0.5 rounded bg-brand-border text-slate-300">Hubert Yang</span>
+                                        </div>
+                                        <p class="text-xs text-brand-accent font-semibold mt-1" itemprop="jobTitle">AI365 品牌創辦人 / 企業 AI 導入顧問</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3.5 pt-2 border-t border-brand-border/40">
+                                    <div class="flex items-start gap-3">
+                                        <div class="mt-1 w-5 h-5 rounded-full bg-brand-accent/10 flex items-center justify-center text-[10px] text-brand-accent shrink-0">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-slate-300">生成式 AI 導入、AI 數位轉型與 AI Agent 落地</p>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="mt-1 w-5 h-5 rounded-full bg-brand-cyan/10 flex items-center justify-center text-[10px] text-brand-cyan shrink-0">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-slate-300">25年資訊培訓大師、800+ 取得 AI 國際認證學員</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-4 border-t border-brand-border flex items-center justify-between">
+                                    <span class="text-[11px] text-slate-400 italic">"AI 的價值，在於融入日常與制度"</span>
+                                    <a href="#chat-assistant" class="text-xs text-brand-accent hover:underline flex items-center gap-1 font-bold">
+                                        <span>AI 數位代理諮詢</span>
+                                        <i class="fa-solid fa-angles-right text-[10px]"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Stats Dashboard -->
+        <section class="py-12 border-y border-brand-border bg-brand-card/20 relative z-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="space-y-1">
+                        <div class="text-3xl sm:text-4xl md:text-5xl font-black text-brand-accent">25+</div>
+                        <p class="text-xs sm:text-sm text-slate-400 uppercase tracking-widest font-semibold">資訊培育經驗 (年)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-3xl sm:text-4xl md:text-5xl font-black text-brand-cyan">1,000+</div>
+                        <p class="text-xs sm:text-sm text-slate-400 uppercase tracking-widest font-semibold">成功輔導轉職學員</p>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-3xl sm:text-4xl md:text-5xl font-black text-brand-purple">800+</div>
+                        <p class="text-xs sm:text-sm text-slate-400 uppercase tracking-widest font-semibold">通過 ITS AI 國際認證</p>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="text-3xl sm:text-4xl md:text-5xl font-black text-amber-400">5.92<span class="text-lg font-normal text-slate-400">/6</span></div>
+                        <p class="text-xs sm:text-sm text-slate-400 uppercase tracking-widest font-semibold">中華電信培訓滿意度</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI365 Core Concept & Personal Brand Section -->
+        <section id="ai365" class="py-20 md:py-28 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-xs uppercase tracking-widest text-brand-accent font-bold px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full">CORE METHODOLOGY</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">「AI365」品牌理念：融入日常的 AI 工作流</h2>
+                    <p class="text-slate-300 font-light text-base sm:text-lg leading-relaxed">
+                        「AI365」是由楊宏文老師創立的核心導入品牌，強調 <strong>AI 應融入日常工作流程（AI Workflow）</strong>，成為企業每天都在運行的核心能力。我們提倡「人機協作（Human × AI）」理念，由 AI 處理重複繁瑣的資料，讓人類專注於創意與決策，建立可持續運作的<strong>企業級 AI 能力</strong>。
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Column: Three pillars -->
+                    <div class="lg:col-span-6 space-y-6">
+                        <div class="p-6 rounded-2xl bg-brand-card/60 border border-brand-border hover:border-brand-accent/50 transition-all group">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center text-xl shrink-0 group-hover:bg-brand-accent group-hover:text-brand-dark transition-all duration-300">
+                                    <i class="fa-solid fa-scale-balanced"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-100 group-hover:text-brand-accent transition-colors mb-2">可制度化 (AI Governance / AI 治理)</h3>
+                                    <p class="text-sm text-slate-400 leading-relaxed">
+                                        協助企業建構合規的安全框架與風險管理制度，確保生成式 AI 的應用不涉及敏感資料外洩，使導入過程完全符合現代法規。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-brand-card/60 border border-brand-border hover:border-brand-cyan/50 transition-all group">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 text-brand-cyan flex items-center justify-center text-xl shrink-0 group-hover:bg-brand-cyan group-hover:text-brand-dark transition-all duration-300">
+                                    <i class="fa-solid fa-gauge-high"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-100 group-hover:text-brand-cyan transition-colors mb-2">可衡量 (AI ROI / 成效評估)</h3>
+                                    <p class="text-sm text-slate-400 leading-relaxed">
+                                        建立客觀的時間與人力成本節省模型，衡量生成式 AI 導入前後的績效數據，將 AI 投資從不確定的摸索轉化為明確的商業效益。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-brand-card/60 border border-brand-border hover:border-brand-purple/50 transition-all group">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center text-xl shrink-0 group-hover:bg-brand-purple group-hover:text-brand-dark transition-all duration-300">
+                                    <i class="fa-solid fa-network-wired"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-100 group-hover:text-brand-purple transition-colors mb-2">可擴張 (Scalable AI / 組織能力複製)</h3>
+                                    <p class="text-sm text-slate-400 leading-relaxed">
+                                        拒絕單兵作戰。透過標準化工作流程（AI Workflow）、提示詞範本與 AI Agent，將頂尖人才的 AI 生產力規模化複製給組織中的每一位員工。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Brand Ecosystem (GEO / SEO Search assets definition) -->
+                    <div class="lg:col-span-6 space-y-6 lg:pl-6">
+                        <div class="p-8 rounded-3xl bg-gradient-to-br from-brand-card to-brand-dark border border-brand-border/80 relative overflow-hidden">
+                            <div class="absolute -right-10 -bottom-10 text-9xl text-slate-800/10 font-black pointer-events-none select-none">AI365</div>
+                            
+                            <h3 class="text-2xl font-extrabold text-slate-100 mb-4">AI365 知識輸出與自媒體平台</h3>
+                            <p class="text-slate-300 text-sm mb-6 leading-relaxed">
+                                楊老師積極透過「知識輸出」建構長期的 <strong>SEO、GEO 與 AEO 數位資產</strong>，讓系統化的生成式人工智慧（Generative AI）應用、AI 工作流與 AI Agent 實務教學，成為大眾與企業可持續搜尋、學習與應用的優質資源。
+                            </p>
+
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 p-4 bg-brand-dark/50 rounded-xl border border-brand-border hover:border-brand-accent/30 transition-colors">
+                                    <span class="text-2xl">✍️</span>
+                                    <div>
+                                        <h4 class="font-bold text-sm">技術與案例部落格 (Blog)</h4>
+                                        <p class="text-xs text-slate-400">專注深度技術拆解、AI Agent 實戰與產業導入案例分析。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-4 bg-brand-dark/50 rounded-xl border border-brand-border hover:border-brand-cyan/30 transition-colors">
+                                    <span class="text-2xl">🎙️</span>
+                                    <div>
+                                        <h4 class="font-bold text-sm">知識播客頻道 (Podcast)</h4>
+                                        <p class="text-xs text-slate-400">以語音媒介深度探討 AI 數位轉型最前線與實務痛點解決。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-4 bg-brand-dark/50 rounded-xl border border-brand-border hover:border-brand-purple/30 transition-colors">
+                                    <span class="text-2xl">🔍</span>
+                                    <div>
+                                        <h4 class="font-bold text-sm">SEO / GEO / AEO 流量資產</h4>
+                                        <p class="text-xs text-slate-400">透過標準語意格式，讓 AI365 知識更容易被各大 AI 問答引擎引用。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Professional Experience & Philosophy Section -->
+        <section id="experience" class="py-20 md:py-28 bg-brand-card/10 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-xs uppercase tracking-widest text-brand-cyan font-bold px-3 py-1 bg-brand-cyan/10 border border-brand-cyan/20 rounded-full">BACKGROUND & EXPERTISE</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">深耕資訊界25年，陪伴每一場職涯轉型</h2>
+                    <p class="text-slate-300 font-light text-base sm:text-lg">
+                        從事資訊專業就業技能培訓超過 25 年，累計協助上千名學員成功轉職為工程師。楊老師深諳學習、就業與職涯轉型的完整歷程，不只教技術，更陪伴學員適應 AI 時代的新定位。
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Philosophy 1 -->
+                    <div class="bg-brand-card/55 border border-brand-border p-8 rounded-2xl flex flex-col justify-between hover:border-brand-accent/40 transition-all">
+                        <div>
+                            <div class="text-brand-accent text-3xl mb-4"><i class="fa-solid fa-heart-pulse"></i></div>
+                            <h3 class="text-xl font-bold mb-3">教學初心 (Why)</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                                楊老師深信：<strong>「一個人學會一項技能，就有機會改變一生。」</strong>在每場培訓中，他更在乎學員能否跨出動手操作的第一步，重獲自主與核心競爭力，讓 AI 成為助力而非壓力。
+                            </p>
+                        </div>
+                        <span class="text-xs text-brand-accent font-mono font-bold tracking-wider">TEACHING PHILOSOPHY</span>
+                    </div>
+
+                    <!-- Philosophy 2 -->
+                    <div class="bg-brand-card/55 border border-brand-border p-8 rounded-2xl flex flex-col justify-between hover:border-brand-cyan/40 transition-all">
+                        <div>
+                            <div class="text-brand-cyan text-3xl mb-4"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                            <h3 class="text-xl font-bold mb-3">教學風格 (How)</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                                提倡 <strong>Step-by-step 圖解式教學</strong>、帶入真實工作應用場景，並提供高度互動的陪伴式即時指導。課程核心目標在於下課後學員能<strong>「做得出來」</strong>，而非僅是「聽懂」。
+                            </p>
+                        </div>
+                        <span class="text-xs text-brand-cyan font-mono font-bold tracking-wider">PRACTICAL APPROACH</span>
+                    </div>
+
+                    <!-- Philosophy 3 -->
+                    <div class="bg-brand-card/55 border border-brand-border p-8 rounded-2xl flex flex-col justify-between hover:border-brand-purple/40 transition-all">
+                        <div>
+                            <div class="text-brand-purple text-3xl mb-4"><i class="fa-solid fa-users-gear"></i></div>
+                            <h3 class="text-xl font-bold mb-3">教學成果 (Impact)</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                                已累積輔導<strong>超過 800 位學員順利通過 ITS AI 國際認證</strong>，並帶領上千名零基礎或跨領域人才成功跨越門檻，將 AI 技能即刻在職場日常中落地展現成果。
+                            </p>
+                        </div>
+                        <span class="text-xs text-brand-purple font-mono font-bold tracking-wider">TRANSFORMATION IMPACT</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enterprise AI Transformation Achievements Section -->
+        <section id="achievements" class="py-20 md:py-28 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-xs uppercase tracking-widest text-brand-purple font-bold px-3 py-1 bg-brand-purple/10 border border-brand-purple/20 rounded-full">TRANSFORMATION CASE STUDIES</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">企業 AI 導入實績與公部門推廣</h2>
+                    <p class="text-slate-300 font-light text-base sm:text-lg">
+                        從指標性上市櫃大廠到重要政府機構，楊老師提供可被驗證、數據化的企業 AI 導入方案與人才培訓課程。
+                    </p>
+                </div>
+
+                <!-- Main Major Case Studies -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                    <!-- Pride Technology -->
+                    <div class="bg-brand-card/80 border border-brand-border rounded-3xl p-8 hover:border-brand-accent/50 transition-all duration-300 flex flex-col justify-between group">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-mono font-bold text-brand-accent tracking-widest bg-brand-accent/10 px-3 py-1 rounded">2025 ~ CURRENT • 顧問導入</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-building"></i> 上市櫃企業</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white group-hover:text-brand-accent transition-colors">普萊德科技 — AI 導入與流程自動化</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed font-light">
+                                擔任 <strong>AI 導入專案顧問</strong>，推動全方位 <strong>AI 賦能計畫 (AI Enablement Program)</strong>。協助其建立跨部門的 AI365 標準工作流與制度，導入 AI Agent 自動化流程。有效助攻其連續五年榮獲《天下永續公民獎》第一名卓越成就。
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">AI Enablement</span>
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">AI Agent 落地</span>
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">工作流自動化</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chunghwa Telecom -->
+                    <div class="bg-brand-card/80 border border-brand-border rounded-3xl p-8 hover:border-brand-cyan/50 transition-all duration-300 flex flex-col justify-between group">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-mono font-bold text-brand-cyan tracking-widest bg-brand-cyan/10 px-3 py-1 rounded">每月固定培訓</span>
+                                <span class="text-xs text-slate-400"><i class="fa-solid fa-users"></i> 萬人級規模</span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white group-hover:text-brand-cyan transition-colors">中華電信 — 大型組織 AI 應用培訓</h3>
+                            <p class="text-sm text-slate-300 leading-relaxed font-light">
+                                長期負責萬人級大型電信企業的生成式 AI 實作訓練。單月培訓規模達 600 人以上，學員對課程滿意度平均高達 <strong>5.92 / 6 分</strong>。成功協助企業建立內部 AI 人機協作文化與核心 Workflow。
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">大型企業內訓</span>
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">課程評分 5.92</span>
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">AI 文化塑形</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Minor & Public cases grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- YuHua Biotech -->
+                    <div class="p-6 rounded-2xl bg-brand-card/40 border border-brand-border hover:border-brand-purple/40 transition-all">
+                        <span class="text-[10px] font-bold text-brand-purple tracking-widest uppercase block mb-1">友華生技</span>
+                        <h4 class="text-base font-bold mb-2 text-white">長期 AI 應用導入專題</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            連續兩年以上，固定每月為企業內部與各事業單位辦理生成式 AI 應用講座，深耕特定崗位的 AI 解決方案與實務落地。
+                        </p>
+                    </div>
+                    <!-- Government Sector -->
+                    <div class="p-6 rounded-2xl bg-brand-card/40 border border-brand-border hover:border-brand-accent/40 transition-all">
+                        <span class="text-[10px] font-bold text-brand-accent tracking-widest uppercase block mb-1">公部門推廣</span>
+                        <h4 class="text-base font-bold mb-2 text-white">勞動部勞動力發展署</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            長期協助各分署辦理生成式 AI 實作工作坊與技術講座，協助政策性課程設計與「產業人才投資方案」，推廣 AI 能力普及化。
+                        </p>
+                    </div>
+                    <!-- Certifications -->
+                    <div class="p-6 rounded-2xl bg-brand-card/40 border border-brand-border hover:border-brand-cyan/40 transition-all">
+                        <span class="text-[10px] font-bold text-brand-cyan tracking-widest uppercase block mb-1">國際認證與資安</span>
+                        <h4 class="text-base font-bold mb-2 text-white">緯育 & 全智網認證合作</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            累計輔導 800 位以上學員通過 ITS AI / CCS GAI 認證。推動 CompTIA Security AI+，聚焦 AI 資安、AI 治理與內部風險控制。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Skills & Methodologies Grid -->
+        <section id="skills" class="py-20 md:py-28 bg-brand-card/25 border-y border-brand-border relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Details -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-xs uppercase tracking-widest text-brand-accent font-bold px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full">METHODOLOGY & TOOLS</span>
+                        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">AI 戰略、方法論與前瞻工具鏈</h2>
+                        <p class="text-slate-300 font-light text-base leading-relaxed">
+                            我們拒絕空洞的空談。透過自主研發的標準方法論，結合主流大語言模型與自動化整合工具，為企業構建敏捷無縫的 <strong>AI 工作流 (AI Workflow) 閉環</strong>。
+                        </p>
+
+                        <!-- Core Expertise List -->
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-bullseye text-brand-accent"></i>
+                                <span class="text-sm text-slate-200">AI 導入策略 (AI Strategy) 與商業目標對齊</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-microchip text-brand-cyan"></i>
+                                <span class="text-sm text-slate-200">AI Agent / Agentic Automation 自主代理落地</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-database text-brand-purple"></i>
+                                <span class="text-sm text-slate-200">RAG (檢索增強生成 - 企業知識庫安全建置)</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-terminal text-emerald-400"></i>
+                                <span class="text-sm text-slate-200">提示工程 (Prompt) 與情境建構 (Context Engineering)</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-magnifying-glass text-blue-400"></i>
+                                <span class="text-sm text-slate-200">AI 深度研究 (Deep Research) 應用實務</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Method Grid -->
+                    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Method 1 -->
+                        <div class="p-6 rounded-2xl bg-brand-dark/90 border border-brand-border hover:border-brand-accent/35 transition-all">
+                            <div class="text-xs font-mono text-brand-accent mb-2">METHODOLOGY</div>
+                            <h4 class="text-base font-bold mb-2 text-white">Vibe Coding 快速 MVP</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                善用現代自主 AI 程式代理，在短短數分鐘內渲染、建構高互動性概念性產品驗證（MVP），大幅縮短傳統軟體規劃週期。
+                            </p>
+                        </div>
+                        <!-- Method 2 -->
+                        <div class="p-6 rounded-2xl bg-brand-dark/90 border border-brand-border hover:border-brand-cyan/35 transition-all">
+                            <div class="text-xs font-mono text-brand-cyan mb-2">METHODOLOGY</div>
+                            <h4 class="text-base font-bold mb-2 text-white">Spec-Driven Development</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                規格驅動開發。使用 AI 在開發前先完成完整的技術與商業邏輯規格推演，讓程式碼生成精準無誤，最大程度降低返工成本。
+                            </p>
+                        </div>
+                        <!-- Method 3 -->
+                        <div class="p-6 rounded-2xl bg-brand-dark/90 border border-brand-border hover:border-brand-purple/35 transition-all">
+                            <div class="text-xs font-mono text-brand-purple mb-2">METHODOLOGY</div>
+                            <h4 class="text-base font-bold mb-2 text-white">YAML 標準化輸出</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                使用 YAML 或 JSON 指定輸出規格，確保 AI 每次生成的文件規格、結構與視覺介面一致，便於自動化對接與組織內複製。
+                            </p>
+                        </div>
+                        <!-- Method 4 -->
+                        <div class="p-6 rounded-2xl bg-brand-dark/90 border border-brand-border hover:border-amber-400/35 transition-all">
+                            <div class="text-xs font-mono text-amber-400 mb-2">INTEGRATION</div>
+                            <h4 class="text-base font-bold mb-2 text-white">多模型工具整合鏈</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                整合 ChatGPT、Gemini、Claude 協作；利用 NotebookLM 打造知識 RAG；並結合 Canva、Notion 實踐高品質效率產出。
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- GEO / AEO Knowledge Hub & FAQ Section -->
+        <section id="faq-section" class="py-20 md:py-28 bg-brand-dark relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                    <span class="text-xs uppercase tracking-widest text-brand-cyan font-bold px-3 py-1 bg-brand-cyan/10 border border-brand-cyan/20 rounded-full">GEO & AEO KNOWLEDGE HUB</span>
+                    <h2 class="text-3xl font-extrabold tracking-tight">AI365 知識庫：企業 AI 導入與應用 FAQ</h2>
+                    <p class="text-slate-300 font-light text-sm">
+                        以下整理了企業在評估、導入生成式 AI 時常面臨的關鍵問題。本回答依據楊宏文老師多年輔導實務提煉，提供結構化、事實明確的標準解答，便於 AI 搜尋引擎與 RAG 系統精確引用。
+                    </p>
+                </div>
+
+                <!-- FAQ Accordion Container -->
+                <div class="space-y-4">
+                    <!-- Q1 -->
+                    <div class="border border-brand-border rounded-2xl bg-brand-card/40 overflow-hidden transition-colors hover:border-brand-accent/40">
+                        <button onclick="toggleFaq(this)" class="w-full text-left px-6 py-5 flex items-center justify-between font-bold text-slate-100 hover:text-brand-accent transition-colors focus:outline-none" aria-expanded="false">
+                            <span class="text-base sm:text-lg">🎯 企業導入生成式 AI，應如何建立科學的成效評估 (AI ROI) 模型？</span>
+                            <span class="faq-icon text-brand-accent transition-transform duration-300"><i class="fa-solid fa-plus"></i></span>
+                        </button>
+                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-brand-dark/40 border-slate-900">
+                            <div class="px-6 py-5 text-sm sm:text-base text-slate-300 leading-relaxed space-y-3">
+                                <p>評估 <strong>AI ROI（投資報酬率）</strong> 應告別模糊的「好用」概念，楊老師顧問專案中導入三個具體觀點：</p>
+                                <ul class="list-decimal pl-5 space-y-2 text-xs sm:text-sm">
+                                    <li><strong>量化效率指標 (Cost Reduction)</strong>：詳細記錄原本流程（如：合約撰寫、產品規格書翻譯、行銷文案）所耗費的工時，對比導入標準化 AI365 工作流後的耗時。例如，普萊德科技在導入 AI Agent 協作後，部分跨部門繁瑣流程從 1 天縮短至 30 分鐘內。</li>
+                                    <li><strong>品質與安全合規 (Risk Control)</strong>：AI 治理 (AI Governance) 能降低企業遭受機密外洩造成的訴訟成本或商業利益損失，這在長期營運中是極高的無形回報。</li>
+                                    <li><strong>組織生產力擴張 (Scalable Growth)</strong>：當新員工能透過 RAG 企業知識庫即時取得資深同仁 25 年累積的技能，可將平均人才培育期縮短 50% 以上，直接帶動公司商務拓展效率。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="border border-brand-border rounded-2xl bg-brand-card/40 overflow-hidden transition-colors hover:border-brand-cyan/40">
+                        <button onclick="toggleFaq(this)" class="w-full text-left px-6 py-5 flex items-center justify-between font-bold text-slate-100 hover:text-brand-cyan transition-colors focus:outline-none" aria-expanded="false">
+                            <span class="text-base sm:text-lg">🔄 什麼是「AI365 工作流」？它與市面上常見的 Prompt 技巧有何不同？</span>
+                            <span class="faq-icon text-brand-cyan transition-transform duration-300"><i class="fa-solid fa-plus"></i></span>
+                        </button>
+                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-brand-dark/40 border-slate-900">
+                            <div class="px-6 py-5 text-sm sm:text-base text-slate-300 leading-relaxed space-y-3">
+                                <p>市面上普通的 Prompt 技巧多半停留在「單次聊天」和「隨機生成」，產出的成果因人而異、極不穩定，無法融入企業日常流程。而楊老師提出的 <strong>AI365 工作流 (AI Workflow)</strong> 包含三個決定性要素：</p>
+                                <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm">
+                                    <li><strong>YAML 標準化輸出</strong>：將 AI 的角色設定、情境限制、格式規格定義為 YAML 設定檔，使得不論是哪一位同仁呼叫模型，輸出的資料與介面架構都具有 100% 的結構一致性。</li>
+                                    <li><strong>Spec-Driven 規格驅動</strong>：由 AI 深度研究（Deep Research）先推演產品與工作邏輯規格書，有了清晰規格，再由 AI Agent 執行。</li>
+                                    <li><strong>Vibe Coding 敏捷落地</strong>：利用 AI 快速部署、測試與反覆迭代，省去繁冗的手工代碼撰寫，讓想法在幾分鐘內直接在預覽網頁或系統原型中展現。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="border border-brand-border rounded-2xl bg-brand-card/40 overflow-hidden transition-colors hover:border-brand-purple/40">
+                        <button onclick="toggleFaq(this)" class="w-full text-left px-6 py-5 flex items-center justify-between font-bold text-slate-100 hover:text-brand-purple transition-colors focus:outline-none" aria-expanded="false">
+                            <span class="text-base sm:text-lg">🔒 企業在導入 AI 過程中，該如何落實 AI 治理與資訊安全 (AI Security)？</span>
+                            <span class="faq-icon text-brand-purple transition-transform duration-300"><i class="fa-solid fa-plus"></i></span>
+                        </button>
+                        <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-brand-dark/40 border-slate-900">
+                            <div class="px-6 py-5 text-sm sm:text-base text-slate-300 leading-relaxed space-y-3">
+                                <p>資料外洩是企業導入 AI 時的最大隱憂。楊老師在與<strong>全智網 AI Network</strong>、<strong>緯育 TibaMe</strong> 合作培訓時，特別強調以下資安實踐：</p>
+                                <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm">
+                                    <li><strong>敏感數據隔離 (PII Filtering)</strong>：在用戶輸入端配置過濾層，在發送給商業 API（如 ChatGPT API/Gemini API）之前，對客戶姓名、身份證字號、公司關鍵財務指標進行本地去識別化或代碼加密。</li>
+                                    <li><strong>合規性模型選擇</strong>：限制企業內部使用符合歐盟 GDPR、具備不將數據留作再訓練保障的商業合規版 AI 服務。</li>
+                                    <li><strong>RAG 權限安全控制</strong>：在規劃企業知識庫 (RAG) 時，嚴格綁定組織本身的 AD / SSO 權限。確保普通部門員工無法透過 Prompt Injection 繞過保護，取得財務、專利或薪資等機密數據。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulated AI Chatbot Assistant Section -->
+        <section id="chat-assistant" class="py-20 md:py-28 bg-brand-card/20 relative">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-card/20 to-transparent pointer-events-none"></div>
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12 space-y-4">
+                    <span class="text-xs uppercase tracking-widest text-brand-accent font-bold px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full">INTERACTIVE AGENT DEMO</span>
+                    <h2 class="text-3xl font-extrabold tracking-tight">AI365 智能諮詢代理 (楊老師思想分身)</h2>
+                    <p class="text-slate-300 font-light text-sm">
+                        透過親手打造的互動 Agent 分身，展示生成式人工智慧在客服與知識萃取領域的實際應用。請在下方點選您的疑惑：
+                    </p>
+                </div>
+
+                <!-- Chatbot Terminal Box -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[520px]">
+                    <!-- Chat Header -->
+                    <div class="bg-brand-border/40 px-6 py-4 border-b border-brand-border flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2.5 h-2.5 rounded-full bg-brand-accent animate-pulse"></div>
+                            <div>
+                                <span class="block text-sm font-bold text-white">AI365 Agent (楊老師思想模型)</span>
+                                <span class="block text-[10px] text-slate-400">系統狀態：Active • 知識庫對接成功</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-1.5">
+                            <span class="w-3 h-3 rounded-full bg-slate-700 block"></span>
+                            <span class="w-3 h-3 rounded-full bg-slate-700 block"></span>
+                            <span class="w-3 h-3 rounded-full bg-slate-700 block"></span>
+                        </div>
+                    </div>
+
+                    <!-- Chat Box Messages Container -->
+                    <div class="flex-1 p-6 overflow-y-auto space-y-4 scroll-smooth" id="chat-messages-container">
+                        <!-- Bot Greeting -->
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-accent/20 border border-brand-accent/30 flex items-center justify-center text-sm shrink-0">🤖</div>
+                            <div class="bg-brand-border/30 rounded-r-2xl rounded-bl-2xl p-4 max-w-[85%] border border-brand-border">
+                                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                    您好！我是楊宏文老師的 AI 數位代理。我已被注入楊老師關於「企業生成式 AI 導入、AI數位轉型與 AI Agent 應用落地」的核心知識與思想。您有興趣深入探索哪些議題？
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Query Buttons -->
+                    <div class="p-4 bg-brand-dark/50 border-t border-brand-border space-y-2">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">熱門問題指引：</span>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="askPresetQuestion(1)" class="text-left text-[11px] sm:text-xs bg-brand-card hover:bg-slate-800 text-slate-300 hover:text-brand-accent border border-brand-border hover:border-brand-accent/50 px-3 py-2 rounded-xl transition-all">
+                                🎯 企業導入 AI，要如何評估投資報酬率 (ROI)？
+                            </button>
+                            <button onclick="askPresetQuestion(2)" class="text-left text-[11px] sm:text-xs bg-brand-card hover:bg-slate-800 text-slate-300 hover:text-brand-accent border border-brand-border hover:border-brand-accent/50 px-3 py-2 rounded-xl transition-all">
+                                🔄 什麼是「AI365 工作流」與 YAML 標準化？
+                            </button>
+                            <button onclick="askPresetQuestion(3)" class="text-left text-[11px] sm:text-xs bg-brand-card hover:bg-slate-800 text-slate-300 hover:text-brand-accent border border-brand-border hover:border-brand-accent/50 px-3 py-2 rounded-xl transition-all">
+                                🔒 AI Governance 與 AI Security 如何落實在課程中？
+                            </button>
+                            <button onclick="askPresetQuestion(4)" class="text-left text-[11px] sm:text-xs bg-brand-card hover:bg-slate-800 text-slate-300 hover:text-brand-accent border border-brand-border hover:border-brand-accent/50 px-3 py-2 rounded-xl transition-all">
+                                🤝 老師的教學風格與「教學初心」是什麼？
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clients Wall Section with Live Filters -->
+        <section id="clients" class="py-20 md:py-28 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                    <span class="text-xs uppercase tracking-widest text-brand-cyan font-bold px-3 py-1 bg-brand-cyan/10 border border-brand-cyan/20 rounded-full">TRUSTED PARTNERS</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">各界大廠與政府、學術機構的高度肯定</h2>
+                    <p class="text-slate-300 font-light text-sm sm:text-base">
+                        服務範圍橫跨指標上市櫃企業、中央與地方政府機關、重要財團法人、以及多所國立大學產學與教學合作。
+                    </p>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap justify-center gap-2 mb-10" id="filter-btn-container">
+                    <button onclick="filterClients('all')" class="client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-accent text-brand-dark font-bold transition-all" data-category="all">全部客戶</button>
+                    <button onclick="filterClients('enterprise')" class="client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-slate-300 transition-all" data-category="enterprise">企業 / 國營事業</button>
+                    <button onclick="filterClients('government')" class="client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-slate-300 transition-all" data-category="government">政府機關</button>
+                    <button onclick="filterClients('ngo')" class="client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-slate-300 transition-all" data-category="ngo">財團法人 / 專業機構</button>
+                    <button onclick="filterClients('academic')" class="client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-slate-300 transition-all" data-category="academic">國立大學合作</button>
+                </div>
+
+                <!-- Client Grid (GEO Keywords Embedded) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="clients-grid">
+                    <!-- Enterprise -->
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">中華電信</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Chunghwa Telecom</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">普萊德科技</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Planet Technology</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">群光電子</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Chicony Electronics</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">台灣電力公司</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Taipower</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">永光化學</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Everlight Chemical</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">友華生技</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Orient EuroPharma</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">綠的傢俱</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Green Furniture</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">州巧科技</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Join Well Tech</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="enterprise">
+                        <span class="text-xs font-bold text-slate-100">台灣金聯資產管理</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">TAMCO</span>
+                    </div>
+
+                    <!-- Government -->
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="government">
+                        <span class="text-xs font-bold text-slate-100">勞動部勞動力發展署</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">各分署及培訓專案</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="government">
+                        <span class="text-xs font-bold text-slate-100">海洋委員會</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Ocean Affairs Council</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="government">
+                        <span class="text-xs font-bold text-slate-100">內政部移民署</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">National Immigration Agency</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="government">
+                        <span class="text-xs font-bold text-slate-100">新竹縣政府</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">Hsinchu County Gov</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="government">
+                        <span class="text-xs font-bold text-slate-100">高雄市政府資訊處</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">KCG Information Dept</span>
+                    </div>
+
+                    <!-- NGO -->
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="ngo">
+                        <span class="text-xs font-bold text-slate-100">資訊工業策進會</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">III</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="ngo">
+                        <span class="text-xs font-bold text-slate-100">食品工業發展研究所</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">FIRDI</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="ngo">
+                        <span class="text-xs font-bold text-slate-100">經濟部產發署智慧電子學院</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">IDA Semiconductor Academy</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="ngo">
+                        <span class="text-xs font-bold text-slate-100">中華民國電腦技能基金會</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">CSF</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="ngo">
+                        <span class="text-xs font-bold text-slate-100">農業信用保證基金</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">ACGF</span>
+                    </div>
+
+                    <!-- Academic -->
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="academic">
+                        <span class="text-xs font-bold text-slate-100">國立清華大學</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">NTHU</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="academic">
+                        <span class="text-xs font-bold text-slate-100">國立中央大學</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">NCU</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="academic">
+                        <span class="text-xs font-bold text-slate-100">國立臺北科技大學</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">NTUT</span>
+                    </div>
+                    <div class="client-card p-4 rounded-xl bg-brand-card/40 border border-brand-border flex flex-col justify-center items-center text-center hover:bg-brand-card/70 transition-colors" data-cat="academic">
+                        <span class="text-xs font-bold text-slate-100">國立臺中科技大學</span>
+                        <span class="text-[9px] text-slate-400 mt-1 uppercase">NTCUST</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Consultation & Contact Section -->
+        <section id="contact" class="py-20 md:py-28 relative">
+            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.08)_0%,transparent_70%)] pointer-events-none"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    
+                    <!-- Contact Left Info -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-xs uppercase tracking-widest text-brand-accent font-bold px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full">CONTACT US</span>
+                        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">啟動您的企業 AI 轉型契機</h2>
+                        <p class="text-slate-300 font-light text-base leading-relaxed">
+                            不論您是需要客製化<strong>「企業生成式 AI 導入顧問服務」</strong>、<strong>「AI365 專題內訓」</strong>，或是政府與學術界講座邀約、ITS AI 認證合作。填寫以下預約諮詢表單，我們將於 24 小時內儘速與您聯繫。
+                        </p>
+
+                        <div class="space-y-4 pt-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-slate-300"><i class="fa-solid fa-envelope"></i></div>
+                                <div>
+                                    <span class="block text-xs text-slate-400">Email 諮詢信箱</span>
+                                    <span class="text-sm font-semibold">service@ai365.com (模擬)</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-brand-card border border-brand-border flex items-center justify-center text-slate-300"><i class="fa-solid fa-globe"></i></div>
+                                <div>
+                                    <span class="block text-xs text-slate-400">官方自媒體平台</span>
+                                    <span class="text-sm font-semibold">AI365 生成式人工智慧知識平台</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="lg:col-span-7">
+                        <div class="p-8 rounded-3xl bg-brand-card border border-brand-border shadow-xl">
+                            <form id="consultation-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs text-slate-300 uppercase tracking-widest font-bold mb-2">姓名 / 聯絡人 *</label>
+                                        <input type="text" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-accent transition-colors" placeholder="請輸入姓名">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-300 uppercase tracking-widest font-bold mb-2">單位 / 企業名稱 *</label>
+                                        <input type="text" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-accent transition-colors" placeholder="請輸入單位名稱">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs text-slate-300 uppercase tracking-widest font-bold mb-2">聯絡電話 *</label>
+                                        <input type="tel" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-accent transition-colors" placeholder="請輸入聯絡電話">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-slate-300 uppercase tracking-widest font-bold mb-2">電子信箱 *</label>
+                                        <input type="email" required class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-accent transition-colors" placeholder="email@company.com">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-slate-300 uppercase tracking-widest font-bold mb-2">預約諮詢類別</label>
+                                    <select class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-accent transition-colors">
+                                        <option>企業生成式 AI 導入顧問專案</option>
+                                        <option>企業級 AI365 工作流實作內訓</option>
+                                        <option>公部門 / 政府政策性課程講座</option>
+                                        <option>ITS AI / CCS GAI 國際認證合作輔導</option>
+                                        <option>演講邀約與自媒體合作洽談</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-slate-300 uppercase tracking-widest font-bold mb-2">需求描述 / 細節說明</label>
+                                    <textarea rows="4" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-brand-accent transition-colors" placeholder="例：預計辦理 30 人 AI 工作坊、希望導入 AI Agent 自動化、希望建立特定 RAG 知識庫等"></textarea>
+                                </div>
+
+                                <div id="form-success-msg" class="hidden p-4 rounded-xl bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-sm">
+                                    <i class="fa-solid fa-circle-check mr-2"></i> 您的諮詢意向已成功送出！團隊將於 24 小時內與您聯繫。
+                                </div>
+
+                                <button type="submit" class="glow-button w-full py-4 rounded-xl bg-gradient-to-r from-brand-accent to-brand-cyan text-brand-dark font-extrabold shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all">
+                                    提交轉型需求
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SEO / GEO Index Footer block -->
+    <section class="py-8 bg-brand-dark border-t border-brand-border" aria-hidden="true">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-center gap-2 text-[10px] sm:text-xs text-slate-500">
+                <span class="font-bold text-slate-400">SEO / GEO / AEO 索引樹:</span>
+                <span>Hubert Yang</span>•<span>AI365</span>•<span>Generative AI</span>•<span>AI導入顧問</span>•<span>AI數位轉型</span>•<span>AI Agent</span>•<span>AI Workflow</span>•<span>RAG企業知識庫</span>•<span>AI Security</span>•<span>AI Governance</span>•<span>Prompt Engineering</span>•<span>Vibe Coding</span>•<span>AI企業培訓</span>•<span>ITS AI 國際認證</span>•<span>人機協作</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 py-12 text-center text-slate-400 text-sm border-t border-brand-border/40 pb-28 sm:pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+            <div class="flex items-center justify-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-accent/10 border border-brand-accent/20 text-brand-accent flex items-center justify-center text-xs font-black">
+                    365
+                </div>
+                <span class="text-base font-extrabold text-white">楊宏文 老師 (AI365 數位品牌)</span>
+            </div>
+            <p class="text-xs text-slate-500 font-light">
+                © 2026 楊宏文 Hubert Yang AI365 Enterprise AI Consulting. All Rights Reserved. <br>
+                採用結構化語意規範優化建置 (GEO & AEO Compliant Framework)
+            </p>
+        </div>
+    </footer>
+
+    <!-- FLOAT BGM CONTROLLER PLAYER (Premium Neo-Brutalism glass design) -->
+    <div class="fixed bottom-6 right-6 z-50 flex items-center space-x-3 bg-brand-card/90 backdrop-blur-md border border-brand-border/80 px-4 py-3 rounded-2xl shadow-2xl transition-all duration-300 hover:border-brand-accent/40" id="bgm-widget">
+        <!-- Visualizer Bars (Only animates when playing) -->
+        <div class="flex items-end gap-[3px] h-4 w-5 mr-1" id="audio-visualizer">
+            <span class="wave-bar w-[3px] h-full bg-brand-accent rounded-full transform origin-bottom scale-y-[0.2]"></span>
+            <span class="wave-bar w-[3px] h-full bg-brand-accent rounded-full transform origin-bottom scale-y-[0.2]"></span>
+            <span class="wave-bar w-[3px] h-full bg-brand-accent rounded-full transform origin-bottom scale-y-[0.2]"></span>
+            <span class="wave-bar w-[3px] h-full bg-brand-accent rounded-full transform origin-bottom scale-y-[0.2]"></span>
+        </div>
+
+        <div class="flex flex-col text-left">
+            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Background BGM</span>
+            <span class="text-xs font-semibold text-slate-200 max-w-[120px] truncate" id="bgm-status">BGM: Stopped</span>
+        </div>
+
+        <button onclick="toggleBGM()" id="bgm-play-btn" class="w-8 h-8 rounded-full bg-brand-accent/20 border border-brand-accent/40 text-brand-accent flex items-center justify-center hover:bg-brand-accent hover:text-brand-dark transition-all duration-300" aria-label="播放背景音樂">
+            <i class="fa-solid fa-play text-xs" id="bgm-play-icon"></i>
+        </button>
+    </div>
+
+    <!-- Scripts for Navigation, Filtering, Chatbot and Audio System -->
+    <script>
+        // Drawer Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileDrawer = document.getElementById('mobile-drawer');
+        const menuIcon = document.getElementById('menu-icon');
+        const drawerLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isHidden = mobileDrawer.classList.contains('hidden');
+            if (isHidden) {
+                mobileDrawer.classList.remove('hidden');
+                menuIcon.className = 'fa-solid fa-xmark text-2xl';
+            } else {
+                mobileDrawer.classList.add('hidden');
+                menuIcon.className = 'fa-solid fa-bars text-2xl';
+            }
+        });
+
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileDrawer.classList.add('hidden');
+                menuIcon.className = 'fa-solid fa-bars text-2xl';
+            });
+        });
+
+        // BGM Playback Control Logic
+        const bgmPlayer = document.getElementById('bgm-player');
+        const bgmPlayBtn = document.getElementById('bgm-play-btn');
+        const bgmPlayIcon = document.getElementById('bgm-play-icon');
+        const bgmStatus = document.getElementById('bgm-status');
+        const visualizerBars = document.querySelectorAll('.wave-bar');
+
+        function toggleBGM() {
+            if (bgmPlayer.paused) {
+                bgmPlayer.play()
+                    .then(() => {
+                        bgmPlayIcon.className = 'fa-solid fa-pause text-xs';
+                        bgmStatus.innerText = 'BGM: Playing';
+                        bgmStatus.classList.add('text-brand-accent');
+                        visualizerBars.forEach(bar => bar.classList.add('animate-bar-bounce'));
+                    })
+                    .catch(err => {
+                        console.log("Audio play blocked by browser. Interaction required.", err);
+                        bgmStatus.innerText = 'Playback Blocked';
+                    });
+            } else {
+                bgmPlayer.pause();
+                bgmPlayIcon.className = 'fa-solid fa-play text-xs';
+                bgmStatus.innerText = 'BGM: Paused';
+                bgmStatus.classList.remove('text-brand-accent');
+                visualizerBars.forEach(bar => bar.classList.remove('animate-bar-bounce'));
+            }
+        }
+
+        // Auto-attempt playback on first general user interaction on the page
+        window.addEventListener('click', () => {
+            // Unmute & attempt playback if not already clicked manually
+            if (bgmPlayer.paused && bgmStatus.innerText === 'BGM: Stopped') {
+                // We keep it default paused to respect users, but update status
+                bgmStatus.innerText = 'BGM: Ready';
+            }
+        }, { once: true });
+
+        // Client Wall Filter logic
+        function filterClients(category) {
+            const buttons = document.querySelectorAll('.client-filter-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-category') === category) {
+                    btn.className = "client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-accent text-brand-dark font-bold transition-all";
+                } else {
+                    btn.className = "client-filter-btn px-4 py-2 text-xs sm:text-sm rounded-full bg-brand-card hover:bg-slate-800 border border-brand-border text-slate-300 transition-all";
+                }
+            });
+
+            const cards = document.querySelectorAll('.client-card');
+            cards.forEach(card => {
+                const cat = card.getAttribute('data-cat');
+                if (category === 'all' || cat === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Accordion FAQ Toggle Logic
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon');
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+            button.setAttribute('aria-expanded', !isExpanded);
+
+            if (!isExpanded) {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = "rotate(45deg)";
+            } else {
+                content.style.maxHeight = "0px";
+                icon.style.transform = "rotate(0deg)";
+            }
+        }
+
+        // Chatbot Agent Answer Database
+        const presetResponses = {
+            1: {
+                question: "企業導入 AI，要如何評估投資報酬率 (ROI)？",
+                answer: "評估 AI ROI 絕非單純估算工具費，而是要對比『效率與營收產出』。楊老師在企業導入顧問專案中，主要劃分為三個核心维度：<br><br>1. **效率提升量化 (Efficiency Gain)**：計算員工在日常工作流（如客服、文件彙整、編譯規格書）中節省的時間。例如，普萊德科技導入自動化 AI Agent 後，原本需要一天的跨部門整合流程，縮短至半小時內。<br>2. **流程精準度與安全合規 (Quality & Security)**：將 AI Workflow 標準化，減少人為錯誤造成的重工成本，並透過 AI Governance 降低機密外洩風險。<br>3. **商業營收增長能力 (Capability Scaling)**：透過 RAG 企業知識庫，讓新進同仁擁有資深專家的知識支持，極大縮短人才培育期，直接增進商業推進效率。"
+            },
+            2: {
+                question: "什麼是「AI365 工作流」與 YAML 標準化？",
+                answer: "「AI365 工作流」是楊宏文老師的核心方法論。核心概念在於 **『讓 AI 融入每一天的常態工作，而非一次性好玩工具』**。<br><br>要達成這一點，必須避免『靠運氣、隨意打字』的 Prompt Engineering。我們在企業內訓導入：<br>- **YAML 標準化輸出 (Standardized Output)**：利用 YAML 格式標準化提示詞結構，確保 AI 每次生成的文件、回傳規格都是一致的，便於與企業既有前後端軟體或 ERP 串接對應。<br>- **Spec-Driven 與 Vibe Coding 結合**：先用規格（Spec）確定邏輯流程，再用 AI Agent 工具在數分鐘內快速渲染原型（Vibe Coding）。這樣能讓企業隨時調整策略，不需耗費多月等待軟體開發，達成轉型閉環。"
+            },
+            3: {
+                question: "AI Governance 與 AI Security 如何落實在課程中？",
+                answer: "很多企業想導入 AI，但最怕資料外洩。因此，楊老師與**全智網**、**緯育 TibaMe** 合作推廣 ITS AI、CompTIA Security AI+ 國際認證課程：<br><br>1. **AI 治理 (AI Governance)**：設定標準與制度。比如：如何配置敏感資料隱私過濾層、如何選擇在地的商業版 AI 確保資料不會被拿去訓練。<br>2. **AI 資安與風險管理**：在設計 RAG (企業知識庫) 時，如何實施權限安全隔離，確保普通業務人員不會存取到敏感的財務專利。從技術根源上提供安全性把關，才能建構健康、合規的企業 AI 生產力系統。"
+            },
+            4: {
+                question: "楊老師的教學風格與「教學初心」是什麼？",
+                answer: "楊老師從事資訊就業技能培訓 **超過 25 年**，深知最困難的不是『聽懂』，而是『做得出來』。<br><br>**他的教學初心：**<br>『一個人學會一項技能，就有機會改變一生。』他重視每位學員是否能突破抗拒，踏出操作的第一步，發現人機協同的強大加持。<br><br>**他的教學風格：**<br>- **Step-by-step 圖解式教學**：將生硬的 API 架構、AI Agent 開發流程拆解為直觀的互動圖示。<br>- **真實工作場景導入**：不講空泛案例。全部對標中華電信、普萊德科技等大廠實際導入的痛點問題。<br>- **陪伴式與即時指導**：重視動手實作，確保學員能親眼看到成果落地。"
+            }
+        };
+
+        function askPresetQuestion(id) {
+            const messagesContainer = document.getElementById('chat-messages-container');
+            const data = presetResponses[id];
+            if (!data) return;
+
+            const userMsgHtml = `
+                <div class="flex gap-3 justify-end">
+                    <div class="bg-brand-accent text-brand-dark rounded-l-2xl rounded-tr-2xl p-4 max-w-[85%] font-medium text-xs sm:text-sm shadow-md">
+                        ${data.question}
+                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-brand-accent/20 border border-brand-accent/30 flex items-center justify-center text-sm shrink-0">👤</div>
+                </div>
+            `;
+            messagesContainer.insertAdjacentHTML('beforeend', userMsgHtml);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            const typingIndicatorId = 'typing-' + Date.now();
+            const typingHtml = `
+                <div class="flex gap-3" id="${typingIndicatorId}">
+                    <div class="w-8 h-8 rounded-lg bg-brand-accent/20 border border-brand-accent/30 flex items-center justify-center text-sm shrink-0">🤖</div>
+                    <div class="bg-brand-border/30 rounded-r-2xl rounded-bl-2xl p-4 max-w-[85%] border border-brand-border flex items-center space-x-1">
+                        <span class="w-2 h-2 rounded-full bg-brand-accent animate-bounce" style="animation-delay: 0.1s"></span>
+                        <span class="w-2 h-2 rounded-full bg-brand-accent animate-bounce" style="animation-delay: 0.2s"></span>
+                        <span class="w-2 h-2 rounded-full bg-brand-accent animate-bounce" style="animation-delay: 0.3s"></span>
+                    </div>
+                </div>
+            `;
+            setTimeout(() => {
+                messagesContainer.insertAdjacentHTML('beforeend', typingHtml);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 300);
+
+            setTimeout(() => {
+                const indicator = document.getElementById(typingIndicatorId);
+                if (indicator) indicator.remove();
+
+                const botMsgHtml = `
+                    <div class="flex gap-3 animate-fadeIn">
+                        <div class="w-8 h-8 rounded-lg bg-brand-accent/20 border border-brand-accent/30 flex items-center justify-center text-sm shrink-0">🤖</div>
+                        <div class="bg-brand-border/30 rounded-r-2xl rounded-bl-2xl p-4 max-w-[85%] border border-brand-border shadow-sm">
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                ${data.answer}
+                            </p>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.insertAdjacentHTML('beforeend', botMsgHtml);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1200);
+        }
+
+        // Contact Form Submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const successMsg = document.getElementById('form-success-msg');
+            successMsg.classList.remove('hidden');
+            event.target.reset();
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+            }, 6000);
+        }
+    </script>
+</body>
+</html>

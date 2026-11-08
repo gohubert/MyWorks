@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>我的網頁作品集 | 楊宏文 (楊老師) AI365 實戰應用展</title>
+    <meta name="description" content="楊宏文（楊老師）的網頁作品集，展示透過 AI365、Spec-Driven 與 Vibe Coding 打造的企業級離線工具與互動式網頁應用：企業資料去識別化工具、加班工時診斷儀表板、銷售營運互動分析儀表板、星語塔羅 78 張深度解牌。">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#05070f',
+                            surface: '#0b0f22',
+                            card: '#101631',
+                            border: '#1e294b',
+                            accent: '#10b981',
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                            amber: '#f59e0b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #05070f;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Hide scrollbar for horizontal pill bar on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .card-glow {
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+        }
+        .card-glow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px -15px rgba(16, 185, 129, 0.22);
+        }
+        @keyframes Equalizer {
+            0% { transform: scaleY(0.25); }
+            100% { transform: scaleY(1); }
+        }
+        .eq-bar {
+            animation: Equalizer 0.8s ease-in-out infinite alternate;
+            transform-origin: bottom;
+        }
+        .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+        .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+        .eq-paused .eq-bar {
+            animation-play-state: paused;
+            transform: scaleY(0.3);
+        }
+    </style>
+</head>
+<body class="pb-24 md:pb-12 selection:bg-brand-accent selection:text-brand-dark">
+
+    <!-- Background Music (Local Asset) -->
+    <audio id="bgm" src="music/music-1.mp3" loop preload="metadata"></audio>
+
+    <!-- Ambient Background Glow -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-24 -left-20 w-80 h-80 bg-brand-accent/10 rounded-full blur-[90px]"></div>
+        <div class="absolute top-1/3 -right-24 w-80 h-80 bg-brand-cyan/10 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-10 left-1/4 w-72 h-72 bg-brand-purple/10 rounded-full blur-[100px]"></div>
+    </div>
+
+    <!-- Sticky Mobile-First Top Bar -->
+    <header class="sticky top-0 z-40 bg-brand-dark/85 backdrop-blur-xl border-b border-brand-border/80">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+            <a href="#top" class="flex items-center gap-2.5 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-accent to-brand-cyan flex items-center justify-center text-brand-dark font-black text-sm shadow-md shrink-0">
+                    365
+                </div>
+                <div class="truncate">
+                    <span class="block text-sm sm:text-base font-extrabold tracking-tight text-white truncate">楊宏文老師｜作品集</span>
+                    <span class="block text-[10px] text-brand-cyan font-mono uppercase tracking-wider">Mobile-First Portfolio</span>
+                </div>
+            </a>
+
+            <!-- Desktop Quick Nav -->
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300" aria-label="頁內導覽">
+                <a href="#catalog" class="hover:text-brand-accent transition-colors">作品目錄</a>
+                <a href="#works" class="hover:text-brand-accent transition-colors">作品圖卡</a>
+                <a href="#about" class="hover:text-brand-accent transition-colors">關於我</a>
+                <a href="about/index.html" class="px-3.5 py-1.5 rounded-lg bg-brand-card border border-brand-border hover:border-brand-accent text-brand-accent text-xs font-bold transition-colors">
+                    完整顧問主頁 <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                </a>
+            </nav>
+
+            <!-- BGM Toggle Button -->
+            <button id="bgm-btn" type="button" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-card/90 border border-brand-border hover:border-brand-accent/60 text-xs text-slate-300 transition-all shrink-0" aria-label="切換背景音樂">
+                <span id="eq-wrap" class="eq-paused inline-flex items-end gap-0.5 h-3 w-3.5">
+                    <span class="eq-bar w-0.5 h-full bg-brand-accent rounded-full"></span>
+                    <span class="eq-bar w-0.5 h-full bg-brand-cyan rounded-full"></span>
+                    <span class="eq-bar w-0.5 h-full bg-brand-purple rounded-full"></span>
+                </span>
+                <span id="bgm-label">播放配樂</span>
+            </button>
+        </div>
+    </header>
+
+    <main id="top" class="relative z-10 max-w-5xl mx-auto px-4 pt-6 sm:pt-10 space-y-10 sm:space-y-14">
+
+        <!-- Hero Section (Mobile-First) -->
+        <section class="relative rounded-3xl bg-gradient-to-br from-brand-card/90 via-brand-surface/95 to-brand-dark border border-brand-border p-6 sm:p-9 shadow-2xl overflow-hidden">
+            <div class="absolute -right-8 -bottom-8 text-8xl font-black text-white/[0.03] select-none pointer-events-none">WORKS</div>
+
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-xs font-semibold mb-4">
+                <span class="w-2 h-2 rounded-full bg-brand-accent animate-ping"></span>
+                100% 瀏覽器本機運行 • 零伺服器依賴 Web Apps
+            </div>
+
+            <!-- Main H1 Required by User -->
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
+                我的網頁作品集
+            </h1>
+
+            <p class="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
+                收錄由<strong>楊宏文（楊老師）</strong>透過 <span class="text-brand-accent font-semibold">AI365 工作流</span>、<span class="text-brand-cyan font-semibold">Spec-Driven 規格驅動開發</span>與 <span class="text-brand-purple font-semibold">Vibe Coding</span> 打造的 4 款單檔網頁應用程式。兼顧手機與桌機操作體驗，點選即可直接開啟使用。
+            </p>
+
+            <!-- Quick Directory Jump Pills (作品目錄索引) -->
+            <div id="catalog" class="mt-6 pt-5 border-t border-brand-border/70">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                        <i class="fa-solid fa-compass text-brand-accent mr-1.5"></i>作品目錄快速跳轉
+                    </span>
+                    <span class="text-[11px] text-slate-400">共 4 項實戰作品</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <a href="#work-deid" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-brand-dark/70 border border-brand-border hover:border-blue-400/60 transition-all group">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-slate-100 truncate">資料去識別化</div>
+                            <div class="text-[10px] text-slate-400 truncate">個資合規與假名化</div>
+                        </div>
+                    </a>
+                    <a href="#work-overtime" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-brand-dark/70 border border-brand-border hover:border-cyan-400/60 transition-all group">
+                        <span class="w-8 h-8 rounded-lg bg-cyan-500/15 text-cyan-400 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-business-time"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-slate-100 truncate">加班工時診斷</div>
+                            <div class="text-[10px] text-slate-400 truncate">HR 勞基法與負荷分析</div>
+                        </div>
+                    </a>
+                    <a href="#work-sales" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-brand-dark/70 border border-brand-border hover:border-emerald-400/60 transition-all group">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-slate-100 truncate">銷售營運儀表板</div>
+                            <div class="text-[10px] text-slate-400 truncate">毛利勾稽與鯨魚曲線</div>
+                        </div>
+                    </a>
+                    <a href="#work-tarot" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-brand-dark/70 border border-brand-border hover:border-amber-400/60 transition-all group">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-300 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-slate-100 truncate">星語 78 張塔羅</div>
+                            <div class="text-[10px] text-slate-400 truncate">正逆位深度中文解牌</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Works Section with Category Filter -->
+        <section id="works" class="space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-brand-accent text-lg"></i>
+                        精選作品一覽
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-0.5">每件作品皆包含約 100 字核心簡介、底層 API 技術規格與實務應用場景</p>
+                </div>
+
+                <!-- Mobile-Friendly Horizontal Category Filter -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" role="tablist" aria-label="作品分類篩選">
+                    <button type="button" data-filter="all" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-accent text-brand-dark transition-all whitespace-nowrap">
+                        全部作品 (4)
+                    </button>
+                    <button type="button" data-filter="enterprise" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-card border border-brand-border text-slate-300 hover:text-white transition-all whitespace-nowrap">
+                        企業數據與治理 (3)
+                    </button>
+                    <button type="button" data-filter="lifestyle" class="filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-card border border-brand-border text-slate-300 hover:text-white transition-all whitespace-nowrap">
+                        互動生活與決策 (1)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards Grid: 1 col on mobile, 2 cols on tablet/desktop -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- ==================== WORK 1: 企業資料去識別化工具 ==================== -->
+                <article id="work-deid" data-category="enterprise" class="work-card card-glow rounded-3xl bg-brand-card/90 border border-brand-border flex flex-col overflow-hidden scroll-mt-20">
+                    <!-- Mini Graphic Card (小圖卡視覺) -->
+                    <div class="relative h-48 bg-gradient-to-br from-[#19285c] via-[#131d42] to-[#0b1026] p-5 flex flex-col justify-between border-b border-brand-border overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-blue-500/15 blur-2xl pointer-events-none"></div>
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                                <i class="fa-solid fa-shield-halved mr-1"></i>資料治理 & 個資保護
+                            </span>
+                            <span class="text-[11px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                                ● 100% 離線運算
+                            </span>
+                        </div>
+
+                        <!-- Simulated De-identification Graphic -->
+                        <div class="my-auto bg-slate-950/75 border border-blue-400/25 rounded-2xl p-3.5 space-y-2 relative z-10 backdrop-blur-sm">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-slate-400 font-mono">客戶姓名</span>
+                                <div class="flex items-center gap-2 font-mono">
+                                    <span class="line-through text-slate-500">王小明</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-amber-400"></i>
+                                    <span class="px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">林宥廷 (擬真假名)</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-slate-400 font-mono">身分證號</span>
+                                <div class="flex items-center gap-2 font-mono">
+                                    <span class="line-through text-slate-500">A123456789</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-blue-400"></i>
+                                    <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">A12****789</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-slate-400 font-mono">年度營收</span>
+                                <div class="flex items-center gap-2 font-mono">
+                                    <span class="text-slate-400">12,800,000</span>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-emerald-400"></i>
+                                    <span class="text-emerald-300 font-bold">等比例縮放 (毛利率不變)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 relative z-10">
+                            <span>支援 .xlsx（多工作表）/ .csv</span>
+                            <span class="font-mono text-blue-300">R4 楊老師版</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-extrabold text-white">企業資料去識別化工具</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">跨表同值同假名 • 七大脫敏技術 • 另存加密對照表</p>
+                            </div>
+
+                            <!-- 100字簡介 -->
+                            <div class="p-3.5 rounded-2xl bg-brand-dark/70 border border-brand-border/80">
+                                <div class="text-[11px] font-bold text-brand-accent uppercase tracking-wider mb-1">
+                                    <i class="fa-solid fa-file-lines mr-1"></i>作品簡介（約 100 字）
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                                    專為企業打造的純前端離線資料脫敏工具，全程於本機瀏覽器運算、不上傳雲端。支援 Excel 多工作表與 CSV 批次處理，提供跨表一致的擬真假名化、遮罩、泛化、等比例縮放與數值微擾等七大技術，並可匯出還原對照表，兼顧資料分析價值與個資合規安全。
+                                </p>
+                            </div>
+
+                            <!-- 使用到的 API -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-code text-blue-400"></i>使用到的 API 與核心技術
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">File &amp; FileReader API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">Drag and Drop API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">TextDecoder (UTF-8/Big5)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DOMParser (XML)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">Blob &amp; ObjectURL</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">ExcelJS / fflate 引擎</span>
+                                </div>
+                            </div>
+
+                            <!-- 應用場景 -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-briefcase text-brand-cyan"></i>實務應用場景
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    企業將含個資或營業秘密之報表交付外部顧問或上傳 AI 分析前之安全脫敏、跨部門數據共享、系統測試擬真資料生成，以及教育訓練範例製作。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Open Button -->
+                        <div class="pt-2">
+                            <a href="apps/data-deidentification-tool.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white font-bold text-sm shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+                                <span>打開作品：企業資料去識別化工具</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ==================== WORK 2: 加班工時診斷儀表板 ==================== -->
+                <article id="work-overtime" data-category="enterprise" class="work-card card-glow rounded-3xl bg-brand-card/90 border border-brand-border flex flex-col overflow-hidden scroll-mt-20">
+                    <!-- Mini Graphic Card (小圖卡視覺) -->
+                    <div class="relative h-48 bg-gradient-to-br from-[#123547] via-[#0f2533] to-[#091520] p-5 flex flex-col justify-between border-b border-brand-border overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-cyan-500/15 blur-2xl pointer-events-none"></div>
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                                <i class="fa-solid fa-heart-pulse mr-1"></i>HR 人資分析 & 勞基法合規
+                            </span>
+                            <span class="text-[11px] font-mono text-cyan-200 bg-cyan-500/15 border border-cyan-500/30 px-2.5 py-0.5 rounded-full">
+                                4 大診斷模組
+                            </span>
+                        </div>
+
+                        <!-- Simulated Overtime Dashboard Graphic -->
+                        <div class="my-auto grid grid-cols-3 gap-2 relative z-10">
+                            <div class="bg-slate-950/75 border border-cyan-400/25 rounded-xl p-2.5">
+                                <div class="text-[10px] text-slate-400">趨勢與斜率</div>
+                                <div class="text-sm font-black text-cyan-300 mt-0.5">OLS 迴歸</div>
+                                <div class="mt-1.5 flex items-end gap-1 h-6">
+                                    <span class="w-2 h-2.5 bg-cyan-500/40 rounded-sm"></span>
+                                    <span class="w-2 h-3.5 bg-cyan-500/60 rounded-sm"></span>
+                                    <span class="w-2 h-5 bg-cyan-400 rounded-sm"></span>
+                                    <span class="w-2 h-6 bg-amber-400 rounded-sm"></span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-950/75 border border-cyan-400/25 rounded-xl p-2.5">
+                                <div class="text-[10px] text-slate-400">集中度與法規</div>
+                                <div class="text-sm font-black text-amber-300 mt-0.5">Gini 係數</div>
+                                <div class="mt-1.5 text-[10px] text-amber-200 bg-amber-500/20 rounded px-1.5 py-0.5 inline-block">
+                                    46h / 54h / 138h
+                                </div>
+                            </div>
+                            <div class="bg-slate-950/75 border border-cyan-400/25 rounded-xl p-2.5">
+                                <div class="text-[10px] text-slate-400">人力缺口象限</div>
+                                <div class="text-sm font-black text-rose-300 mt-0.5">替補比分析</div>
+                                <div class="mt-1.5 text-[10px] text-emerald-300 flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>自動根因歸納
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 relative z-10">
+                            <span>內建原生 ZIP 解壓與欄位同義詞對應</span>
+                            <span class="font-mono text-cyan-300">支援遮罩與報表列印</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-extrabold text-white">加班工時診斷儀表板</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">資料健檢 • 部門趨勢與集中度 • 缺口象限與負荷風險分數</p>
+                            </div>
+
+                            <!-- 100字簡介 -->
+                            <div class="p-3.5 rounded-2xl bg-brand-dark/70 border border-brand-border/80">
+                                <div class="text-[11px] font-bold text-brand-accent uppercase tracking-wider mb-1">
+                                    <i class="fa-solid fa-file-lines mr-1"></i>作品簡介（約 100 字）
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                                    專為人資與管理層設計的本機端工時診斷系統，無須外部套件即可直接解析 XLSX 與 CSV。內建資料健檢與智慧欄位對應，透過四大分析模組自動計算部門趨勢迴歸、吉尼係數集中度、法規超標分級、人力缺口替補比與員工負荷風險評分，一鍵產出根因診斷報告。
+                                </p>
+                            </div>
+
+                            <!-- 使用到的 API -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-code text-cyan-400"></i>使用到的 API 與核心技術
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DecompressionStream API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DataView &amp; TypedArray</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DOMParser (XML)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">File &amp; Blob URL API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">动态 SVG 視覺化</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">CSS Print 列印排版</span>
+                                </div>
+                            </div>
+
+                            <!-- 應用場景 -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-briefcase text-brand-cyan"></i>實務應用場景
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    HR 勞基法加班工時合規稽核、部門長期高工時預警、未核准加班黑數排查、部門人力編制缺口評估，以及異常缺勤與過勞高風險員工關懷名單篩選。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Open Button -->
+                        <div class="pt-2">
+                            <a href="apps/overtime-analysis-dashboard.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+                                <span>打開作品：加班工時診斷儀表板</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ==================== WORK 3: 銷售營運互動分析儀表板 ==================== -->
+                <article id="work-sales" data-category="enterprise" class="work-card card-glow rounded-3xl bg-brand-card/90 border border-brand-border flex flex-col overflow-hidden scroll-mt-20">
+                    <!-- Mini Graphic Card (小圖卡視覺) -->
+                    <div class="relative h-48 bg-gradient-to-br from-[#133829] via-[#102723] to-[#0a1618] p-5 flex flex-col justify-between border-b border-brand-border overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-emerald-500/15 blur-2xl pointer-events-none"></div>
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                                <i class="fa-solid fa-chart-line mr-1"></i>商業智慧 BI & 經營診斷
+                            </span>
+                            <span class="text-[11px] font-mono text-emerald-200 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                                嚴格 CSP 零外連
+                            </span>
+                        </div>
+
+                        <!-- Simulated Sales BI Graphic -->
+                        <div class="my-auto bg-slate-950/75 border border-emerald-400/25 rounded-2xl p-3.5 space-y-2 relative z-10">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] text-slate-400 block">經營摘要自動診斷</span>
+                                    <span class="text-xs font-bold text-white">達成率 • 毛利侵蝕 • 鯨魚曲線</span>
+                                </div>
+                                <div class="flex gap-1.5">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">達標</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">警示</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300">虧損</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 pt-1 text-center">
+                                <div class="bg-slate-900/90 rounded-lg p-1.5 border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">產品毛利</div>
+                                    <div class="text-xs font-bold text-emerald-300">瀑布拆解</div>
+                                </div>
+                                <div class="bg-slate-900/90 rounded-lg p-1.5 border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">客戶 ABC</div>
+                                    <div class="text-xs font-bold text-cyan-300">假大戶識別</div>
+                                </div>
+                                <div class="bg-slate-900/90 rounded-lg p-1.5 border border-slate-800">
+                                    <div class="text-[10px] text-slate-400">業務象限</div>
+                                    <div class="text-xs font-bold text-amber-300">未核准折扣</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 relative z-10">
+                            <span>內建 80 筆合成訂單範例，一鍵體驗</span>
+                            <span class="font-mono text-emerald-300">支援 PDF 報告列印</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-extrabold text-white">銷售營運互動分析儀表板</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">經營摘要自動生成 • KPI 鑽取面板 • 客戶鯨魚曲線與毛利診斷</p>
+                            </div>
+
+                            <!-- 100字簡介 -->
+                            <div class="p-3.5 rounded-2xl bg-brand-dark/70 border border-brand-border/80">
+                                <div class="text-[11px] font-bold text-brand-accent uppercase tracking-wider mb-1">
+                                    <i class="fa-solid fa-file-lines mr-1"></i>作品簡介（約 100 字）
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                                    具備嚴格 CSP 安全防護的零依賴銷售 BI 儀表板，拖入 Excel 或 CSV 即可在瀏覽器內自動完成多表關聯與資料勾稽健檢。涵蓋業績區域達成率、產品毛利侵蝕拆解、客戶柏拉圖 ABC 與鯨魚曲線、假大戶識別及業務員績效象限，自動生成經營摘要與異常診斷。
+                                </p>
+                            </div>
+
+                            <!-- 使用到的 API -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-code text-emerald-400"></i>使用到的 API 與核心技術
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DecompressionStream API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DataView (ZIP64 解析)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">DOMParser (XML)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">File &amp; Drag-and-Drop API</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">Content-Security-Policy</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">window.print() 診斷報告</span>
+                                </div>
+                            </div>
+
+                            <!-- 應用場景 -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-briefcase text-brand-cyan"></i>實務應用場景
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    企業經營層月度與季度業績復盤、低毛利與虧損訂單根因追蹤、高營收低毛利「假大戶」篩查、業務員未核准折扣稽核與銷售目標達成率管理。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Open Button -->
+                        <div class="pt-2">
+                            <a href="apps/sales-performance-dashboard.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+                                <span>打開作品：銷售營運互動分析儀表板</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ==================== WORK 4: 星語塔羅｜78 張塔羅與深度解牌 ==================== -->
+                <article id="work-tarot" data-category="lifestyle" class="work-card card-glow rounded-3xl bg-brand-card/90 border border-brand-border flex flex-col overflow-hidden scroll-mt-20">
+                    <!-- Mini Graphic Card (小圖卡視覺) -->
+                    <div class="relative h-48 bg-gradient-to-br from-[#33224e] via-[#211736] to-[#110d1c] p-5 flex flex-col justify-between border-b border-brand-border overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-36 h-36 rounded-full bg-amber-400/15 blur-2xl pointer-events-none"></div>
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-200 border border-amber-400/30">
+                                <i class="fa-solid fa-star-and-crescent mr-1"></i>心靈探索 & 決策反思
+                            </span>
+                            <span class="text-[11px] font-mono text-purple-200 bg-purple-500/20 border border-purple-400/30 px-2.5 py-0.5 rounded-full">
+                                ✦ 78 張完整牌庫
+                            </span>
+                        </div>
+
+                        <!-- Simulated Tarot Cards Spread -->
+                        <div class="my-auto flex items-center justify-center gap-3 relative z-10">
+                            <div class="w-16 h-24 rounded-xl bg-gradient-to-b from-[#34264f] to-[#1a132b] border border-amber-300/60 flex flex-col items-center justify-center p-1.5 shadow-lg -rotate-6">
+                                <span class="text-amber-300 text-lg leading-none">☾</span>
+                                <span class="text-[10px] font-serif text-amber-100 mt-1">女祭司</span>
+                                <span class="text-[8px] text-purple-300">過去影響</span>
+                            </div>
+                            <div class="w-16 h-24 rounded-xl bg-gradient-to-b from-[#3f2d5e] to-[#1e1533] border-2 border-amber-300 flex flex-col items-center justify-center p-1.5 shadow-xl -translate-y-1">
+                                <span class="text-amber-300 text-xl leading-none">☀</span>
+                                <span class="text-[10px] font-serif text-amber-100 mt-1 font-bold">太陽・正位</span>
+                                <span class="text-[8px] text-amber-200">現在狀態</span>
+                            </div>
+                            <div class="w-16 h-24 rounded-xl bg-gradient-to-b from-[#34264f] to-[#1a132b] border border-amber-300/60 flex flex-col items-center justify-center p-1.5 shadow-lg rotate-6">
+                                <span class="text-amber-300 text-lg leading-none">☆</span>
+                                <span class="text-[10px] font-serif text-amber-100 mt-1">星星</span>
+                                <span class="text-[8px] text-purple-300">未來趨勢</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] text-purple-200/80 relative z-10">
+                            <span>單張 / 三張 / 五張牌陣 × 六大主題</span>
+                            <span class="font-mono text-amber-300">支援本機占卜紀錄</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-extrabold text-white">星語塔羅｜78 張塔羅與深度解牌</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">大阿爾克那與四元素牌組 • 正逆位解析 • 具體行動建議</p>
+                            </div>
+
+                            <!-- 100字簡介 -->
+                            <div class="p-3.5 rounded-2xl bg-brand-dark/70 border border-brand-border/80">
+                                <div class="text-[11px] font-bold text-brand-accent uppercase tracking-wider mb-1">
+                                    <i class="fa-solid fa-file-lines mr-1"></i>作品簡介（約 100 字）
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                                    收錄完整 78 張偉特塔羅大阿爾克那與四元素牌組的離線互動占卜應用。採用密碼學等級亂數進行洗牌與正逆位抽取，支援單張指引、三張時間流與五張深度剖析牌陣，結合感情、工作、財務等六大主題，自動生成結構化繁體中文牌義解析、反思提問與具體行動建議。
+                                </p>
+                            </div>
+
+                            <!-- 使用到的 API -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-code text-amber-300"></i>使用到的 API 與核心技術
+                                </div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">Web Crypto API (getRandomValues)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">Web Storage API (localStorage)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">Clipboard API (一鍵複製解牌)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700 text-[11px] text-slate-200 font-mono">ARIA Live 無障礙狀態通知</span>
+                                </div>
+                            </div>
+
+                            <!-- 應用場景 -->
+                            <div>
+                                <div class="text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-briefcase text-brand-cyan"></i>實務應用場景
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    個人日常決策換位思考、職涯與專案盲點探索、人際與感情關係梳理、靜心自我對話，以及無網路環境下隨時可用的行動端象徵性牌卡工具。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Open Button -->
+                        <div class="pt-2">
+                            <a href="apps/tarot-reading-78-cards.html" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 hover:brightness-105 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+                                <span>打開作品：星語塔羅 78 張深度解牌</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- About Me Section (關於我) -->
+        <section id="about" class="rounded-3xl bg-gradient-to-br from-brand-card via-brand-surface to-brand-dark border border-brand-border p-6 sm:p-9 shadow-2xl scroll-mt-20">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+                <!-- Portrait Column -->
+                <div class="lg:col-span-4 flex flex-col items-center text-center">
+                    <div class="relative w-44 sm:w-52 aspect-[4/5] rounded-2xl overflow-hidden border-2 border-brand-accent/40 shadow-xl bg-brand-dark">
+                        <img
+                            src="assets/myphoto.jpg"
+                            alt="楊宏文 (楊老師 / Hubert Yang) 形象照"
+                            class="w-full h-full object-cover object-top"
+                            onerror="this.src='https://gohubert.github.io/images/HubertYang.jpg'"
+                        >
+                        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-transparent p-3">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-brand-accent/20 text-brand-accent border border-brand-accent/40">
+                                AI365 Founder
+                            </span>
+                        </div>
+                    </div>
+
+                    <h2 class="mt-4 text-2xl font-black text-white">
+                        楊宏文 <span class="text-sm font-medium text-brand-accent">（楊老師 / Hubert Yang）</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-1">
+                        企業生成式 AI 導入顧問 • 資訊人才培訓專家
+                    </p>
+                </div>
+
+                <!-- Bio & Achievements Column -->
+                <div class="lg:col-span-8 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs font-bold">
+                        <i class="fa-solid fa-user-tie"></i> 關於我 • ABOUT ME
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-white leading-snug">
+                        連結 AI 與商業落地，讓 AI 成為組織制度與個人能力
+                    </h3>
+
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        深耕資訊專業就業培訓超過 <strong>25 年</strong>，專注於<strong>企業生成式 AI（Generative AI）導入</strong>、<strong>AI 數位轉型</strong>與 <strong>AI Agent 應用落地</strong>。創立「<strong>AI365</strong>」工作流方法論，結合 <strong>YAML 標準化規格</strong>、<strong>Spec-Driven 規格驅動開發</strong>與 <strong>Vibe Coding</strong>，協助企業與學員將實際業務痛點快速轉化為可制度化（AI Governance）、可衡量（AI ROI）、可擴張（Scalable AI）的數位工具。
+                    </p>
+
+                    <!-- Key Highlight Metrics -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                        <div class="p-3.5 rounded-2xl bg-brand-dark/75 border border-brand-border text-center">
+                            <div class="text-xl sm:text-2xl font-black text-brand-accent">25+</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">年資訊培訓經驗</div>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-brand-dark/75 border border-brand-border text-center">
+                            <div class="text-xl sm:text-2xl font-black text-brand-cyan">1,000+</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">成功轉職工程師</div>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-brand-dark/75 border border-brand-border text-center">
+                            <div class="text-xl sm:text-2xl font-black text-brand-purple">800+</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">通過 ITS AI 國際認證</div>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-brand-dark/75 border border-brand-border text-center">
+                            <div class="text-xl sm:text-2xl font-black text-amber-400">5.92<span class="text-xs text-slate-400">/6</span></div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">大型企業內訓滿意度</div>
+                        </div>
+                    </div>
+
+                    <!-- Core Expertise Tags -->
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                        <span class="px-3 py-1 rounded-full bg-brand-dark border border-brand-border text-xs text-slate-300">#AI365工作流</span>
+                        <span class="px-3 py-1 rounded-full bg-brand-dark border border-brand-border text-xs text-slate-300">#VibeCoding</span>
+                        <span class="px-3 py-1 rounded-full bg-brand-dark border border-brand-border text-xs text-slate-300">#SpecDriven開發</span>
+                        <span class="px-3 py-1 rounded-full bg-brand-dark border border-brand-border text-xs text-slate-300">#RAG企業知識庫</span>
+                        <span class="px-3 py-1 rounded-full bg-brand-dark border border-brand-border text-xs text-slate-300">#AIGovernance資安治理</span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <a href="about/index.html" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-accent to-brand-cyan text-brand-dark font-extrabold text-sm shadow-lg shadow-brand-accent/20 flex items-center justify-center gap-2 hover:brightness-105 transition-all">
+                            <span>前往「關於我」完整顧問履歷頁</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#works" class="px-6 py-3.5 rounded-xl bg-brand-dark border border-brand-border hover:border-slate-500 text-slate-200 font-bold text-sm flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-grid-2"></i>
+                            <span>返回作品圖卡</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-xs text-slate-500 py-6 border-t border-brand-border/60 space-y-1">
+            <p>© 2026 楊宏文 (楊老師 / Hubert Yang) • AI365 企業生成式 AI 導入顧問</p>
+            <p>所有展示作品皆採用瀏覽器本機端運算架構，保護資料隱私與資訊安全。</p>
+        </footer>
+
+    </main>
+
+    <!-- Mobile Sticky Bottom Navigation Bar (手機優先拇指導覽列) -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-brand-dark/95 backdrop-blur-xl border-t border-brand-border px-2 py-1.5" aria-label="手機底部快速導覽">
+        <div class="grid grid-cols-4 gap-1 max-w-md mx-auto">
+            <a href="#catalog" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-300 hover:text-brand-accent active:bg-brand-card/60 transition-colors">
+                <i class="fa-solid fa-compass text-base"></i>
+                <span class="text-[11px] font-medium mt-0.5">作品目錄</span>
+            </a>
+            <a href="#works" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-300 hover:text-brand-accent active:bg-brand-card/60 transition-colors">
+                <i class="fa-solid fa-layer-group text-base"></i>
+                <span class="text-[11px] font-medium mt-0.5">作品圖卡</span>
+            </a>
+            <a href="#about" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-slate-300 hover:text-brand-accent active:bg-brand-card/60 transition-colors">
+                <i class="fa-solid fa-user-tie text-base"></i>
+                <span class="text-[11px] font-medium mt-0.5">關於我</span>
+            </a>
+            <a href="about/index.html" class="flex flex-col items-center justify-center py-1.5 rounded-xl text-brand-accent font-bold active:bg-brand-card/60 transition-colors">
+                <i class="fa-solid fa-id-card-clip text-base"></i>
+                <span class="text-[11px] mt-0.5">完整履歷</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // 分類篩選互動
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const workCards = document.querySelectorAll('.work-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.filter;
+                filterBtns.forEach(b => {
+                    const active = b === btn;
+                    b.className = active
+                        ? 'filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-accent text-brand-dark transition-all whitespace-nowrap'
+                        : 'filter-btn px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-card border border-brand-border text-slate-300 hover:text-white transition-all whitespace-nowrap';
+                });
+
+                workCards.forEach(card => {
+                    if (target === 'all' || card.dataset.category === target) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // 背景音樂播放控制 (使用本機 music/music-1.mp3)
+        const bgm = document.getElementById('bgm');
+        const bgmBtn = document.getElementById('bgm-btn');
+        const bgmLabel = document.getElementById('bgm-label');
+        const eqWrap = document.getElementById('eq-wrap');
+
+        bgmBtn.addEventListener('click', async () => {
+            try {
+                if (bgm.paused) {
+                    await bgm.play();
+                    eqWrap.classList.remove('eq-paused');
+                    bgmLabel.textContent = '音樂播放中';
+                } else {
+                    bgm.pause();
+                    eqWrap.classList.add('eq-paused');
+                    bgmLabel.textContent = '播放配樂';
+                }
+            } catch (e) {
+                console.warn('無法播放音訊：', e);
+            }
+        });
+    </script>
+</body>
+</html>
